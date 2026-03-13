@@ -36,10 +36,6 @@ Would you like or need to protect your data, docker containers of the microservi
 
 https://hub.docker.com/?namespace=digiwells
 
-More info on how to run the container and map its database to a folder on your computer, at:
-
-https://github.com/NORCE-DrillingAndWells/DrillingAndWells/wiki
-
 # Deployment
 
 Microservice is available at:

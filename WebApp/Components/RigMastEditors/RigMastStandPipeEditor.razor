@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Stand Pipe"
+                          Value="RigMast.StandPipe"
+                          ValueChanged="@(value => RigMast.StandPipe = (StandPipe?)value)"
+                          ModelType="@typeof(StandPipe)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

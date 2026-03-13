@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Top Drive"
+                          Value="RigMast.TopDrive"
+                          ValueChanged="@(value => RigMast.TopDrive = (TopDrive?)value)"
+                          ModelType="@typeof(TopDrive)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

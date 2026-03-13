@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Slips"
+                          Value="RigMast.Slips"
+                          ValueChanged="@(value => RigMast.Slips = (Slips?)value)"
+                          ModelType="@typeof(Slips)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

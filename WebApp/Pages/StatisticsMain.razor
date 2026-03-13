@@ -1,0 +1,61 @@
+@page "/Statistics"
+@inject ILogger<StatisticsMain> Logger
+@inject ISnackbar Snackbar
+@inject RigApiClient RigApiClient
+
+@if (_isLoading)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else if (_statistics == null)
+{
+    <MudAlert Severity="Severity.Warning">No usage statistics available.</MudAlert>
+}
+else
+{
+    <MudPaper Class="pa-4" Outlined="true">
+        <MudText Typo="Typo.h4" Class="mb-4">Usage Statistics</MudText>
+        <MudGrid>
+            <MudItem xs="12" md="6"><MudText><strong>Total requests:</strong> @_totalCount</MudText></MudItem>
+            <MudItem xs="12" md="6"><MudText><strong>Rig controller requests:</strong> @_rigCount</MudText></MudItem>
+        </MudGrid>
+    </MudPaper>
+}
+
+@code {
+    private UsageStatisticsRig? _statistics;
+    private ulong _totalCount;
+    private ulong _rigCount;
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _statistics = await RigApiClient.GetUsageStatisticsAsync();
+            if (_statistics != null)
+            {
+                _totalCount = Sum(_statistics.GetAllRigIdPerDay)
+                    + Sum(_statistics.GetAllRigMetaInfoPerDay)
+                    + Sum(_statistics.GetRigByIdPerDay)
+                    + Sum(_statistics.GetAllRigLightPerDay)
+                    + Sum(_statistics.GetAllRigPerDay)
+                    + Sum(_statistics.PostRigPerDay)
+                    + Sum(_statistics.PutRigByIdPerDay)
+                    + Sum(_statistics.DeleteRigByIdPerDay);
+                _rigCount = _totalCount;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load usage statistics");
+            Snackbar.Add("Failed to load usage statistics.", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private static ulong Sum(History? history) => history?.Data?.Aggregate<CountPerDay, ulong>(0, (current, item) => current + (ulong)item.Count) ?? 0;
+}

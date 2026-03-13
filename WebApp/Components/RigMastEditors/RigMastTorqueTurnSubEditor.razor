@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Torque Turn Sub"
+                          Value="RigMast.TorqueTurnSub"
+                          ValueChanged="@(value => RigMast.TorqueTurnSub = (TorqueTurnSub?)value)"
+                          ModelType="@typeof(TorqueTurnSub)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

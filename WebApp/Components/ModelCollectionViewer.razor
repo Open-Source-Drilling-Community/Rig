@@ -1,0 +1,51 @@
+@using System.Collections
+
+@if (Items == null)
+{
+    <MudPaper Class="pa-3" Outlined="true">
+        <MudText Typo="Typo.subtitle2">@Label</MudText>
+        <MudText Typo="Typo.body2">Not set</MudText>
+    </MudPaper>
+}
+else if (Items.Count == 0)
+{
+    <MudPaper Class="pa-3" Outlined="true">
+        <MudText Typo="Typo.subtitle2">@Label</MudText>
+        <MudText Typo="Typo.body2">No items.</MudText>
+    </MudPaper>
+}
+else
+{
+    <MudPaper Class="pa-3" Outlined="true">
+        <MudText Typo="Typo.subtitle2" Class="mb-2">@Label</MudText>
+        <MudExpansionPanels Dense="true" MultiExpansion="true">
+            @for (int i = 0; i < Items.Count; i++)
+            {
+                object? item = Items[i];
+                <MudExpansionPanel @key="@(Label + "-" + i)" Text="@($"{Label} #{i + 1}")">
+                    @if (item == null)
+                    {
+                        <MudText Typo="Typo.body2">Not set</MudText>
+                    }
+                    else if (ModelObjectViewer.IsViewableComplexType(ItemType))
+                    {
+                        <ModelObjectViewer Value="item"
+                                           ModelType="ItemType"
+                                           Depth="@(Depth + 1)" />
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2">@item</MudText>
+                    }
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    </MudPaper>
+}
+
+@code {
+    [Parameter] public IList? Items { get; set; }
+    [Parameter] public Type ItemType { get; set; } = typeof(object);
+    [Parameter] public string Label { get; set; } = "Items";
+    [Parameter] public int Depth { get; set; }
+}

@@ -1,0 +1,11 @@
+@using System.Collections
+@namespace WebApp.Components.RigEditors
+
+<RigListPropertyEditor Title="Desilter List"
+                       Items="(IList?)Rig.DesilterList"
+                       ItemsChanged="@(items => Rig.DesilterList = items.Cast<Desilter>().ToList())"
+                       ItemType="@typeof(Desilter)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

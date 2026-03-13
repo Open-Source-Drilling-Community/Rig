@@ -1,0 +1,1011 @@
+@page "/Rig/Edit"
+@page "/Rig/Edit/{Id:guid}"
+@inject ILogger<RigEdit> Logger
+@inject ISnackbar Snackbar
+@inject RigApiClient RigApiClient
+@inject FieldClusterApiClient FieldClusterApiClient
+@inject NavigationManager NavigationManager
+
+<MudUnitAndReferenceChoiceTag HttpHost="@APIUtils.HostNameUnitConversion"
+                              HttpBasePath="@APIUtils.HostBasePathUnitConversion"
+                              HttpController="UnitSystem/"
+                              UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
+                              UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
+    @if (_isLoading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (_currentRig == null)
+    {
+        <MudAlert Severity="Severity.Error">Rig data is unavailable.</MudAlert>
+    }
+    else
+    {
+        <MudStack Spacing="3">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <MudText Typo="Typo.h4">@(_isNewRig ? "Create rig" : "Edit rig")</MudText>
+                <MudStack Row="true" Spacing="2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveRig">Save</MudButton>
+                    <MudButton Variant="Variant.Outlined" OnClick="BackToList">Back</MudButton>
+                </MudStack>
+            </MudStack>
+
+            <MudGrid>
+                <MudItem xs="12" md="4" lg="3">
+                    <MudPaper Class="pa-3" Outlined="true">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+                            <MudText Typo="Typo.h6">Rig structure</MudText>
+                            <MudSwitch T="bool"
+                                       Value="@_hideUninstantiatedNodes"
+                                       ValueChanged="@(EventCallback.Factory.Create<bool>(this, value => _hideUninstantiatedNodes = value))"
+                                       Label="Hide missing"
+                                       Color="Color.Primary" />
+                        </MudStack>
+                        <MudTextField @bind-Value="_treeFilter"
+                                      Placeholder="Find node"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Search"
+                                      Variant="Variant.Outlined"
+                                      Class="mb-2"
+                                      Immediate="true" />
+                        @if (HasTreeFilter)
+                        {
+                            <MudPaper Class="pa-2 mb-2" Outlined="true">
+                                <MudText Typo="Typo.subtitle2" Class="mb-2">Search results</MudText>
+                                @if (FilteredNodes.Count == 0)
+                                {
+                                    <MudText Typo="Typo.body2">No matching nodes.</MudText>
+                                }
+                                else
+                                {
+                                    @foreach (RigTreeNode node in FilteredNodes)
+                                    {
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-1">
+                                            <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@(() => SelectSearchResult(node.Key))">
+                                                @node.Label
+                                            </MudButton>
+                                            <MudStack Row="true" Spacing="1">
+                                                @if (node.CanCreate && !node.Exists)
+                                                {
+                                                    <MudIconButton Icon="@Icons.Material.Filled.AddCircleOutline" Size="Size.Small" OnClick="@(() => CreateSearchResult(node.Key))" />
+                                                }
+                                                @if (node.CanAddItem)
+                                                {
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@(() => AddSearchResultItem(node.Key))" />
+                                                }
+                                            </MudStack>
+                                        </MudStack>
+                                        <MudText Typo="Typo.caption" Class="mb-2">@node.Key</MudText>
+                                    }
+                                }
+                            </MudPaper>
+                        }
+
+                        @if (TreeRoot != null)
+                        {
+                            @foreach (RigTreeNode node in VisibleTreeNodes)
+                            {
+                                <div style="margin-left:@(node.Depth * 16)px">
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        @if (node.Children.Count > 0)
+                                        {
+                                            <MudIconButton Icon="@(IsExpanded(node.Key) ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ChevronRight)"
+                                                           Size="Size.Small"
+                                                           OnClick="@(() => ToggleNode(node.Key))" />
+                                        }
+                                        <MudButton Variant="@(node.Key == _selectedNodeKey ? Variant.Filled : Variant.Text)"
+                                                   Color="@(node.Key == _selectedNodeKey ? Color.Primary : Color.Default)"
+                                                   Size="Size.Small"
+                                                   Class="@GetNodeButtonClass(node)"
+                                                   OnClick="@(() => SelectTreeNode(node.Key))">
+                                            @node.Label
+                                        </MudButton>
+                                        @if (node.CanCreate && !node.Exists)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.AddCircleOutline" Size="Size.Small" OnClick="@(() => CreateTreeNode(node.Key))" />
+                                        }
+                                        @if (node.CanAddItem)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="@(() => AddTreeItem(node.Key))" />
+                                        }
+                                        @if (node.CanDeleteItem)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline" Size="Size.Small" Color="Color.Error" OnClick="@(() => DeleteTreeItem(node.Key))" />
+                                        }
+                                        @if (node.CanClear && node.Exists && !node.IsRoot && !node.IsListItem)
+                                        {
+                                            <MudIconButton Icon="@Icons.Material.Filled.RemoveCircleOutline" Size="Size.Small" Color="Color.Error" OnClick="@(() => ClearTreeNode(node.Key))" />
+                                        }
+                                    </MudStack>
+                                </div>
+                            }
+                        }
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" md="8" lg="9">
+                    <MudPaper Class="pa-4" Outlined="true">
+                        @if (SelectedNode != null)
+                        {
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-3">
+                                <MudText Typo="Typo.h5">@SelectedNode.Label</MudText>
+                                <MudStack Row="true" Spacing="1">
+                                    @if (SelectedNode.CanCreate && !SelectedNode.Exists)
+                                    {
+                                        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="CreateSelectedNode">Create</MudButton>
+                                    }
+                                    @if (SelectedNode.CanAddItem)
+                                    {
+                                        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="AddSelectedItem">Add item</MudButton>
+                                    }
+                                    @if (SelectedNode.CanDeleteItem)
+                                    {
+                                        <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="DeleteSelectedItem">Delete</MudButton>
+                                    }
+                                    @if (SelectedNode.CanClear && SelectedNode.Exists && !SelectedNode.IsRoot && !SelectedNode.IsListItem)
+                                    {
+                                        <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="ClearSelectedNode">Clear</MudButton>
+                                    }
+                                </MudStack>
+                            </MudStack>
+
+                            @if (SelectedNode.IsList)
+                            {
+                                <MudText Typo="Typo.body1">Select a list item in the tree to edit its values.</MudText>
+                                <MudText Typo="Typo.body2">Current items: @GetListCount(SelectedNode)</MudText>
+                            }
+                            else if (!SelectedNode.Exists)
+                            {
+                                <MudText Typo="Typo.body1">This component has not been created yet.</MudText>
+                                <MudText Typo="Typo.body2">Use the Create action to add it to the rig configuration.</MudText>
+                            }
+                            else if (ReferenceEquals(SelectedNode.Value, _currentRig))
+                            {
+                                <MudGrid>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="_currentRig.Name" Label="Name" Variant="Variant.Outlined" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="_currentRig.Description" Label="Description" Variant="Variant.Outlined" Lines="3" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField Value="@FormatDate(_currentRig.CreationDate)"
+                                                      ValueChanged="@(EventCallback.Factory.Create<string?>(this, SetCreationDate))"
+                                                      Label="Creation date"
+                                                      Variant="Variant.Outlined"
+                                                      HelperText="UTC ISO-8601" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField Value="@FormatDate(_currentRig.LastModificationDate)"
+                                                      ValueChanged="@(EventCallback.Factory.Create<string?>(this, SetLastModificationDate))"
+                                                      Label="Last modification date"
+                                                      Variant="Variant.Outlined"
+                                                      HelperText="UTC ISO-8601" />
+                                    </MudItem>
+                                    <MudItem xs="12">
+                                        <MudSwitch T="bool"
+                                                   Value="@_currentRig.IsFixedPlatform"
+                                                   ValueChanged="@(EventCallback.Factory.Create<bool>(this, OnFixedPlatformChanged))"
+                                                   Label="Fixed platform"
+                                                   Color="Color.Primary" />
+                                    </MudItem>
+                                    @if (_currentRig.IsFixedPlatform)
+                                    {
+                                        <MudItem xs="12" md="6">
+                                            <MudSelect T="NORCE.Drilling.Rig.ModelShared.Field"
+                                                       Label="Field"
+                                                       Value="@_selectedField"
+                                                       ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.Field?>(this, OnFieldChanged))"
+                                                       Variant="Variant.Outlined"
+                                                       Dense="true"
+                                                       ToStringFunc="@(s => s?.Name)">
+                                                @foreach (KeyValuePair<Guid, NORCE.Drilling.Rig.ModelShared.Field> fieldKvp in _fields.OrderBy(x => x.Value?.Name))
+                                                {
+                                                    if (fieldKvp.Key != Guid.Empty && fieldKvp.Value != null && !string.IsNullOrWhiteSpace(fieldKvp.Value.Name))
+                                                    {
+                                                        <MudSelectItem Value="@fieldKvp.Value">@fieldKvp.Value.Name</MudSelectItem>
+                                                    }
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudSelect T="NORCE.Drilling.Rig.ModelShared.Cluster"
+                                                       Label="Cluster"
+                                                       Value="@_selectedCluster"
+                                                       ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.Cluster?>(this, OnClusterChanged))"
+                                                       Variant="Variant.Outlined"
+                                                       Dense="true"
+                                                       Disabled="@(_selectedField == null)"
+                                                       ToStringFunc="@(s => s?.Name)">
+                                                @foreach (KeyValuePair<Guid, NORCE.Drilling.Rig.ModelShared.Cluster> clusterKvp in AvailableClusters.OrderBy(x => x.Value?.Name))
+                                                {
+                                                    if (clusterKvp.Value != null)
+                                                    {
+                                                        <MudSelectItem Value="@clusterKvp.Value">@clusterKvp.Value.Name</MudSelectItem>
+                                                    }
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                    }
+                                    <MudItem xs="12" md="6">
+                                        <QuantityField Value="@_currentRig.DrillFloorElevation"
+                                                       ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => _currentRig.DrillFloorElevation = value))"
+                                                       Quantity="Length"
+                                                       Label="Drill Floor Elevation" />
+                                    </MudItem>
+                                </MudGrid>
+                            }
+                            else if (SelectedNode.Value is RigMast selectedRigMast)
+                            {
+                                <MudGrid>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="selectedRigMast.Name" Label="Name" Variant="Variant.Outlined" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="selectedRigMast.Description" Label="Description" Variant="Variant.Outlined" Lines="3" />
+                                    </MudItem>
+                                </MudGrid>
+                            }
+                            else if (SelectedNode.Value is HoistingSystem selectedHoistingSystem)
+                            {
+                                <MudGrid>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="selectedHoistingSystem.Name" Label="Name" Variant="Variant.Outlined" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudTextField @bind-Value="selectedHoistingSystem.Description" Label="Description" Variant="Variant.Outlined" Lines="3" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="6">
+                                        <MudSelect T="NORCE.Drilling.Rig.ModelShared.HoistingSystemType"
+                                                   Value="selectedHoistingSystem.HoistingSystemType"
+                                                   ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.HoistingSystemType>(this, value => OnHoistingSystemTypeChanged(selectedHoistingSystem, value)))"
+                                                   Label="Hoisting System Type"
+                                                   Variant="Variant.Outlined">
+                                            @foreach (NORCE.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType in Enum.GetValues<NORCE.Drilling.Rig.ModelShared.HoistingSystemType>())
+                                            {
+                                                <MudSelectItem T="NORCE.Drilling.Rig.ModelShared.HoistingSystemType" Value="hoistingSystemType">@DataUtils.GetDisplayName(hoistingSystemType.ToString())</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                </MudGrid>
+                            }
+                            else if (SelectedNode.Value is TopDrive selectedTopDrive)
+                            {
+                                <MudStack Spacing="3">
+                                    <MudGrid>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.Name" Label="Name" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.Description" Label="Description" Variant="Variant.Outlined" Lines="3" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.Manufacturer" Label="Manufacturer" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.Model" Label="Model" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.ProductCode" Label="Product Code" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.SerialNumber" Label="Serial Number" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudSelect T="NORCE.Drilling.Rig.ModelShared.TopDriveClass"
+                                                       Value="selectedTopDrive.TopDriveClass"
+                                                       ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.TopDriveClass>(this, value => selectedTopDrive.TopDriveClass = value))"
+                                                       Label="Top Drive Class"
+                                                       Variant="Variant.Outlined">
+                                                @foreach (NORCE.Drilling.Rig.ModelShared.TopDriveClass topDriveClass in Enum.GetValues<NORCE.Drilling.Rig.ModelShared.TopDriveClass>())
+                                                {
+                                                    <MudSelectItem T="NORCE.Drilling.Rig.ModelShared.TopDriveClass" Value="topDriveClass">@GetTopDriveClassLabel(topDriveClass)</MudSelectItem>
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.Weight"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.Weight = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.Weight))"
+                                                           Label="Weight" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.TopDriveHeight"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TopDriveHeight = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TopDriveHeight))"
+                                                           Label="Top Drive Height" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitRotationSpeed"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitRotationSpeed = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitRotationSpeed))"
+                                                           Label="Max Limit Rotation Speed" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitMakeupTorque"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitMakeupTorque = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitMakeupTorque))"
+                                                           Label="Max Limit Makeup Torque" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitBreakoutTorque"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitBreakoutTorque = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitBreakoutTorque))"
+                                                           Label="Max Limit Breakout Torque" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitOperatingTorque"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitOperatingTorque = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitOperatingTorque))"
+                                                           Label="Max Limit Operating Torque" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitDesignTorque"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitDesignTorque = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitDesignTorque))"
+                                                           Label="Max Limit Design Torque" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitOperatingLoad"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitOperatingLoad = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitOperatingLoad))"
+                                                           Label="Max Limit Operating Load" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitDesignLoad"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitDesignLoad = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitDesignLoad))"
+                                                           Label="Max Limit Design Load" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.MaxLimitIbopPressure"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitIbopPressure = value))"
+                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitIbopPressure))"
+                                                           Label="Max Limit iBOP Pressure" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudSwitch T="bool"
+                                                       Value="@(selectedTopDrive.Orientable ?? false)"
+                                                       ValueChanged="@(EventCallback.Factory.Create<bool>(this, value => selectedTopDrive.Orientable = value))"
+                                                       Label="Orientable"
+                                                       Color="Color.Primary" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudSelect T="string"
+                                                       Value="@selectedTopDrive.TopDriveControllerType.ToString()"
+                                                       ValueChanged="@(EventCallback.Factory.Create<string?>(this, value => SetTopDriveControllerType(selectedTopDrive, value)))"
+                                                       Label="Top Drive Controller Type"
+                                                       Variant="Variant.Outlined">
+                                                @foreach (string enumName in new[] { "Unknown", "StiffPIController", "TunedPIController", "ImpedanceMatching" })
+                                                {
+                                                    <MudSelectItem T="string" Value="@enumName">@GetTopDriveControllerTypeLabel(enumName)</MudSelectItem>
+                                                }
+                                            </MudSelect>
+                                        </MudItem>
+                                    </MudGrid>
+
+                                    @if (IsTopDriveController(selectedTopDrive, "StiffPIController")
+                                        || IsTopDriveController(selectedTopDrive, "TunedPIController"))
+                                    {
+                                        <MudGrid>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.ProportionalGain"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.ProportionalGain = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.ProportionalGain))"
+                                                               Label="Proportional Gain" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.IntegralGain"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.IntegralGain = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.IntegralGain))"
+                                                               Label="Integral Gain" />
+                                            </MudItem>
+                                        </MudGrid>
+                                    }
+
+                                    @if (IsTopDriveController(selectedTopDrive, "TunedPIController"))
+                                    {
+                                        <MudGrid>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.TuningFrequency"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TuningFrequency = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TuningFrequency))"
+                                                               Label="Tuning Frequency" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.InertiaCorrectionFactor"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.InertiaCorrectionFactor = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.InertiaCorrectionFactor))"
+                                                               Label="Inertia Correction Factor" />
+                                            </MudItem>
+                                        </MudGrid>
+                                    }
+
+                                    @if (IsTopDriveController(selectedTopDrive, "ImpedanceMatching"))
+                                    {
+                                        <MudGrid>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.VFDFilterTimeConstant"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.VFDFilterTimeConstant = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.VFDFilterTimeConstant))"
+                                                               Label="VFD Filter Time Constant" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.EncoderTimeConstant"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.EncoderTimeConstant = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.EncoderTimeConstant))"
+                                                               Label="Encoder Time Constant" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.AccelerationFilterTimeConstant"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.AccelerationFilterTimeConstant = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.AccelerationFilterTimeConstant))"
+                                                               Label="Acceleration Filter Time Constant" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.TorqueHighPassFilterTimeConstant"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TorqueHighPassFilterTimeConstant = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TorqueHighPassFilterTimeConstant))"
+                                                               Label="Torque High Pass Filter Time Constant" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.TorqueLowPassFilterTimeConstant"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TorqueLowPassFilterTimeConstant = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TorqueLowPassFilterTimeConstant))"
+                                                               Label="Torque Low Pass Filter Time Constant" />
+                                            </MudItem>
+                                            <MudItem xs="12" md="6">
+                                                <QuantityField Value="@selectedTopDrive.TuningFactor"
+                                                               ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TuningFactor = value))"
+                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TuningFactor))"
+                                                               Label="Tuning Factor" />
+                                            </MudItem>
+                                        </MudGrid>
+                                    }
+                                </MudStack>
+                            }
+                            else
+                            {
+                                <ModelDirectEditor Value="SelectedNode.Value" ModelType="SelectedNode.ValueType" />
+                            }
+                        }
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudStack>
+    }
+</MudUnitAndReferenceChoiceTag>
+
+@code {
+    [Parameter] public Guid? Id { get; set; }
+
+    private Rig? _currentRig;
+    private bool _isLoading = true;
+    private bool _isNewRig;
+    private string _selectedNodeKey = "Rig";
+    private string _treeFilter = string.Empty;
+    private bool _hideUninstantiatedNodes = true;
+    private HashSet<string> _expandedTreeKeys = new(StringComparer.Ordinal);
+    private Dictionary<Guid, NORCE.Drilling.Rig.ModelShared.Field> _fields = new();
+    private Dictionary<Guid, NORCE.Drilling.Rig.ModelShared.Cluster> _clusters = new();
+    private NORCE.Drilling.Rig.ModelShared.Field? _selectedField;
+    private NORCE.Drilling.Rig.ModelShared.Cluster? _selectedCluster;
+
+    private RigTreeNode? TreeRoot => _currentRig == null ? null : RigTreeBuilder.Build(_currentRig, typeof(Rig), "Rig");
+    private RigTreeNode? SelectedNode => RigTreeBuilder.FindNode(TreeRoot, _selectedNodeKey) ?? TreeRoot;
+    private List<RigTreeNode> VisibleTreeNodes => TreeRoot == null ? new List<RigTreeNode>() : BuildVisibleTreeNodes(TreeRoot).ToList();
+    private bool HasTreeFilter => !string.IsNullOrWhiteSpace(_treeFilter);
+    private List<RigTreeNode> FilteredNodes => TreeRoot == null
+        ? new List<RigTreeNode>()
+        : FlattenNodes(TreeRoot)
+            .Where(node => !node.IsRoot && NodeMatchesFilter(node, _treeFilter))
+            .OrderBy(node => node.Key.Count(ch => ch == '.' || ch == '['))
+            .ThenBy(node => node.Label)
+            .Take(20)
+            .ToList();
+
+    private IEnumerable<KeyValuePair<Guid, NORCE.Drilling.Rig.ModelShared.Cluster>> AvailableClusters =>
+        _clusters.Where(x => x.Value != null
+            && x.Value.FieldID != null
+            && _selectedField != null
+            && _selectedField.MetaInfo != null
+            && _selectedField.MetaInfo.ID == x.Value.FieldID
+            && !x.Value.IsSingleWell);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await LoadFieldAndClusterData();
+
+            if (Id.HasValue)
+            {
+                _currentRig = await RigApiClient.GetRigAsync(Id.Value);
+                _isNewRig = false;
+            }
+            else
+            {
+                _currentRig = DataUtils.CreateDefaultRig();
+                _isNewRig = true;
+            }
+
+            if (_currentRig == null)
+            {
+                Snackbar.Add("Rig not found.", Severity.Warning);
+                BackToList();
+                return;
+            }
+
+            _selectedNodeKey = "Rig";
+            ExpandPath(_selectedNodeKey);
+            InitializeSelectedFieldAndCluster();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load rig editor");
+            Snackbar.Add("Failed to initialize the rig editor.", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task LoadFieldAndClusterData()
+    {
+        List<NORCE.Drilling.Rig.ModelShared.Field> fields = await FieldClusterApiClient.GetFieldsAsync();
+        foreach (NORCE.Drilling.Rig.ModelShared.Field field in fields)
+        {
+            if (field.MetaInfo != null && field.MetaInfo.ID != Guid.Empty && !_fields.ContainsKey(field.MetaInfo.ID))
+            {
+                _fields.Add(field.MetaInfo.ID, field);
+            }
+        }
+
+        List<NORCE.Drilling.Rig.ModelShared.Cluster> clusters = await FieldClusterApiClient.GetClustersAsync();
+        foreach (NORCE.Drilling.Rig.ModelShared.Cluster cluster in clusters)
+        {
+            if (cluster.MetaInfo != null && cluster.MetaInfo.ID != Guid.Empty && !_clusters.ContainsKey(cluster.MetaInfo.ID))
+            {
+                _clusters.Add(cluster.MetaInfo.ID, cluster);
+            }
+        }
+    }
+
+    private void InitializeSelectedFieldAndCluster()
+    {
+        if (_currentRig == null || !_currentRig.IsFixedPlatform)
+        {
+            _selectedField = null;
+            _selectedCluster = null;
+            if (_currentRig != null)
+            {
+                _currentRig.ClusterID = null;
+            }
+            return;
+        }
+
+        if (_currentRig.ClusterID.HasValue && _clusters.TryGetValue(_currentRig.ClusterID.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster))
+        {
+            _selectedCluster = cluster;
+            if (cluster.FieldID.HasValue)
+            {
+                _fields.TryGetValue(cluster.FieldID.Value, out _selectedField);
+            }
+        }
+    }
+
+    private void OnHoistingSystemTypeChanged(HoistingSystem hoistingSystem, NORCE.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType)
+    {
+        hoistingSystem.HoistingSystemType = hoistingSystemType;
+
+        if (hoistingSystemType == NORCE.Drilling.Rig.ModelShared.HoistingSystemType.Drawworks)
+        {
+            hoistingSystem.Drawworks ??= new Drawworks { Name = "Drawworks" };
+            hoistingSystem.CrownBlock ??= new CrownBlock { Name = "Crown Block" };
+            hoistingSystem.TravellingBlock ??= new TravellingBlock { Name = "Travelling Block" };
+            hoistingSystem.DrillLine ??= new DrillLine { Name = "Drill Line" };
+        }
+        else
+        {
+            hoistingSystem.Drawworks = null;
+            hoistingSystem.CrownBlock = null;
+            hoistingSystem.TravellingBlock = null;
+            hoistingSystem.DrillLine = null;
+        }
+
+        ExpandPath(_selectedNodeKey);
+        StateHasChanged();
+    }
+
+    private static bool IsTopDriveController(TopDrive topDrive, string controllerTypeName) =>
+        string.Equals(topDrive.TopDriveControllerType.ToString(), controllerTypeName, StringComparison.Ordinal);
+
+    private static string GetTopDriveClassLabel(NORCE.Drilling.Rig.ModelShared.TopDriveClass topDriveClass) => topDriveClass switch
+    {
+        NORCE.Drilling.Rig.ModelShared.TopDriveClass.AcTopDrive => "AC Top Drive",
+        NORCE.Drilling.Rig.ModelShared.TopDriveClass.HydraulicTopDrive => "Hydraulic Top Drive",
+        _ => DataUtils.GetDisplayName(topDriveClass.ToString())
+    };
+
+    private static string GetTopDriveControllerTypeLabel(string controllerTypeName) => controllerTypeName switch
+    {
+        "Unknown" => "Unknown",
+        "StiffPIController" => "Stiff PI Controller",
+        "TunedPIController" => "Tuned PI Controller",
+        "ImpedanceMatching" => "Impedance Matching",
+        _ => DataUtils.GetDisplayName(controllerTypeName)
+    };
+
+    private void SetTopDriveControllerType(TopDrive topDrive, string? controllerTypeName)
+    {
+        if (string.IsNullOrWhiteSpace(controllerTypeName) || controllerTypeName == "Unknown")
+        {
+            topDrive.TopDriveControllerType = NORCE.Drilling.Rig.ModelShared.TopDriveControllerType.Unknown;
+            return;
+        }
+
+        if (Enum.TryParse(controllerTypeName, out NORCE.Drilling.Rig.ModelShared.TopDriveControllerType parsed))
+        {
+            topDrive.TopDriveControllerType = parsed;
+        }
+    }
+
+    private Task OnSelectedNodeChanged(string key)
+    {
+        _selectedNodeKey = key;
+        ExpandPath(key);
+        return Task.CompletedTask;
+    }
+
+    private void SelectSearchResult(string key)
+    {
+        _selectedNodeKey = key;
+        ExpandPath(key);
+    }
+
+    private void SelectTreeNode(string key)
+    {
+        _selectedNodeKey = key;
+        ExpandPath(key);
+    }
+
+    private void ToggleNode(string key)
+    {
+        if (!_expandedTreeKeys.Add(key))
+        {
+            _expandedTreeKeys.Remove(key);
+        }
+    }
+
+    private bool IsExpanded(string key) => _expandedTreeKeys.Contains(key);
+
+    private void CreateTreeNode(string key)
+    {
+        RigTreeNode? node = RigTreeBuilder.FindNode(TreeRoot, key);
+        if (node?.CreateAction != null)
+        {
+            _selectedNodeKey = node.CreateAction();
+            _treeFilter = string.Empty;
+            ExpandPath(_selectedNodeKey);
+        }
+    }
+
+    private void AddTreeItem(string key)
+    {
+        RigTreeNode? node = RigTreeBuilder.FindNode(TreeRoot, key);
+        if (node?.AddItemAction != null)
+        {
+            _selectedNodeKey = node.AddItemAction();
+            _treeFilter = string.Empty;
+            ExpandPath(_selectedNodeKey);
+        }
+    }
+
+    private void DeleteTreeItem(string key)
+    {
+        RigTreeNode? node = RigTreeBuilder.FindNode(TreeRoot, key);
+        if (node?.DeleteItemAction != null)
+        {
+            _selectedNodeKey = node.DeleteItemAction();
+            ExpandPath(_selectedNodeKey);
+        }
+    }
+
+    private void ClearTreeNode(string key)
+    {
+        RigTreeNode? node = RigTreeBuilder.FindNode(TreeRoot, key);
+        if (node?.ClearAction != null)
+        {
+            _selectedNodeKey = node.ClearAction();
+            ExpandPath(_selectedNodeKey);
+        }
+    }
+
+    private void CreateSearchResult(string key)
+    {
+        RigTreeNode? node = RigTreeBuilder.FindNode(TreeRoot, key);
+        if (node?.CreateAction != null)
+        {
+            _selectedNodeKey = node.CreateAction();
+            _treeFilter = string.Empty;
+            ExpandPath(_selectedNodeKey);
+        }
+    }
+
+    private void AddSearchResultItem(string key)
+    {
+        RigTreeNode? node = RigTreeBuilder.FindNode(TreeRoot, key);
+        if (node?.AddItemAction != null)
+        {
+            _selectedNodeKey = node.AddItemAction();
+            _treeFilter = string.Empty;
+            ExpandPath(_selectedNodeKey);
+        }
+    }
+
+    private void CreateSelectedNode()
+    {
+        if (SelectedNode?.CreateAction == null)
+        {
+            return;
+        }
+
+        _selectedNodeKey = SelectedNode.CreateAction();
+        _treeFilter = string.Empty;
+        ExpandPath(_selectedNodeKey);
+    }
+
+    private void AddSelectedItem()
+    {
+        if (SelectedNode?.AddItemAction == null)
+        {
+            return;
+        }
+
+        _selectedNodeKey = SelectedNode.AddItemAction();
+        _treeFilter = string.Empty;
+        ExpandPath(_selectedNodeKey);
+    }
+
+    private void DeleteSelectedItem()
+    {
+        if (SelectedNode?.DeleteItemAction == null)
+        {
+            return;
+        }
+
+        _selectedNodeKey = SelectedNode.DeleteItemAction();
+        ExpandPath(_selectedNodeKey);
+    }
+
+    private void ClearSelectedNode()
+    {
+        if (SelectedNode?.ClearAction == null)
+        {
+            return;
+        }
+
+        _selectedNodeKey = SelectedNode.ClearAction();
+        ExpandPath(_selectedNodeKey);
+    }
+
+    private int GetListCount(RigTreeNode node) => node.Value is System.Collections.IList list ? list.Count : 0;
+
+    private Task OnFixedPlatformChanged(bool value)
+    {
+        if (_currentRig == null)
+        {
+            return Task.CompletedTask;
+        }
+
+        _currentRig.IsFixedPlatform = value;
+        if (!value)
+        {
+            _selectedField = null;
+            _selectedCluster = null;
+            _currentRig.ClusterID = null;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private string FormatDate(DateTimeOffset? value) => value?.ToString("O") ?? string.Empty;
+
+    private Task SetCreationDate(string? value)
+    {
+        if (_currentRig != null && DateTimeOffset.TryParse(value, out DateTimeOffset parsed))
+        {
+            _currentRig.CreationDate = parsed;
+        }
+        return Task.CompletedTask;
+    }
+
+    private Task SetLastModificationDate(string? value)
+    {
+        if (_currentRig != null && DateTimeOffset.TryParse(value, out DateTimeOffset parsed))
+        {
+            _currentRig.LastModificationDate = parsed;
+        }
+        return Task.CompletedTask;
+    }
+
+    private Task OnFieldChanged(NORCE.Drilling.Rig.ModelShared.Field? field)
+    {
+        _selectedField = field;
+        _selectedCluster = null;
+        if (_currentRig != null)
+        {
+            _currentRig.ClusterID = null;
+        }
+        return Task.CompletedTask;
+    }
+
+    private Task OnClusterChanged(NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+    {
+        _selectedCluster = cluster;
+        if (_currentRig != null)
+        {
+            _currentRig.ClusterID = cluster?.MetaInfo?.ID;
+        }
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveRig()
+    {
+        if (_currentRig?.MetaInfo == null)
+        {
+            Snackbar.Add("Rig metadata is missing.", Severity.Error);
+            return;
+        }
+
+        if (_currentRig.IsFixedPlatform)
+        {
+            if (_selectedField == null || _selectedCluster?.MetaInfo == null)
+            {
+                Snackbar.Add("A fixed platform rig must be associated with a field and a cluster.", Severity.Warning);
+                return;
+            }
+
+            _currentRig.ClusterID = _selectedCluster.MetaInfo.ID;
+        }
+        else
+        {
+            _selectedField = null;
+            _selectedCluster = null;
+            _currentRig.ClusterID = null;
+        }
+
+        if (_currentRig.CreationDate == null)
+        {
+            _currentRig.CreationDate = DateTimeOffset.UtcNow;
+        }
+        _currentRig.LastModificationDate = DateTimeOffset.UtcNow;
+
+        try
+        {
+            HttpStatusCode statusCode = _isNewRig
+                ? await RigApiClient.CreateRigAsync(_currentRig)
+                : await RigApiClient.UpdateRigAsync(_currentRig);
+
+            if (statusCode == HttpStatusCode.OK)
+            {
+                Snackbar.Add("Rig saved.", Severity.Success);
+                BackToList();
+            }
+            else
+            {
+                Snackbar.Add($"Save failed: {(int)statusCode} {statusCode}", Severity.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to save rig {RigId}", _currentRig.MetaInfo.ID);
+            Snackbar.Add("Failed to save rig.", Severity.Error);
+        }
+    }
+
+    private void BackToList() => NavigationManager.NavigateTo("/Rig/webapp/Rig");
+
+    private static IEnumerable<RigTreeNode> FlattenNodes(RigTreeNode node)
+    {
+        yield return node;
+        foreach (RigTreeNode child in node.Children)
+        {
+            foreach (RigTreeNode descendant in FlattenNodes(child))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+    private static bool NodeMatchesFilter(RigTreeNode node, string? filter)
+    {
+        string query = NormalizeSearchText(filter);
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return true;
+        }
+
+        return NormalizeSearchText(node.Label).Contains(query, StringComparison.Ordinal)
+            || NormalizeSearchText(node.Key).Contains(query, StringComparison.Ordinal)
+            || NormalizeSearchText(node.ValueType.Name).Contains(query, StringComparison.Ordinal);
+    }
+
+    private static string NormalizeSearchText(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        return new string(value.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+    }
+
+    private void ExpandPath(string? key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return;
+        }
+
+        string current = key!;
+        while (!string.IsNullOrWhiteSpace(current))
+        {
+            _expandedTreeKeys.Add(current);
+            int listIndex = current.LastIndexOf('[');
+            int propertyIndex = current.LastIndexOf('.');
+            int cutIndex = Math.Max(listIndex, propertyIndex);
+            if (cutIndex <= 0)
+            {
+                break;
+            }
+
+            current = current.Substring(0, cutIndex);
+        }
+
+        _expandedTreeKeys.Add("Rig");
+    }
+
+    private IEnumerable<RigTreeNode> BuildVisibleTreeNodes(RigTreeNode root)
+    {
+        if (_hideUninstantiatedNodes && !root.Exists && !root.IsRoot)
+        {
+            yield break;
+        }
+
+        yield return root;
+
+        if (!IsExpanded(root.Key))
+        {
+            yield break;
+        }
+
+        foreach (RigTreeNode child in root.Children)
+        {
+            if (_hideUninstantiatedNodes && !child.Exists && !child.IsRoot)
+            {
+                continue;
+            }
+
+            foreach (RigTreeNode descendant in BuildVisibleTreeNodes(child))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+    private string GetNodeButtonClass(RigTreeNode node)
+    {
+        if (node.Exists)
+        {
+            return "rig-tree-node-existing";
+        }
+
+        if (node.CanCreate || node.CanAddItem)
+        {
+            return "rig-tree-node-missing";
+        }
+
+        return "rig-tree-node-disabled";
+    }
+}

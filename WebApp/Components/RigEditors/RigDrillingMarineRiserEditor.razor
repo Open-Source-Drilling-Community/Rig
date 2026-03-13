@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Drilling Marine Riser"
+                          Value="Rig.DrillingMarineRiser"
+                          ValueChanged="@(value => Rig.DrillingMarineRiser = (DrillingMarineRiser?)value)"
+                          ModelType="@typeof(DrillingMarineRiser)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

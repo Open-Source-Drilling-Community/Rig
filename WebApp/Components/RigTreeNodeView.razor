@@ -1,0 +1,193 @@
+@if (Node == null)
+{
+    <MudText Typo="Typo.body2">No nodes.</MudText>
+}
+else if (ShouldRenderNode(Node))
+{
+    <div style="margin-left:@(Node.Depth * 16)px">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+            @if (Node.Children.Count > 0)
+            {
+                <MudIconButton Icon="@(_expanded ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ChevronRight)" Size="Size.Small" OnClick="ToggleExpanded" />
+            }
+            else
+            {
+                <div style="width:32px"></div>
+            }
+            <MudButton Variant="@(IsSelected ? Variant.Filled : Variant.Text)"
+                       Color="@(IsSelected ? Color.Primary : Color.Default)"
+                       Size="Size.Small"
+                       Class="@GetNodeButtonClass()"
+                       OnClick="SelectNode">
+                @Node.Label
+            </MudButton>
+            @if (Node.CanCreate && !Node.Exists)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.AddCircleOutline" Size="Size.Small" OnClick="CreateNode" />
+            }
+            @if (Node.CanAddItem)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="AddItem" />
+            }
+            @if (Node.CanDeleteItem)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline" Size="Size.Small" Color="Color.Error" OnClick="DeleteItem" />
+            }
+            @if (Node.CanClear && Node.Exists && !Node.IsRoot && !Node.IsListItem)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.RemoveCircleOutline" Size="Size.Small" Color="Color.Error" OnClick="ClearNode" />
+            }
+        </MudStack>
+    </div>
+
+    @if (_expanded)
+    {
+        @foreach (RigTreeNode child in Node.Children)
+        {
+            <RigTreeNodeView Node="child"
+                             SelectedKey="SelectedKey"
+                             SelectedKeyChanged="SelectedKeyChanged"
+                             SearchText="SearchText"
+                             ExpandedKeys="ExpandedKeys" />
+        }
+    }
+}
+
+@code {
+    [Parameter] public RigTreeNode? Node { get; set; }
+    [Parameter] public string? SelectedKey { get; set; }
+    [Parameter] public EventCallback<string> SelectedKeyChanged { get; set; }
+    [Parameter] public string? SearchText { get; set; }
+    [Parameter] public HashSet<string>? ExpandedKeys { get; set; }
+
+    private bool _expanded = true;
+    private bool IsSelected => Node != null && Node.Key == SelectedKey;
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrWhiteSpace(SearchText))
+        {
+            _expanded = Node != null && (HasMatchingDescendant(Node) || IsNodeOnSelectedPath(Node) || IsExplicitlyExpanded(Node));
+            return;
+        }
+
+        if (Node != null && IsNodeOnSelectedPath(Node))
+        {
+            _expanded = true;
+            return;
+        }
+
+        if (Node != null && IsExplicitlyExpanded(Node))
+        {
+            _expanded = true;
+            return;
+        }
+
+        if (Node != null && Node.Depth > 1 && Node.Children.Count > 0)
+        {
+            _expanded = false;
+        }
+    }
+
+    private Task SelectNode() => Node == null ? Task.CompletedTask : SelectedKeyChanged.InvokeAsync(Node.Key);
+
+    private void ToggleExpanded()
+    {
+        _expanded = !_expanded;
+        if (Node == null || ExpandedKeys == null)
+        {
+            return;
+        }
+
+        if (_expanded)
+        {
+            ExpandedKeys.Add(Node.Key);
+        }
+        else
+        {
+            ExpandedKeys.Remove(Node.Key);
+        }
+    }
+
+    private Task CreateNode() => InvokeAndSelect(Node?.CreateAction);
+    private Task AddItem() => InvokeAndSelect(Node?.AddItemAction);
+    private Task DeleteItem() => InvokeAndSelect(Node?.DeleteItemAction);
+    private Task ClearNode() => InvokeAndSelect(Node?.ClearAction);
+
+    private Task InvokeAndSelect(Func<string>? action)
+    {
+        if (action == null)
+        {
+            return Task.CompletedTask;
+        }
+
+        string key = action();
+        return SelectedKeyChanged.InvokeAsync(key);
+    }
+
+    private bool ShouldRenderNode(RigTreeNode node)
+    {
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            return true;
+        }
+
+        return NodeMatches(node) || HasMatchingDescendant(node) || IsNodeOnSelectedPath(node);
+    }
+
+    private bool HasMatchingDescendant(RigTreeNode node) => node.Children.Any(child => NodeMatches(child) || HasMatchingDescendant(child));
+
+    private bool IsNodeOnSelectedPath(RigTreeNode node) =>
+        !string.IsNullOrWhiteSpace(SelectedKey)
+        && SelectedKey!.StartsWith(node.Key, StringComparison.Ordinal);
+
+    private bool IsExplicitlyExpanded(RigTreeNode node) => ExpandedKeys != null && ExpandedKeys.Contains(node.Key);
+
+    private bool NodeMatches(RigTreeNode node)
+    {
+        string query = NormalizeSearchText(SearchText);
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return true;
+        }
+
+        return NormalizeSearchText(node.Label).Contains(query, StringComparison.Ordinal)
+            || NormalizeSearchText(node.Key).Contains(query, StringComparison.Ordinal)
+            || NormalizeSearchText(node.ValueType.Name).Contains(query, StringComparison.Ordinal);
+    }
+
+    private static string NormalizeSearchText(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        char[] buffer = value
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray();
+
+        return new string(buffer);
+    }
+
+    private string GetNodeButtonClass()
+    {
+        if (Node == null)
+        {
+            return string.Empty;
+        }
+
+        if (Node.Exists)
+        {
+            return "rig-tree-node-existing";
+        }
+
+        if (Node.CanCreate || Node.CanAddItem)
+        {
+            return "rig-tree-node-missing";
+        }
+
+        return "rig-tree-node-disabled";
+    }
+}

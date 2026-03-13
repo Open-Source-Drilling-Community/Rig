@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Choke Manifold"
+                          Value="RigMast.ChokeManifold"
+                          ValueChanged="@(value => RigMast.ChokeManifold = (ChokeManifold?)value)"
+                          ModelType="@typeof(ChokeManifold)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

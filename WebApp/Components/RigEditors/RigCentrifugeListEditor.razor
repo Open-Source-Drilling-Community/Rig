@@ -1,0 +1,11 @@
+@using System.Collections
+@namespace WebApp.Components.RigEditors
+
+<RigListPropertyEditor Title="Centrifuge List"
+                       Items="(IList?)Rig.CentrifugeList"
+                       ItemsChanged="@(items => Rig.CentrifugeList = items.Cast<Centrifuge>().ToList())"
+                       ItemType="@typeof(Centrifuge)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

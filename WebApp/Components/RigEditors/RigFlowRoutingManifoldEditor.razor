@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Flow Routing Manifold"
+                          Value="Rig.FlowRoutingManifold"
+                          ValueChanged="@(value => Rig.FlowRoutingManifold = (FlowRoutingManifold?)value)"
+                          ModelType="@typeof(FlowRoutingManifold)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

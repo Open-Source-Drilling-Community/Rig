@@ -1,0 +1,11 @@
+@using System.Collections
+@namespace WebApp.Components.RigEditors
+
+<RigListPropertyEditor Title="Degasser List"
+                       Items="(IList?)Rig.DegasserList"
+                       ItemsChanged="@(items => Rig.DegasserList = items.Cast<Degasser>().ToList())"
+                       ItemType="@typeof(Degasser)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

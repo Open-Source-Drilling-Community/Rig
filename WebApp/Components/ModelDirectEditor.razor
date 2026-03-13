@@ -1,0 +1,365 @@
+@using System.Collections
+@using System.Reflection
+
+@if (Value == null)
+{
+    <MudText Typo="Typo.body2">No data.</MudText>
+}
+else
+{
+    <MudGrid>
+        @foreach (PropertyInfo property in EditableProperties)
+        {
+            Type coreType = GetCoreType(property.PropertyType);
+            object? propertyValue = property.GetValue(Value);
+
+            <MudItem xs="12" md="6">
+                @if (coreType == typeof(string))
+                {
+                    <MudTextField Value="@(propertyValue as string)"
+                                  ValueChanged="@(EventCallback.Factory.Create<string?>(this, value => SetValue(property, value)))"
+                                  Label="@DataUtils.GetDisplayName(property.Name)"
+                                  Variant="Variant.Outlined" />
+                }
+                else if (coreType == typeof(bool))
+                {
+                    <MudSwitch T="bool"
+                               Value="@(propertyValue is bool flag && flag)"
+                               ValueChanged="@(EventCallback.Factory.Create<bool>(this, value => SetValue(property, value)))"
+                               Label="@DataUtils.GetDisplayName(property.Name)"
+                               Color="Color.Primary" />
+                }
+                else if (coreType == typeof(int))
+                {
+                    <MudNumericField T="int?"
+                                     Value="@(propertyValue as int?)"
+                                     ValueChanged="@(EventCallback.Factory.Create<int?>(this, value => SetValue(property, value)))"
+                                     Label="@DataUtils.GetDisplayName(property.Name)"
+                                     Variant="Variant.Outlined" />
+                }
+                else if (coreType == typeof(long))
+                {
+                    <MudNumericField T="long?"
+                                     Value="@(propertyValue as long?)"
+                                     ValueChanged="@(EventCallback.Factory.Create<long?>(this, value => SetValue(property, value)))"
+                                     Label="@DataUtils.GetDisplayName(property.Name)"
+                                     Variant="Variant.Outlined" />
+                }
+                else if (coreType == typeof(double))
+                {
+                    <QuantityField Value="@(propertyValue as double?)"
+                                   ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => SetValue(property, value)))"
+                                   Quantity="@DataUtils.InferQuantity(property.Name)"
+                                   Label="@DataUtils.GetDisplayName(property.Name)" />
+                }
+                else if (coreType == typeof(Guid))
+                {
+                    <MudTextField Value="@GuidToString(propertyValue)"
+                                  ValueChanged="@(EventCallback.Factory.Create<string?>(this, value => SetGuidValue(property, value)))"
+                                  Label="@DataUtils.GetDisplayName(property.Name)"
+                                  Variant="Variant.Outlined" />
+                }
+                else if (coreType == typeof(DateTimeOffset))
+                {
+                    <MudTextField Value="@DateTimeOffsetToString(propertyValue)"
+                                  ValueChanged="@(EventCallback.Factory.Create<string?>(this, value => SetDateTimeOffsetValue(property, value)))"
+                                  Label="@DataUtils.GetDisplayName(property.Name)"
+                                  Variant="Variant.Outlined"
+                                  HelperText="UTC ISO-8601" />
+                }
+                else if (coreType.IsEnum)
+                {
+                    <MudSelect T="string"
+                               Value="@(propertyValue?.ToString())"
+                               ValueChanged="@(EventCallback.Factory.Create<string?>(this, value => SetEnumValue(property, value)))"
+                               Label="@DataUtils.GetDisplayName(property.Name)"
+                               Variant="Variant.Outlined">
+                        @foreach (string enumValue in Enum.GetNames(coreType))
+                        {
+                            <MudSelectItem T="string" Value="@enumValue">@DataUtils.GetDisplayName(enumValue)</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    [Parameter] public object? Value { get; set; }
+    [Parameter] public Type ModelType { get; set; } = typeof(object);
+    [Parameter] public HashSet<string>? ExcludedProperties { get; set; }
+
+    private IEnumerable<PropertyInfo> EditableProperties => ModelType
+        .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+        .Where(p => p.CanRead && p.CanWrite && p.GetIndexParameters().Length == 0)
+        .Where(p => IsDirectEditableType(p.PropertyType))
+        .Where(p => !IsHiddenProperty(ModelType, p.Name))
+        .Where(p => ExcludedProperties == null || !ExcludedProperties.Contains(p.Name))
+        .OrderBy(p => GetPropertyOrder(ModelType, p.Name))
+        .ThenBy(p => p.Name);
+
+    private static Type GetCoreType(Type type) => Nullable.GetUnderlyingType(type) ?? type;
+
+    private static bool IsDirectEditableType(Type type)
+    {
+        Type coreType = GetCoreType(type);
+        return coreType == typeof(string)
+            || coreType == typeof(bool)
+            || coreType == typeof(int)
+            || coreType == typeof(long)
+            || coreType == typeof(double)
+            || coreType == typeof(Guid)
+            || coreType == typeof(DateTimeOffset)
+            || coreType.IsEnum;
+    }
+
+    private static int GetPropertyOrder(Type modelType, string propertyName)
+    {
+        if (modelType == typeof(ChokeManifold))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "ChokeControlClass" => 6,
+                "PipeDiameter" => 7,
+                "MinLimitOperatingTemperature" => 8,
+                "MaxLimitOperatingTemperature" => 9,
+                "MaxLimitTestPressure" => 10,
+                "MaxLimitOperatingPressure" => 11,
+                "MaxLimitDesignPressure" => 12,
+                "MinLimitOperatingPressure" => 13,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(MudPump))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "PumpClass" => 6,
+                "PumpAction" => 7,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(ShaleShaker))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "ShakerClass" => 6,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(MudTank))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "TankClass" => 6,
+                "TankFluidType" => 7,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(TopDrive))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "TopDriveClass" => 6,
+                "Weight" => 7,
+                "TopDriveHeight" => 8,
+                "MaxLimitRotationSpeed" => 9,
+                "MaxLimitMakeupTorque" => 10,
+                "MaxLimitBreakoutTorque" => 11,
+                "MaxLimitOperatingTorque" => 12,
+                "MaxLimitDesignTorque" => 13,
+                "MaxLimitOperatingLoad" => 14,
+                "MaxLimitDesignLoad" => 15,
+                "Orientable" => 16,
+                "TopDriveControllerType" => 17,
+                "MaxLimitIbopPressure" => 18,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(Drawworks))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "MaxLimitOperatingLoad" => 6,
+                "MaxLimitDesignLoad" => 7,
+                "MaxLimitContinuousDrumPower" => 8,
+                "MaxLimitContinuousDrumTorque" => 9,
+                "DrawworksClass" => 10,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(StandPipeManifold))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "StandpipeSpecLevel" => 6,
+                "MaxLimitOperatingPressure" => 7,
+                "MaxLimitDesignPressure" => 8,
+                "PipeDiameter" => 9,
+                "MinLimitOperatingTemperature" => 10,
+                "MaxLimitOperatingTemperature" => 11,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(StandPipe))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "PressureMeasurementElevation" => 6,
+                "MudHoseHangingPointElevation" => 7,
+                _ => 100
+            };
+        }
+
+        if (modelType == typeof(RotaryTable))
+        {
+            return propertyName switch
+            {
+                "Name" => 0,
+                "Description" => 1,
+                "Manufacturer" => 2,
+                "Model" => 3,
+                "ProductCode" => 4,
+                "SerialNumber" => 5,
+                "RotaryTableType" => 6,
+                "TableOpeningDiameter" => 7,
+                "BushingType" => 8,
+                "BushingSize" => 9,
+                "Height" => 10,
+                "Mass" => 11,
+                "MaxLimitOperatingSpeed" => 12,
+                "MaxLimitDesignSpeed" => 13,
+                "MaxLimitOperatingTorque" => 14,
+                "MaxLimitDesignTorque" => 15,
+                "MaxLimitOperatingStringWeight" => 16,
+                "MaxLimitDesignStringWeight" => 17,
+                "MaxLimitPower" => 18,
+                "MaxLimitTemperature" => 19,
+                _ => 100
+            };
+        }
+
+        return propertyName switch
+        {
+            "Name" => 0,
+            "Description" => 1,
+            "Manufacturer" => 2,
+            "Model" => 3,
+            "ProductCode" => 4,
+            "SerialNumber" => 5,
+            _ => 100
+        };
+    }
+
+    private static bool IsHiddenProperty(Type modelType, string propertyName) =>
+        modelType == typeof(MudPump) && propertyName == nameof(MudPump.Type);
+
+    private void SetValue(PropertyInfo property, object? value)
+    {
+        if (Value == null)
+        {
+            return;
+        }
+
+        property.SetValue(Value, value);
+    }
+
+    private void SetGuidValue(PropertyInfo property, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            SetValue(property, property.PropertyType == typeof(Guid) ? Guid.Empty : null);
+            return;
+        }
+
+        if (Guid.TryParse(value, out Guid guid))
+        {
+            SetValue(property, guid);
+        }
+    }
+
+    private void SetDateTimeOffsetValue(PropertyInfo property, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            SetValue(property, null);
+            return;
+        }
+
+        if (DateTimeOffset.TryParse(value, out DateTimeOffset parsed))
+        {
+            SetValue(property, parsed);
+        }
+    }
+
+    private void SetEnumValue(PropertyInfo property, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            SetValue(property, null);
+            return;
+        }
+
+        object parsed = Enum.Parse(GetCoreType(property.PropertyType), value);
+        SetValue(property, parsed);
+    }
+
+    private static string GuidToString(object? value) => value is Guid guid ? guid.ToString() : string.Empty;
+    private static string DateTimeOffsetToString(object? value) => value is DateTimeOffset dto ? dto.ToString("O") : string.Empty;
+}

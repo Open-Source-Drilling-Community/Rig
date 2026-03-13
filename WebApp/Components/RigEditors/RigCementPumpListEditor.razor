@@ -1,0 +1,11 @@
+@using System.Collections
+@namespace WebApp.Components.RigEditors
+
+<RigListPropertyEditor Title="Cement Pump List"
+                       Items="(IList?)Rig.CementPumpList"
+                       ItemsChanged="@(items => Rig.CementPumpList = items.Cast<CementPump>().ToList())"
+                       ItemType="@typeof(CementPump)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Drilling Choke Manifold"
+                          Value="Rig.DrillingChokeManifold"
+                          ValueChanged="@(value => Rig.DrillingChokeManifold = (DrillingChokeManifold?)value)"
+                          ModelType="@typeof(DrillingChokeManifold)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

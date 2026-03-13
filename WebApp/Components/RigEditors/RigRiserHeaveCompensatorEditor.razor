@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Riser Heave Compensator"
+                          Value="Rig.RiserHeaveCompensator"
+                          ValueChanged="@(value => Rig.RiserHeaveCompensator = (RiserHeaveCompensator?)value)"
+                          ModelType="@typeof(RiserHeaveCompensator)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

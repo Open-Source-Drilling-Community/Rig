@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Pipe Deck"
+                          Value="Rig.PipeDeck"
+                          ValueChanged="@(value => Rig.PipeDeck = (PipeDeck?)value)"
+                          ModelType="@typeof(PipeDeck)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

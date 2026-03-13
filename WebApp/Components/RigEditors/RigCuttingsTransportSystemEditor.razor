@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Cuttings Transport System"
+                          Value="Rig.CuttingsTransportSystem"
+                          ValueChanged="@(value => Rig.CuttingsTransportSystem = (CuttingsTransportSystem?)value)"
+                          ModelType="@typeof(CuttingsTransportSystem)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

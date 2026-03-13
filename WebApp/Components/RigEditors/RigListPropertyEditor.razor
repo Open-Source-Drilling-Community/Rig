@@ -1,0 +1,20 @@
+@using System.Collections
+
+<MudExpansionPanel Text="@Title" Expanded="false">
+    <MudPaper Class="pa-3" Outlined="true">
+        <ModelCollectionEditor Items="Items" ItemsChanged="OnItemsChanged" ItemType="ItemType" Label="@Title" Depth="1" />
+    </MudPaper>
+</MudExpansionPanel>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public IList? Items { get; set; }
+    [Parameter] public EventCallback<IList> ItemsChanged { get; set; }
+    [Parameter] public Type ItemType { get; set; } = typeof(object);
+
+    private async Task OnItemsChanged(IList items)
+    {
+        Items = items;
+        await ItemsChanged.InvokeAsync(items);
+    }
+}

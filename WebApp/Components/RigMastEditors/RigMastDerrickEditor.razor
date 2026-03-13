@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Derrick"
+                          Value="RigMast.Derrick"
+                          ValueChanged="@(value => RigMast.Derrick = (Derrick?)value)"
+                          ModelType="@typeof(Derrick)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

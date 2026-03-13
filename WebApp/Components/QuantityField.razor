@@ -1,0 +1,15 @@
+<MudInputWithUnit SIValueNullable="Value" SIValueNullableChanged="ValueChanged" QuantityName="@Quantity" QuantityLabel="@Label" />
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Quantity { get; set; } = "Dimensionless";
+
+    [Parameter]
+    public double? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<double?> ValueChanged { get; set; }
+}

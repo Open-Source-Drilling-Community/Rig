@@ -1,0 +1,17 @@
+# visual studio
+/**/packages
+/**/bin
+/**/obj
+/**/Debug/
+/**/Release/
+/**/_site
+*.suo
+*.user
+.vs/
+UpgradeLog*.htm
+*.db
+
+# We don't care about azure docker support
+*azds.yaml
+.vs/Horizon/DesignTimeBuild/.dtbcache.v2
+.vs/Horizon/v17/.suo

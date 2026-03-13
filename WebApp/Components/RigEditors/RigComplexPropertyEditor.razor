@@ -1,0 +1,64 @@
+@using System.Reflection
+
+<MudExpansionPanel Text="@Title" Expanded="false">
+    <MudPaper Class="pa-3" Outlined="true">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+            <MudText Typo="Typo.subtitle2">@Title</MudText>
+            <MudStack Row="true" Spacing="1">
+                @if (Value == null && CanCreateInstance())
+                {
+                    <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="CreateValue">Create</MudButton>
+                }
+                else if (Value == null)
+                {
+                    <MudText Typo="Typo.caption">Cannot create this type automatically.</MudText>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="ClearValue">Clear</MudButton>
+                }
+            </MudStack>
+        </MudStack>
+        @if (Value != null)
+        {
+            <ModelObjectEditor Value="Value" ModelType="ModelType" Depth="1" />
+        }
+    </MudPaper>
+</MudExpansionPanel>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public object? Value { get; set; }
+    [Parameter] public EventCallback<object?> ValueChanged { get; set; }
+    [Parameter] public Type ModelType { get; set; } = typeof(object);
+
+    private bool CanCreateInstance() => CreateInstance() != null;
+
+    private async Task CreateValue()
+    {
+        object? instance = CreateInstance();
+        if (instance != null)
+        {
+            Value = instance;
+            await ValueChanged.InvokeAsync(instance);
+        }
+    }
+
+    private async Task ClearValue()
+    {
+        Value = null;
+        await ValueChanged.InvokeAsync(null);
+    }
+
+    private object? CreateInstance()
+    {
+        try
+        {
+            return Activator.CreateInstance(ModelType);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+}

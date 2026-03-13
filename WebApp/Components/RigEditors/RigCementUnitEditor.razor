@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Cement Unit"
+                          Value="Rig.CementUnit"
+                          ValueChanged="@(value => Rig.CementUnit = (CementUnit?)value)"
+                          ModelType="@typeof(CementUnit)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

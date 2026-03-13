@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Rotary Hose"
+                          Value="RigMast.RotaryHose"
+                          ValueChanged="@(value => RigMast.RotaryHose = (RotaryHose?)value)"
+                          ModelType="@typeof(RotaryHose)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Cat Walk"
+                          Value="RigMast.CatWalk"
+                          ValueChanged="@(value => RigMast.CatWalk = (CatWalk?)value)"
+                          ModelType="@typeof(CatWalk)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

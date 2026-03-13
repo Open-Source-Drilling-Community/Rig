@@ -1,0 +1,4622 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Service, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "version": "1.0"
+  },
+  "paths": {
+    "/Rig": {
+      "get": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "GetAllRigId",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "PostRig",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rig/MetaInfo": {
+      "get": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "GetAllRigMetaInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Rig/{id}": {
+      "get": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "GetRigById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "PutRigById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "DeleteRigById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rig/LightData": {
+      "get": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "GetAllRigLight",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigLight"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Rig/HeavyData": {
+      "get": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "GetAllRig",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/RigUsageStatistics": {
+      "get": {
+        "tags": [
+          "RigUsageStatistics"
+        ],
+        "operationId": "GetRigUsageStatistics",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.UsageStatisticsRig"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NORCE.Drilling.Rig.Model.Accumulator": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "AccumulatorClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AccumulatorClass"
+          },
+          "Capacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.AccumulatorClass": {
+        "enum": [
+          "Bladder",
+          "Diaphragm",
+          "Piston",
+          "MetalBellow",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.AutoDriller": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ControlMode": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AutodrillerControlMode"
+          },
+          "MaxLimitRop": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitRop": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitWob": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitWob": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDifferentialPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitDifferentialPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTrq": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitTrq": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SetpointWob": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SetpointRop": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SetpointDiffp": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SetpointTrq": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.AutodrillerControlMode": {
+        "enum": [
+          "Rop",
+          "Diffp",
+          "Trq",
+          "Limit",
+          "Wob"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.AuxSolidsControl": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "SolidsControlClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SolidsControlClass"
+          },
+          "DesanderOn": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "DesilterOn": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "DegasserOn": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "CentrifugeOn": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.BopComponentClass": {
+        "enum": [
+          "AnnularPreventer",
+          "BlindRam",
+          "BlindShearRam",
+          "Diverter",
+          "DrillingSpool",
+          "PipeRam",
+          "ShearRam",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.BopLineClass": {
+        "enum": [
+          "ChokeLine",
+          "KillLine",
+          "BoosterLine",
+          "SurfaceLine",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.BopLineDefinition": {
+        "type": "object",
+        "properties": {
+          "BopLinesClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopLineClass"
+          },
+          "LineOd": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "LineId": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.BopStack": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "BopStackClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopStackClass"
+          },
+          "UnitReferenceList": {
+            "type": "string",
+            "nullable": true
+          },
+          "BopControlType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControllerType"
+          },
+          "BoreDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "BopComponents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopStackComponentDefinition"
+            },
+            "nullable": true
+          },
+          "BopLines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopLineDefinition"
+            },
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "BopLineMaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "BopLineMaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CasingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "KillLinePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ChokeLinePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ShutInDrillpipePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.BopStackClass": {
+        "enum": [
+          "LandBop",
+          "MarineSurfaceBop",
+          "MarineSubSeaBop",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.BopStackComponentDefinition": {
+        "type": "object",
+        "properties": {
+          "BopStackComponentClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopComponentClass"
+          },
+          "BoreDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CasingDriveClass": {
+        "enum": [
+          "Internal",
+          "External",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.CasingDriveSystem": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "CsgDrvClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingDriveClass"
+          },
+          "HoistingCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignRotationSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitRotationSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitPushDown": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CasingRunningTool": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CasingTongs": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CatWalk": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CementPump": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "PumpClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PumpClass"
+          },
+          "PlungerDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "StrokeLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CementPumpDisplacement": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CementPumpDisplacementPoint"
+            },
+            "nullable": true
+          },
+          "MaxLimitPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFlowRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CementPumpDisplacementPoint": {
+        "type": "object",
+        "properties": {
+          "StrokeRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "FlowRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Pressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CementUnit": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Mounting": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MountingType"
+          },
+          "Features": {
+            "type": "string",
+            "nullable": true
+          },
+          "NumberOfPumps": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Centrifuge": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.ChokeCvCurvePoint": {
+        "type": "object",
+        "properties": {
+          "Pressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Flow": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.ChokeFunction": {
+        "enum": [
+          "PressureControl",
+          "Safety"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ChokeManifold": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ChokeControlClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControlClass"
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTestPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.ChokeNumber": {
+        "enum": [
+          "Single",
+          "Dual",
+          "Triple"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.CoilDriveSystem": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "CoilDrvClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MountingType"
+          },
+          "ReelPayloadCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ReelPayloadLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ReelRemainingLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InjectorHeadRadius": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InjectorHeadMinTubingOd": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InjHeadDesignPullCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InjHeadDesignSnubCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InjHeadPullCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InjHeadSnubCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InjHeadMaxSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtWeightOnBit": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtCoilSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtCircPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtWellheadPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtEngineSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtInjHeadDrivePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtInjTubingReelDrivePress": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CtChainTension": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CompensatorStatus": {
+        "enum": [
+          "Active",
+          "Inactive"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ContinuousCirculationDevice": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "CcdControlClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControlClass"
+          },
+          "WorkingPumpPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitBackflow": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFluidTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitFluidTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitMudWeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitRotationRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.ControlClass": {
+        "enum": [
+          "Manual",
+          "Automatic",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ControllerType": {
+        "enum": [
+          "Hydraulic",
+          "Electrical",
+          "Acoustic",
+          "Pneumatic",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.CountPerDay": {
+        "type": "object",
+        "properties": {
+          "Date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "Count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CrownBlock": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "SheaveDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "GrooveDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "NumberOfSheaves": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "MaxLimitDesignLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitCompensatorStroke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Hookload": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CuttingsDryer": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.CuttingsTransportSystem": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Degasser": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Derrick": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "DerrickClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DerrickClass"
+          },
+          "Height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitJointsPerStand": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "MaxLimitDesignLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitWindSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DerrickClass": {
+        "enum": [
+          "Conventional",
+          "Slant",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.Desander": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Desilter": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Drawworks": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "DrawworksClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrawworksClass"
+          },
+          "MaxLimitDesignLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitContinuousDrumPower": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitContinuousDrumTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DrawworksClass": {
+        "enum": [
+          "DirectDrive",
+          "SingleSpeedGearDriven",
+          "DualSpeedGearDriven",
+          "ActiveHeave",
+          "ActiveHeaveDualDrum",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.DrillLine": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Number": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Diameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "LinearWeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignBreakingLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingBreakingLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Hookload": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DrillingChokeManifold": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ManifoldType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ManifoldClass"
+          },
+          "TrimSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "FlowMeter": {
+            "type": "string",
+            "nullable": true
+          },
+          "FlowMeterSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "FlowMeterPressureRating": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "JunkBasket": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "ChokeCount": {
+            "type": "string",
+            "nullable": true
+          },
+          "FlowMeterCount": {
+            "type": "string",
+            "nullable": true
+          },
+          "PressureSensorVotingNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ChokeNumber": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeNumber"
+          },
+          "ChokeFunction": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeFunction"
+          },
+          "ChokeCvCurves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeCvCurvePoint"
+            },
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOpeningSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitBackPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureBeforeChoke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureAfterChoke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CvValue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CloggingOccuring": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TemperatureBeforeChoke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TemperatureAfterChoke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "FlowThroughChoke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MudDensityOut": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MudDensityIn": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ReliefValvePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureBeforeFlowMeter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureAfterFlowMeter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InletPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "OutletPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "VotingSensorsFailed": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DrillingFluidClass": {
+        "enum": [
+          "OilBased",
+          "WaterBased",
+          "GasBased"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.DrillingFluidType": {
+        "enum": [
+          "AeratedMud",
+          "Air",
+          "BrackishWater",
+          "Brine",
+          "CaesiumFormate",
+          "DieselOilBased",
+          "EsterSyntheticBased",
+          "Freshwater",
+          "GlycolMud",
+          "GypMud",
+          "InternalOlefinSyntheticBased",
+          "LightlyTreatedNonDispersed",
+          "LigniteLignosulfonateMud",
+          "LimeMud",
+          "LinearParaffinSyntheticBased",
+          "LinearAlphaOlefinSyntheticBased",
+          "LowSolids",
+          "LowToxicityMineralOilBased",
+          "MineralOilBased",
+          "Mist",
+          "MixedMetalOxideMud",
+          "NativeNaturalMud",
+          "NaturalGas",
+          "NitrogenAeratedMud",
+          "NonAqueousInvertEmulsionDrillingFluids",
+          "NonDispersed",
+          "PneumaticGaseousDrillingFluids",
+          "PolymerMud",
+          "PotassiumFormate",
+          "PotassiumTreatedMud",
+          "SaltwaterMud",
+          "SaturatedSaltMud",
+          "SeaWater",
+          "SeawaterMud",
+          "SilicateMud",
+          "SodiumFormate",
+          "SpudMud",
+          "StableFoam",
+          "StiffFoam",
+          "WaterBasedDrillingFluids"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.DrillingFluidTypeDescriptor": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "DrillingFluidClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingFluidClass"
+          },
+          "DrillingFluidType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingFluidType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DrillingMarineRiser": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "RiserClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RiserClass"
+          },
+          "JointWeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RiserInsideDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RiserOuterDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RiserJointLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RiserTotalLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTensionLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOpTensionLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignKillPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOpKillPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignBoosterPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitBoosterPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOpTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOpTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitAngleRiser": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DrillstringHeaveCompensator": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "HeaveCompClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.HeaveCompensatorClass"
+          },
+          "CompensatorCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CompensatorStatus": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CompensatorStatus"
+          },
+          "MaxLimitCompensatorStroke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DriveMode": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "DriveModeClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DriveModeClass"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.DriveModeClass": {
+        "enum": [
+          "Mechanical",
+          "ElectricalDcScr",
+          "ElectricalAcVfd",
+          "ElectroMechanical",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.EngineModelType": {
+        "enum": [
+          "Reciprocating",
+          "Turbine"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.FloatValve": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "FloatValveClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FloatValveClass"
+          },
+          "Diameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.FloatValveClass": {
+        "enum": [
+          "PlungerFloatValve",
+          "PortedPlungerValve",
+          "FlapperFloatValve",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.FlowRoutingManifold": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ManifoldType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ManifoldClass"
+          },
+          "FlangeSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ReliefLineDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "EqualizationLineDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureReliefValveTrim": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ManifoldFlowPath": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ManifoldFlowPath"
+          },
+          "ManifoldFlowcurves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RoutingManifoldCurvePoint"
+            },
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InletPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "OutletPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ReliefValvePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CloggingOccuring": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TemperatureInlet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TemperatureOutlet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.FlowSensor": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "FlowTransducer": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FlowSensorType"
+          },
+          "FlowOutOfBorehole": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "MudFlowrateOut": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MudFlowrateIn": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.FlowSensorType": {
+        "enum": [
+          "Coriollis",
+          "Paddle",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.Generator": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "GeneratorClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.GeneratorClass"
+          },
+          "Speed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Power": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Voltage": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PowerFactor": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SpeedMode": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SpeedMode"
+          },
+          "EngineModel": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.EngineModelType"
+          },
+          "PowerplantGeneratorNumber": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "PowerplantTotalPower": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "StartupTimeCold": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "StartupTimeWarm": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CoolingMedium": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.GeneratorCooling"
+          },
+          "Phases": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.GeneratorPhases"
+          },
+          "MaxLimitPower": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitPowerIncrease": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitSpeedIncrease": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitVoltage": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitVoltage": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFrequency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitFrequency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "EnginePower": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "GeneratorPower": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "EngineFuelConsumption": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "EngineSpecificFuelConsumption": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RunningHours": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "EngineSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "GeneratorVoltage": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "GridVoltage": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "GridFrequency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "GeneratorFrequency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "EngineTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.GeneratorClass": {
+        "enum": [
+          "Diesel",
+          "Gas",
+          "Lng",
+          "ElectricGrid",
+          "Methanol",
+          "Hydrogen",
+          "Ammonia",
+          "Nuclear",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.GeneratorCooling": {
+        "enum": [
+          "Air",
+          "Water",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.GeneratorPhases": {
+        "enum": [
+          "SinglePhase",
+          "TwoPhase",
+          "ThreePhase"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.HeaveCompensatorClass": {
+        "enum": [
+          "PassiveCrownMounted",
+          "ActiveCrownMounted",
+          "DirectLineCompensator",
+          "ActiveHeaveDrawworks",
+          "RigFloorCompensator",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.History": {
+        "type": "object",
+        "properties": {
+          "Data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CountPerDay"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.HoistingSystem": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "HoistingSystemType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.HoistingSystemType"
+          },
+          "Drawworks": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Drawworks"
+          },
+          "CrownBlock": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CrownBlock"
+          },
+          "TravellingBlock": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TravellingBlock"
+          },
+          "DrillLine": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillLine"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.HoistingSystemType": {
+        "enum": [
+          "Drawworks",
+          "RamRig",
+          "RackAndPinion"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.IronRoughneck": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Kelly": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "KellyClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.KellyClass"
+          },
+          "KellyJointLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignRotationSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitIbopPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitRotationSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceRotation": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "KellyHeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.KellyClass": {
+        "enum": [
+          "Hexagonal",
+          "Square",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ManifoldClass": {
+        "enum": [
+          "Standalone",
+          "Integrated"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ManifoldFlowPath": {
+        "enum": [
+          "One",
+          "Two",
+          "Three"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.MarineMpdClass": {
+        "enum": [
+          "RiserGasHandlingSystem",
+          "IntegratedRiserJoint",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.MarineMpdEquipment": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "MarineMpdClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MarineMpdClass"
+          },
+          "Length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ThroughBoreDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ControlMeans": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControllerType"
+          },
+          "ContainsFlowSpool": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "ContainsNonRotatingDevice": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "ContainsDrillstringIsolation": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDynamicPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitRotatingSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.MeasurementAfm": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "UpdateRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Active": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "AfmMudDensity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AfmMudTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AfmPv": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AfmYp": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AfmRheometerMeasurements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RheometerAfmMeasurement"
+            },
+            "nullable": true
+          },
+          "RtViscConsistencyIndex": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RtViscFlowBehaviorIndex": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.MountingType": {
+        "enum": [
+          "TruckMounted",
+          "SkidMounted",
+          "MiniUnit",
+          "Permanent",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.MpdControlDevice": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "MpdControlDeviceClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdControlDeviceClass"
+          },
+          "NominalSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ThroughBoreDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SealingElementMaterial": {
+            "type": "string",
+            "nullable": true
+          },
+          "ControlDeviceHeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitStaticPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDynamicPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitRotatingSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitActivationPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.MpdControlDeviceClass": {
+        "enum": [
+          "Rotating",
+          "NonRotating"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.MpdController": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "MpdGradientMode": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdGradientMode"
+          },
+          "PrimaryChokeTrim": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SecondaryChokeTrim": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitMudPumpFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ManipulatedMpdChoke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ManipulatedLiftPumpRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ControlledDownholePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "BackpressureFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AnnulusRefillFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.MpdGradientMode": {
+        "enum": [
+          "Single",
+          "Dual",
+          "Temperature",
+          "Flow"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.MudGasSeparator": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.MudPump": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Type": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudPumpType"
+          },
+          "PumpClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PumpClass"
+          },
+          "PumpAction": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "PumpEfficiency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PumpDisplacement": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "LinerId": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Stroke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PulsationDamperPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PulsationDamperVolume": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPower": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingFlowRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MudPumpStrokeRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MudPumpFlowRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.MudPumpType": {
+        "enum": [
+          "Variant1",
+          "Variant2"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.MudTank": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "TankClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TankClass"
+          },
+          "TankFluidType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TankFluidType"
+          },
+          "MaxLimitOperatingVolume": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.MultiPhaseSeparator": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "SeparatorClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SeparatorPhaseClass"
+          },
+          "MaximumOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumOperatingFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SeparationEfficiency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SeparatorMedium": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SeparatorMedium"
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureSeparator": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TemperatureSeparator": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.PipeDeck": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.PipeRack": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.PumpClass": {
+        "enum": [
+          "DuplexPump",
+          "TriplexPump",
+          "QuintuplexPump",
+          "HexPump",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ReturnFlowLine": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RheometerAfmMeasurement": {
+        "type": "object",
+        "properties": {
+          "AfmViscShearRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AfmViscShearStress": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Rig": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "MudPumpList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudPump"
+            },
+            "nullable": true
+          },
+          "CementPumpList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CementPump"
+            },
+            "nullable": true
+          },
+          "CementUnit": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CementUnit"
+          },
+          "DriveMode": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DriveMode"
+          },
+          "MainRigMast": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigMast"
+          },
+          "AuxiliaryRigMast": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigMast"
+          },
+          "MudTankList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudTank"
+            },
+            "nullable": true
+          },
+          "GeneratorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Generator"
+            },
+            "nullable": true
+          },
+          "ShaleShakerList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ShaleShaker"
+            },
+            "nullable": true
+          },
+          "AuxSolidsControl": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AuxSolidsControl"
+          },
+          "DrillingFluidType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingFluidTypeDescriptor"
+          },
+          "FlowSensor": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FlowSensor"
+          },
+          "MeasurementAfm": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MeasurementAfm"
+          },
+          "ReturnFlowLine": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ReturnFlowLine"
+          },
+          "MudGasSeparatorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudGasSeparator"
+            },
+            "nullable": true
+          },
+          "DesanderList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Desander"
+            },
+            "nullable": true
+          },
+          "DesilterList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Desilter"
+            },
+            "nullable": true
+          },
+          "CentrifugeList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Centrifuge"
+            },
+            "nullable": true
+          },
+          "DegasserList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Degasser"
+            },
+            "nullable": true
+          },
+          "CuttingsTransportSystem": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CuttingsTransportSystem"
+          },
+          "CuttingsDryerList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CuttingsDryer"
+            },
+            "nullable": true
+          },
+          "PipeDeck": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PipeDeck"
+          },
+          "Accumulator": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Accumulator"
+          },
+          "BopStack": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopStack"
+          },
+          "FloatValve": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FloatValve"
+          },
+          "AutoDriller": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AutoDriller"
+          },
+          "MpdController": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdController"
+          },
+          "MpdControlDevice": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdControlDevice"
+          },
+          "ContinuousCirculationDevice": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ContinuousCirculationDevice"
+          },
+          "DrillingChokeManifold": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingChokeManifold"
+          },
+          "SurfaceMpdEquipment": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SurfaceMpdEquipment"
+          },
+          "MarineMpdEquipment": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MarineMpdEquipment"
+          },
+          "MultiPhaseSeparator": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MultiPhaseSeparator"
+          },
+          "FlowRoutingManifold": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FlowRoutingManifold"
+          },
+          "DrillstringHeaveCompensator": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillstringHeaveCompensator"
+          },
+          "DrillingMarineRiser": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingMarineRiser"
+          },
+          "RiserHeaveCompensator": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RiserHeaveCompensator"
+          },
+          "DrillFloorElevation": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "IsFixedPlatform": {
+            "type": "boolean"
+          },
+          "ClusterID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RigChoke": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RigLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "IsFixedPlatform": {
+            "type": "boolean"
+          },
+          "ClusterID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RigMast": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "HoistingSystem": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.HoistingSystem"
+          },
+          "CatWalk": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CatWalk"
+          },
+          "PipeRack": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PipeRack"
+          },
+          "CasingDriveSystem": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingDriveSystem"
+          },
+          "CoilDriveSystem": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CoilDriveSystem"
+          },
+          "Derrick": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Derrick"
+          },
+          "TorqueTurnSub": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TorqueTurnSub"
+          },
+          "RotaryTable": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryTable"
+          },
+          "TopDrive": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TopDrive"
+          },
+          "Kelly": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Kelly"
+          },
+          "IronRoughneck": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.IronRoughneck"
+          },
+          "CasingTongs": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingTongs"
+          },
+          "CasingRunningTool": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingRunningTool"
+          },
+          "StandPipe": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.StandPipe"
+          },
+          "StandPipeManifold": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.StandPipeManifold"
+          },
+          "RotaryHose": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryHose"
+          },
+          "ChokeManifold": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeManifold"
+          },
+          "RigChokeList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigChoke"
+            },
+            "nullable": true
+          },
+          "Slips": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Slips"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RiserClass": {
+        "enum": [
+          "MarineDrillingRiser",
+          "TieBackDrillingRiser",
+          "BoltedRiser",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.RiserCompensatorClass": {
+        "enum": [
+          "PassiveRiserTensioner",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.RiserHeaveCompensator": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "RiserCompensatorClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RiserCompensatorClass"
+          },
+          "CompensatorCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "CompensatorStatus": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CompensatorStatus"
+          },
+          "MaxLimitCompensatorStroke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RotaryHose": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RotaryTable": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "RotaryTableType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryTableType"
+          },
+          "TableOpeningDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "BushingType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryTableBushingType"
+          },
+          "BushingSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Height": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Mass": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingStringWeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignStringWeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitPower": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.RotaryTableBushingType": {
+        "enum": [
+          "Master",
+          "Kelly",
+          "Unknown"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.RotaryTableType": {
+        "enum": [
+          "DcDrive",
+          "AcDrive",
+          "Hydraulic",
+          "Unknown"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.RoutingManifoldCurvePoint": {
+        "type": "object",
+        "properties": {
+          "Pressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Flow": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.SeparatorMedium": {
+        "enum": [
+          "Mud",
+          "WellboreFluid"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.SeparatorPhaseClass": {
+        "enum": [
+          "TwoPhases",
+          "ThreePhases",
+          "FourPhases"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ShakerClass": {
+        "enum": [
+          "Linear",
+          "Elliptical",
+          "DoubleDeck",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.ShakerScreenDefinition": {
+        "type": "object",
+        "properties": {
+          "ScreenDeck": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "MeshSize": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.ShaleShaker": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ShakerClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ShakerClass"
+          },
+          "ActiveShakers": {
+            "type": "string",
+            "nullable": true
+          },
+          "ShakerScreens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ShakerScreenDefinition"
+            },
+            "nullable": true
+          },
+          "MaxLimitOperatingCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.Slips": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.SolidsControlClass": {
+        "enum": [
+          "Desander",
+          "Desilter",
+          "Degasser",
+          "Centrifuge",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.SpeedMode": {
+        "enum": [
+          "ConstantSpeed",
+          "VariableSpeed"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.StandPipe": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "PressureMeasurementElevation": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MudHoseHangingPointElevation": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.StandPipeManifold": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "PipeDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "StandpipeSpecLevel": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.StandpipeSpecLevel"
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.StandpipeSpecLevel": {
+        "enum": [
+          "Psl1LowPressureRating",
+          "Psl2ModeratePressureRating",
+          "Psl3HighPressureRating"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.SurfaceMpdClass": {
+        "enum": [
+          "BackPressurePump",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.SurfaceMpdEquipment": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "SurfaceMpdClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SurfaceMpdClass"
+          },
+          "MinimumBoreholeSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumBoreholeSize": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureAccuracy": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitOperatingPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitMudWeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitMudPumpFlowrate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "StrokeRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "FlowRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureAtDischarge": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Power": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "PressureAtInlet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.TankClass": {
+        "enum": [
+          "Active",
+          "Reserve",
+          "Slug",
+          "Trip",
+          "Suction",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.TankFluidType": {
+        "enum": [
+          "DrillingMud",
+          "Brine",
+          "BaseOil",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.TopDrive": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "TopDriveClass": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TopDriveClass"
+          },
+          "TopDriveControllerType": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TopDriveControllerType"
+          },
+          "Orientable": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "Weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitIbopPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitRotationSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitMakeupTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitBreakoutTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TopDriveHeight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ProportionalGain": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "IntegralGain": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TuningFrequency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "VFDFilterTimeConstant": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "EncoderTimeConstant": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AccelerationFilterTimeConstant": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TorqueHighPassFilterTimeConstant": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TorqueLowPassFilterTimeConstant": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TuningFactor": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InertiaCorrectionFactor": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.TopDriveClass": {
+        "enum": [
+          "AcTopDrive",
+          "HydraulicTopDrive",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.TopDriveControllerType": {
+        "enum": [
+          "Unknown",
+          "StiffPIController",
+          "TunedPIController",
+          "ImpedanceMatching"
+        ],
+        "type": "string"
+      },
+      "NORCE.Drilling.Rig.Model.TorqueTurnSub": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Length": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "OutsideDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "InsideDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "BatteryLife": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinLimitTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "Hookload": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceTurnCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "SurfaceAcceleration": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceRotationRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceBorePressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceAxialVibration": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceTorsionalVibration": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SurfaceLateralVibration": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.TravellingBlock": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Weight": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "NumberOfSheaves": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "GrooveDiameter": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitBlockTravel": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitDesignLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaxLimitOperatingLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "HookVelocity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "HookPosition": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NORCE.Drilling.Rig.Model.UsageStatisticsRig": {
+        "type": "object",
+        "properties": {
+          "LastSaved": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "BackUpInterval": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "GetAllRigIdPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          },
+          "GetAllRigMetaInfoPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          },
+          "GetRigByIdPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          },
+          "GetAllRigLightPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          },
+          "GetAllRigPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          },
+          "PostRigPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          },
+          "PutRigByIdPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          },
+          "DeleteRigByIdPerDay": {
+            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.DotnetLibraries.General.DataManagement.MetaInfo": {
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "HttpHostName": {
+            "type": "string",
+            "nullable": true
+          },
+          "HttpHostBasePath": {
+            "type": "string",
+            "nullable": true
+          },
+          "HttpEndPoint": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

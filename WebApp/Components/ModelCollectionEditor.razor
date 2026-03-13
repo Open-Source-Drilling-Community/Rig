@@ -1,0 +1,130 @@
+@if (Items == null)
+{
+    <MudButton Variant="Variant.Outlined" OnClick="CreateList">Create @Label</MudButton>
+}
+else
+{
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+        <MudText Typo="Typo.subtitle2">@Label</MudText>
+        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="AddItem">Add item</MudButton>
+    </MudStack>
+
+    @if (Items.Count == 0)
+    {
+        <MudText Typo="Typo.body2">No items.</MudText>
+    }
+    else
+    {
+        <MudExpansionPanels Dense="true" MultiExpansion="true">
+            @for (int i = 0; i < Items.Count; i++)
+            {
+                int index = i;
+                object? item = Items[index];
+                <MudExpansionPanel @key="@(Label + "-" + index)" Text="@($"{Label} #{index + 1}")">
+                    <MudStack Row="true" Justify="Justify.FlexEnd" Class="mb-2">
+                        <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="() => RemoveItem(index)">Remove</MudButton>
+                    </MudStack>
+                    @if (item == null && CanCreateInstance())
+                    {
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="() => ReplaceItem(index)">Create item</MudButton>
+                    }
+                    else if (item == null)
+                    {
+                        <MudText Typo="Typo.caption">Cannot create this item type automatically.</MudText>
+                    }
+                    else if (ModelObjectEditor.IsEditableComplexType(ItemType))
+                    {
+                        <ModelObjectEditor @key="@(Label + "-item-" + index)"
+                                           Value="item"
+                                           ModelType="ItemType"
+                                           Depth="@(Depth + 1)" />
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2">Unsupported list item type: @ItemType.Name</MudText>
+                    }
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    }
+}
+
+@code {
+    [Parameter] public IList? Items { get; set; }
+    [Parameter] public Type ItemType { get; set; } = typeof(object);
+    [Parameter] public string Label { get; set; } = "Items";
+    [Parameter] public int Depth { get; set; }
+    [Parameter] public EventCallback<IList> ItemsChanged { get; set; }
+
+    private async Task CreateList()
+    {
+        Type listType = typeof(List<>).MakeGenericType(ItemType);
+        IList created = (IList)Activator.CreateInstance(listType)!;
+        Items = created;
+        await ItemsChanged.InvokeAsync(created);
+    }
+
+    private async Task AddItem()
+    {
+        if (Items == null)
+        {
+            await CreateList();
+        }
+
+        Items!.Add(CreateInstance());
+        await ItemsChanged.InvokeAsync(Items);
+    }
+
+    private async Task RemoveItem(int index)
+    {
+        if (Items == null)
+        {
+            return;
+        }
+
+        Items.RemoveAt(index);
+        await ItemsChanged.InvokeAsync(Items);
+    }
+
+    private async Task ReplaceItem(int index)
+    {
+        if (Items == null)
+        {
+            return;
+        }
+
+        Items[index] = CreateInstance();
+        await ItemsChanged.InvokeAsync(Items);
+    }
+
+    private object? CreateInstance()
+    {
+        if (ItemType == typeof(string))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            return Activator.CreateInstance(ItemType);
+        }
+        catch
+        {
+            if (!ItemType.IsAbstract && !ItemType.IsInterface && ItemType.IsClass)
+            {
+                try
+                {
+                    return System.Runtime.Serialization.FormatterServices.GetUninitializedObject(ItemType);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private bool CanCreateInstance() => CreateInstance() != null;
+}

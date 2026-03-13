@@ -1,0 +1,10 @@
+@namespace WebApp.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Coil Drive System"
+                          Value="RigMast.CoilDriveSystem"
+                          ValueChanged="@(value => RigMast.CoilDriveSystem = (CoilDriveSystem?)value)"
+                          ModelType="@typeof(CoilDriveSystem)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}

@@ -1,0 +1,11 @@
+@using System.Collections
+@namespace WebApp.Components.RigEditors
+
+<RigListPropertyEditor Title="Shale Shaker List"
+                       Items="(IList?)Rig.ShaleShakerList"
+                       ItemsChanged="@(items => Rig.ShaleShakerList = items.Cast<ShaleShaker>().ToList())"
+                       ItemType="@typeof(ShaleShaker)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}

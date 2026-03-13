@@ -56,10 +56,6 @@ https://dev.digiwells.no/Rig/swagger (development server)
 
 https://app.digiwells.no/Rig/swagger (production server)
 
-The microservice and webapp are deployed as Docker containers using Kubernetes and Helm. More info at:
-
-https://github.com/NORCE-DrillingAndWells/DrillingAndWells/wiki
-
 # Funding
 
 The current work has been funded by the [Research Council of Norway](https://www.forskningsradet.no/) and [Industry partners](https://www.digiwells.no/about/board/) in the framework of the cent for research-based innovation [SFI Digiwells (2020-2028)](https://www.digiwells.no/) focused on Digitalization, Drilling Engineering and GeoSteering. 

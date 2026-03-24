@@ -10,7 +10,12 @@
                               HttpBasePath="@APIUtils.HostBasePathUnitConversion"
                               HttpController="UnitSystem/"
                               UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
-                              UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
+                              UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName"
+                              DepthReferenceName="@DataUtils.UnitAndReferenceParameters.DepthReferenceName"
+                              DepthReferenceNameChanged="@DataUtils.UpdateDepthReferenceName"
+                              RotaryTableDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.RotaryTableDepthReferenceSource"
+                              GroundMudLineDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.GroundMudLineDepthReferenceSource"
+                              SeaWaterLevelDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource">
     @if (_isLoading)
     {
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
@@ -227,10 +232,12 @@
                                         </MudItem>
                                     }
                                     <MudItem xs="12" md="6">
-                                        <QuantityField Value="@_currentRig.DrillFloorElevation"
-                                                       ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => _currentRig.DrillFloorElevation = value))"
-                                                       Quantity="Length"
-                                                       Label="Drill Floor Elevation" />
+                                        <MudInputWithUnitAdornment QuantityLabel="Drill Floor Elevation"
+                                                                   VariantType="Variant.Text"
+                                                                   QuantityName="DepthDrilling"
+                                                                   DrillingSignalReference="@DrillingSignalReferenceType.Depth"
+                                                                   SIValueNullable="@_currentRig.DrillFloorElevation"
+                                                                   SIValueNullableChanged="@(EventCallback.Factory.Create<double?>(this, OnDrillFloorElevationChanged))" />
                                     </MudItem>
                                 </MudGrid>
                             }
@@ -384,7 +391,7 @@
                                     </MudGrid>
 
                                     @if (IsTopDriveController(selectedTopDrive, "StiffPIController")
-                                        || IsTopDriveController(selectedTopDrive, "TunedPIController"))
+                                                            || IsTopDriveController(selectedTopDrive, "TunedPIController"))
                                     {
                                         <MudGrid>
                                             <MudItem xs="12" md="6">
@@ -489,6 +496,10 @@
     private Dictionary<Guid, NORCE.Drilling.Rig.ModelShared.Cluster> _clusters = new();
     private NORCE.Drilling.Rig.ModelShared.Field? _selectedField;
     private NORCE.Drilling.Rig.ModelShared.Cluster? _selectedCluster;
+    private NORCE.Drilling.Rig.ModelShared.Cluster? CurrentRigCluster =>
+        _selectedCluster ?? (_currentRig?.ClusterID.HasValue == true && _clusters.TryGetValue(_currentRig.ClusterID.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+            ? cluster
+            : null);
 
     private RigTreeNode? TreeRoot => _currentRig == null ? null : RigTreeBuilder.Build(_currentRig, typeof(Rig), "Rig");
     private RigTreeNode? SelectedNode => RigTreeBuilder.FindNode(TreeRoot, _selectedNodeKey) ?? TreeRoot;
@@ -534,10 +545,11 @@
                 BackToList();
                 return;
             }
-
+            DataUtils.ApplyRigReferenceValues(_currentRig, _clusters);
             _selectedNodeKey = "Rig";
             ExpandPath(_selectedNodeKey);
             InitializeSelectedFieldAndCluster();
+            UpdateCurrentRigDepthReferenceSource();
         }
         catch (Exception ex)
         {
@@ -806,6 +818,8 @@
             _currentRig.ClusterID = null;
         }
 
+        UpdateCurrentRigDepthReferenceSource();
+
         return Task.CompletedTask;
     }
 
@@ -837,6 +851,7 @@
         {
             _currentRig.ClusterID = null;
         }
+        UpdateCurrentRigDepthReferenceSource();
         return Task.CompletedTask;
     }
 
@@ -847,6 +862,18 @@
         {
             _currentRig.ClusterID = cluster?.MetaInfo?.ID;
         }
+        UpdateCurrentRigDepthReferenceSource();
+        return Task.CompletedTask;
+    }
+
+    private Task OnDrillFloorElevationChanged(double? value)
+    {
+        if (_currentRig != null)
+        {
+            _currentRig.DrillFloorElevation = value;
+        }
+
+        UpdateCurrentRigDepthReferenceSource();
         return Task.CompletedTask;
     }
 
@@ -1008,4 +1035,6 @@
 
         return "rig-tree-node-disabled";
     }
+
+    private void UpdateCurrentRigDepthReferenceSource() => DataUtils.ApplyRigClusterReferenceValues(_currentRig, CurrentRigCluster);
 }

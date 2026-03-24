@@ -1,6 +1,7 @@
+using NORCE.Drilling.Rig.ModelShared;
+using OSDC.UnitConversion.DrillingRazorMudComponents;
 using System;
 using System.Collections.Generic;
-using NORCE.Drilling.Rig.ModelShared;
 
 public static class DataUtils
 {
@@ -10,14 +11,55 @@ public static class DataUtils
     public static class UnitAndReferenceParameters
     {
         public static string? UnitSystemName { get; set; } = "Metric";
-        public static string? DepthReferenceName { get; set; }
+        public static string? DepthReferenceName { get; set; } = "WGS84";
         public static string? PositionReferenceName { get; set; }
         public static string? AzimuthReferenceName { get; set; }
         public static string? PressureReferenceName { get; set; }
         public static string? DateReferenceName { get; set; }
+        public static GroundMudLineDepthReferenceSource GroundMudLineDepthReferenceSource { get; set; } = new GroundMudLineDepthReferenceSource();
+        public static RotaryTableDepthReferenceSource RotaryTableDepthReferenceSource { get; set; } = new RotaryTableDepthReferenceSource();
+        public static SeaWaterLevelDepthReferenceSource SeaWaterLevelDepthReferenceSource { get; set; } = new SeaWaterLevelDepthReferenceSource();
     }
 
+    public static void ApplyRigReferenceValues(Rig? rig, Dictionary<Guid, Cluster> clusters)
+    {
+        if (rig != null && rig.ClusterID != null)
+        {
+            Cluster? cluster = null;
+            if (clusters.TryGetValue(rig.ClusterID.Value, out cluster))
+            {
+                ApplyRigClusterReferenceValues(rig, cluster);
+                return;
+            }
+        }
+        ApplyRigClusterReferenceValues(rig, null);
+    }
+    public static void ApplyRigClusterReferenceValues(Rig? rig, Cluster? cluster)
+    {
+        DataUtils.UnitAndReferenceParameters.GroundMudLineDepthReferenceSource.GroundMudLineDepthReference = 0;
+        DataUtils.UnitAndReferenceParameters.RotaryTableDepthReferenceSource.RotaryTableDepthReference = 0;
+        DataUtils.UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource.SeaWaterLevelDepthReference = 0;
+        if (rig != null)
+        {
+            if (rig.DrillFloorElevation != null)
+            {
+                DataUtils.UnitAndReferenceParameters.RotaryTableDepthReferenceSource.RotaryTableDepthReference = -rig.DrillFloorElevation;
+            }
+            if (cluster != null)
+            {
+                if (cluster.GroundMudLineDepth != null && cluster.GroundMudLineDepth.GaussianValue != null && cluster.GroundMudLineDepth.GaussianValue.Mean != null)
+                {
+                    DataUtils.UnitAndReferenceParameters.GroundMudLineDepthReferenceSource.GroundMudLineDepthReference = -cluster.GroundMudLineDepth.GaussianValue.Mean;
+                }
+                if (cluster.TopWaterDepth != null && cluster.TopWaterDepth.GaussianValue != null && cluster.TopWaterDepth.GaussianValue.Mean != null)
+                {
+                    DataUtils.UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource.SeaWaterLevelDepthReference = -cluster.TopWaterDepth.GaussianValue.Mean;
+                }
+            }
+        }
+    }
     public static void UpdateUnitSystemName(string value) => UnitAndReferenceParameters.UnitSystemName = value;
+    public static void UpdateDepthReferenceName(string value) => UnitAndReferenceParameters.DepthReferenceName = value;
 
     public static Rig CreateDefaultRig()
     {
@@ -157,5 +199,20 @@ public static class DataUtils
         if (key.Contains("diameter")) return "DiameterPipeDrilling";
         if (key.Contains("radius") || key.Contains("height") || key.Contains("length") || key.Contains("depth") || key.Contains("elevation") || key.Contains("position") || key.Contains("clearance")) return "Length";
         return "Dimensionless";
+    }
+    public class GroundMudLineDepthReferenceSource : IGroundMudLineDepthReferenceSource
+    {
+        public double? GroundMudLineDepthReference { get; set; } = null;
+    }
+
+    public class RotaryTableDepthReferenceSource : IRotaryTableDepthReferenceSource
+    {
+        public double? RotaryTableDepthReference { get; set; } = null;
+    }
+
+    public class SeaWaterLevelDepthReferenceSource : ISeaWaterLevelDepthReferenceSource
+    {
+        public double? SeaWaterLevelDepthReference { get; set; } = null;
+
     }
 }

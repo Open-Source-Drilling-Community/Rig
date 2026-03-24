@@ -9,71 +9,13 @@
                               HttpBasePath="@APIUtils.HostBasePathUnitConversion"
                               HttpController="UnitSystem/"
                               UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
-                              UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
-    <MudStack Spacing="3">
-        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-            <MudText Typo="Typo.h4">Rig Catalog</MudText>
-            <MudStack Row="true" Spacing="2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateRig">Create rig</MudButton>
-                <MudButton Variant="Variant.Outlined" OnClick="Reload">Refresh</MudButton>
-            </MudStack>
-        </MudStack>
-
-        <MudTextField @bind-Value="_searchText" Placeholder="Search rigs" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined" Immediate="true" />
-
-        @if (_isLoading)
-        {
-            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
-        }
-        else
-        {
-            <MudTable Items="FilteredRigs" Hover="true" Dense="true" OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<RigLight>>(this, OnRowClick))">
-                <HeaderContent>
-                    <MudTh>Name</MudTh>
-                    <MudTh>Description</MudTh>
-                    <MudTh>Fixed Platform</MudTh>
-                    <MudTh>Cluster</MudTh>
-                    <MudTh>Last Modified</MudTh>
-                    <MudTh></MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Description">@context.Description</MudTd>
-                    <MudTd DataLabel="Fixed Platform">@(context.IsFixedPlatform ? "Yes" : "No")</MudTd>
-                    <MudTd DataLabel="Cluster">@GetClusterName(context.ClusterID)</MudTd>
-                    <MudTd DataLabel="Last Modified">@context.LastModificationDate?.ToString("u")</MudTd>
-                    <MudTd>
-                        <MudStack Row="true" Spacing="1">
-                            <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@(() => ViewRig(context))">View</MudButton>
-                            <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@(() => EditRig(context))">Edit</MudButton>
-                            <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="@(() => DeleteRig(context))">Delete</MudButton>
-                        </MudStack>
-                    </MudTd>
-                </RowTemplate>
-            </MudTable>
-        }
-
-        @if (_selectedRig != null)
-        {
-            <MudPaper Class="pa-4" Outlined="true">
-                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-3">
-                    <MudText Typo="Typo.h5">Rig details</MudText>
-                    <MudButton Variant="Variant.Text" OnClick="() => _selectedRig = null">Close</MudButton>
-                </MudStack>
-                <MudGrid>
-                    <MudItem xs="12" md="6"><MudText><strong>Name:</strong> @_selectedRig.Name</MudText></MudItem>
-                    <MudItem xs="12" md="6"><MudText><strong>Description:</strong> @_selectedRig.Description</MudText></MudItem>
-                    <MudItem xs="12" md="6"><MudText><strong>Created:</strong> @_selectedRig.CreationDate?.ToString("u")</MudText></MudItem>
-                    <MudItem xs="12" md="6"><MudText><strong>Last Modified:</strong> @_selectedRig.LastModificationDate?.ToString("u")</MudText></MudItem>
-                    <MudItem xs="12" md="6"><MudText><strong>Fixed Platform:</strong> @(_selectedRig.IsFixedPlatform ? "Yes" : "No")</MudText></MudItem>
-                    <MudItem xs="12" md="6"><MudText><strong>Cluster:</strong> @GetClusterName(_selectedRig.ClusterID)</MudText></MudItem>
-                </MudGrid>
-                <MudDivider Class="my-4" />
-                <MudText Typo="Typo.subtitle2" Class="mb-2">Rig definition</MudText>
-                <ModelObjectViewer Value="@_selectedRig" ModelType="@typeof(Rig)" ExcludedProperties="@_excludedViewProperties" />
-            </MudPaper>
-        }
-    </MudStack>
+                              UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName"
+                              DepthReferenceName="@DataUtils.UnitAndReferenceParameters.DepthReferenceName"
+                              DepthReferenceNameChanged="@DataUtils.UpdateDepthReferenceName"
+                              RotaryTableDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.RotaryTableDepthReferenceSource"
+                              GroundMudLineDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.GroundMudLineDepthReferenceSource"
+                              SeaWaterLevelDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource">
+    @PageContent
 </MudUnitAndReferenceChoiceTag>
 
 @code {
@@ -93,114 +35,202 @@
     private Rig? _selectedRig;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
+    private RenderFragment PageContent => @<MudStack Spacing="3">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <MudText Typo="Typo.h4">Rig Catalog</MudText>
+        <MudStack Row="true" Spacing="2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateRig">Create rig</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="Reload">Refresh</MudButton>
+        </MudStack>
+    </MudStack>
 
-    private IEnumerable<RigLight> FilteredRigs => _rigs.Where(r => string.IsNullOrWhiteSpace(_searchText)
-        || ($"{r.Name} {r.Description} {r.MetaInfo?.ID}".Contains(_searchText, StringComparison.OrdinalIgnoreCase)));
+    <MudTextField @bind-Value="_searchText" Placeholder="Search rigs" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Variant="Variant.Outlined" Immediate="true" />
 
-    protected override async Task OnInitializedAsync()
+@if (_isLoading)
     {
-        await LoadRigs();
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+{
+        <MudTable Items="FilteredRigs" Hover="true" Dense="true" OnRowClick="@(EventCallback.Factory.Create<TableRowClickEventArgs<RigLight>>(this, OnRowClick))">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Description</MudTh>
+                <MudTh>Fixed Platform</MudTh>
+                <MudTh>Cluster</MudTh>
+                <MudTh>Last Modified</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="Fixed Platform">@(context.IsFixedPlatform ? "Yes" : "No")</MudTd>
+                <MudTd DataLabel="Cluster">@GetClusterName(context.ClusterID)</MudTd>
+                <MudTd DataLabel="Last Modified">@context.LastModificationDate?.ToString("u")</MudTd>
+                <MudTd>
+                    <MudStack Row="true" Spacing="1">
+                        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@(() => ViewRig(context))">View</MudButton>
+                        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@(() => EditRig(context))">Edit</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="@(() => DeleteRig(context))">Delete</MudButton>
+                    </MudStack>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+}
+
+@if (_selectedRig != null)
+{
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-3">
+                <MudText Typo="Typo.h5">Rig details</MudText>
+                <MudButton Variant="Variant.Text" OnClick="CloseSelectedRig">Close</MudButton>
+            </MudStack>
+            <MudGrid>
+                <MudItem xs="12" md="6"><MudText><strong>Name:</strong> @_selectedRig.Name</MudText></MudItem>
+                <MudItem xs="12" md="6"><MudText><strong>Description:</strong> @_selectedRig.Description</MudText></MudItem>
+                <MudItem xs="12" md="6"><MudText><strong>Created:</strong> @_selectedRig.CreationDate?.ToString("u")</MudText></MudItem>
+                <MudItem xs="12" md="6"><MudText><strong>Last Modified:</strong> @_selectedRig.LastModificationDate?.ToString("u")</MudText></MudItem>
+                <MudItem xs="12" md="6"><MudText><strong>Fixed Platform:</strong> @(_selectedRig.IsFixedPlatform ? "Yes" : "No")</MudText></MudItem>
+                <MudItem xs="12" md="6"><MudText><strong>Cluster:</strong> @GetClusterName(_selectedRig.ClusterID)</MudText></MudItem>
+            </MudGrid>
+            <MudDivider Class="my-4" />
+            <MudText Typo="Typo.subtitle2" Class="mb-2">Rig definition</MudText>
+            <ModelObjectViewer Value="@_selectedRig" ModelType="@typeof(Rig)" ExcludedProperties="@_excludedViewProperties" />
+        </MudPaper>
+}
+</MudStack>;
+
+private IEnumerable<RigLight> FilteredRigs => _rigs.Where(r => string.IsNullOrWhiteSpace(_searchText)
+    || ($"{r.Name} {r.Description} {r.MetaInfo?.ID}".Contains(_searchText, StringComparison.OrdinalIgnoreCase)));
+
+protected override async Task OnInitializedAsync()
+{
+    await LoadRigs();
+}
+
+private async Task LoadRigs()
+{
+    try
+    {
+        _isLoading = true;
+        await LoadClusters();
+        _rigs = await RigApiClient.GetRigLightsAsync();
+    }
+    catch (Exception ex)
+    {
+        Logger.LogError(ex, "Failed to load rigs");
+        Snackbar.Add("Failed to load rigs from the microservice.", Severity.Error);
+    }
+    finally
+    {
+        UpdateSelectedRigDepthReferenceSource();
+        _isLoading = false;
+    }
+}
+
+private async Task Reload() => await LoadRigs();
+
+private async Task LoadClusters()
+{
+    List<NORCE.Drilling.Rig.ModelShared.Cluster> clusters = await FieldClusterApiClient.GetClustersAsync();
+    _clusters = clusters
+        .Where(cluster => cluster?.MetaInfo != null && cluster.MetaInfo.ID != Guid.Empty)
+        .ToDictionary(cluster => cluster.MetaInfo.ID, cluster => cluster);
+}
+
+private void CreateRig() => NavigationManager.NavigateTo("/Rig/webapp/Rig/Edit");
+
+private void EditRig(RigLight rig) => NavigationManager.NavigateTo($"/Rig/webapp/Rig/Edit/{rig.MetaInfo?.ID}");
+
+private async Task ViewRig(RigLight rig)
+{
+    if (rig.MetaInfo == null)
+    {
+        return;
     }
 
-    private async Task LoadRigs()
+    try
     {
-        try
-        {
-            _isLoading = true;
-            await LoadClusters();
-            _rigs = await RigApiClient.GetRigLightsAsync();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Failed to load rigs");
-            Snackbar.Add("Failed to load rigs from the microservice.", Severity.Error);
-        }
-        finally
-        {
-            _isLoading = false;
-        }
+        _selectedRig = await RigApiClient.GetRigAsync(rig.MetaInfo.ID);
+        UpdateSelectedRigDepthReferenceSource();
+    }
+    catch (Exception ex)
+    {
+        Logger.LogError(ex, "Failed to load rig {RigId}", rig.MetaInfo.ID);
+        Snackbar.Add("Failed to load rig details.", Severity.Error);
+    }
+}
+
+private async Task DeleteRig(RigLight rig)
+{
+    if (rig.MetaInfo == null)
+    {
+        return;
     }
 
-    private async Task Reload() => await LoadRigs();
-
-    private async Task LoadClusters()
+    try
     {
-        List<NORCE.Drilling.Rig.ModelShared.Cluster> clusters = await FieldClusterApiClient.GetClustersAsync();
-        _clusters = clusters
-            .Where(cluster => cluster?.MetaInfo != null && cluster.MetaInfo.ID != Guid.Empty)
-            .ToDictionary(cluster => cluster.MetaInfo.ID, cluster => cluster);
-    }
-
-    private void CreateRig() => NavigationManager.NavigateTo("/Rig/webapp/Rig/Edit");
-
-    private void EditRig(RigLight rig) => NavigationManager.NavigateTo($"/Rig/webapp/Rig/Edit/{rig.MetaInfo?.ID}");
-
-    private async Task ViewRig(RigLight rig)
-    {
-        if (rig.MetaInfo == null)
+        HttpStatusCode statusCode = await RigApiClient.DeleteRigAsync(rig.MetaInfo.ID);
+        if (statusCode == HttpStatusCode.OK)
         {
-            return;
-        }
-
-        try
-        {
-            _selectedRig = await RigApiClient.GetRigAsync(rig.MetaInfo.ID);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Failed to load rig {RigId}", rig.MetaInfo.ID);
-            Snackbar.Add("Failed to load rig details.", Severity.Error);
-        }
-    }
-
-    private async Task DeleteRig(RigLight rig)
-    {
-        if (rig.MetaInfo == null)
-        {
-            return;
-        }
-
-        try
-        {
-            HttpStatusCode statusCode = await RigApiClient.DeleteRigAsync(rig.MetaInfo.ID);
-            if (statusCode == HttpStatusCode.OK)
+            Snackbar.Add("Rig deleted.", Severity.Success);
+            if (_selectedRig?.MetaInfo?.ID == rig.MetaInfo.ID)
             {
-                Snackbar.Add("Rig deleted.", Severity.Success);
-                if (_selectedRig?.MetaInfo?.ID == rig.MetaInfo.ID)
-                {
-                    _selectedRig = null;
-                }
-                await LoadRigs();
+                _selectedRig = null;
+                UpdateSelectedRigDepthReferenceSource();
             }
-            else
-            {
-                Snackbar.Add($"Delete failed: {(int)statusCode} {statusCode}", Severity.Warning);
-            }
+            await LoadRigs();
         }
-        catch (Exception ex)
+        else
         {
-            Logger.LogError(ex, "Failed to delete rig {RigId}", rig.MetaInfo.ID);
-            Snackbar.Add("Failed to delete rig.", Severity.Error);
+            Snackbar.Add($"Delete failed: {(int)statusCode} {statusCode}", Severity.Warning);
         }
     }
-
-    private async Task OnRowClick(TableRowClickEventArgs<RigLight> args)
+    catch (Exception ex)
     {
-        if (args.Item != null)
-        {
-            await ViewRig(args.Item);
-        }
+        Logger.LogError(ex, "Failed to delete rig {RigId}", rig.MetaInfo.ID);
+        Snackbar.Add("Failed to delete rig.", Severity.Error);
     }
+}
 
-    private string GetClusterName(Guid? clusterId)
+private async Task OnRowClick(TableRowClickEventArgs<RigLight> args)
+{
+    if (args.Item != null)
     {
-        if (!clusterId.HasValue)
-        {
-            return string.Empty;
-        }
-
-        return _clusters.TryGetValue(clusterId.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
-            ? cluster.Name ?? clusterId.Value.ToString()
-            : clusterId.Value.ToString();
+        await ViewRig(args.Item);
     }
+}
+
+private string GetClusterName(Guid? clusterId)
+{
+    if (!clusterId.HasValue)
+    {
+        return string.Empty;
+    }
+
+    return _clusters.TryGetValue(clusterId.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+        ? cluster.Name ?? clusterId.Value.ToString()
+        : clusterId.Value.ToString();
+}
+
+private NORCE.Drilling.Rig.ModelShared.Cluster? GetCluster(Guid? clusterId)
+{
+    if (!clusterId.HasValue)
+    {
+        return null;
+    }
+
+    return _clusters.TryGetValue(clusterId.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+        ? cluster
+        : null;
+}
+
+private void CloseSelectedRig()
+{
+    _selectedRig = null;
+    UpdateSelectedRigDepthReferenceSource();
+}
+
+private void UpdateSelectedRigDepthReferenceSource() =>
+    DataUtils.ApplyRigReferenceValues(_selectedRig, _clusters);
 }

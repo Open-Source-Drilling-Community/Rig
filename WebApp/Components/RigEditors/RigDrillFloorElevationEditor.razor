@@ -1,9 +1,10 @@
 @namespace WebApp.Components.RigEditors
 
-<RigDoublePropertyEditor Title="Drill Floor Elevation"
-                         Quantity="LengthStandard"
-                         Value="Rig.DrillFloorElevation"
-                         ValueChanged="@(value => Rig.DrillFloorElevation = value)" />
+<MudInputWithUnitAdornment QuantityName="DepthDrilling"
+                           QuantityLabel="Drill Floor Elevation"
+                           DrillingSignalReference="@DrillingSignalReferenceType.Depth"
+                           SIValueNullable="Rig.DrillFloorElevation"
+                           SIValueNullableChanged="@(value => Rig.DrillFloorElevation = value)" />
 
 @code {
     [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;

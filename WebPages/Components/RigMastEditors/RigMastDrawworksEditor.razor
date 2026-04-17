@@ -1,0 +1,17 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Drawworks"
+                          Value="RigMast.HoistingSystem?.Drawworks"
+                          ValueChanged="@(value => SetDrawworks(value))"
+                          ModelType="@typeof(Drawworks)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+
+    private void SetDrawworks(object? value)
+    {
+        RigMast.HoistingSystem ??= new HoistingSystem();
+        RigMast.HoistingSystem.Drawworks = (Drawworks?)value;
+    }
+}
+

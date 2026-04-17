@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Aux Solids Control"
+                          Value="Rig.AuxSolidsControl"
+                          ValueChanged="@(value => Rig.AuxSolidsControl = (AuxSolidsControl?)value)"
+                          ModelType="@typeof(AuxSolidsControl)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

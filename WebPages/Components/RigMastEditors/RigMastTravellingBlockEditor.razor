@@ -1,0 +1,17 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Travelling Block"
+                          Value="RigMast.HoistingSystem?.TravellingBlock"
+                          ValueChanged="@(value => SetTravellingBlock(value))"
+                          ModelType="@typeof(TravellingBlock)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+
+    private void SetTravellingBlock(object? value)
+    {
+        RigMast.HoistingSystem ??= new HoistingSystem();
+        RigMast.HoistingSystem.TravellingBlock = (TravellingBlock?)value;
+    }
+}
+

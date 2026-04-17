@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Accumulator"
+                          Value="Rig.Accumulator"
+                          ValueChanged="@(value => Rig.Accumulator = (Accumulator?)value)"
+                          ModelType="@typeof(Accumulator)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="MPD Control Device"
+                          Value="Rig.MpdControlDevice"
+                          ValueChanged="@(value => Rig.MpdControlDevice = (MpdControlDevice?)value)"
+                          ModelType="@typeof(MpdControlDevice)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

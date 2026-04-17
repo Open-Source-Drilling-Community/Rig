@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Continuous Circulation Device"
+                          Value="Rig.ContinuousCirculationDevice"
+                          ValueChanged="@(value => Rig.ContinuousCirculationDevice = (ContinuousCirculationDevice?)value)"
+                          ModelType="@typeof(ContinuousCirculationDevice)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

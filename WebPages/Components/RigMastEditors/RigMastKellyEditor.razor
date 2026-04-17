@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Kelly"
+                          Value="RigMast.Kelly"
+                          ValueChanged="@(value => RigMast.Kelly = (Kelly?)value)"
+                          ModelType="@typeof(Kelly)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}
+

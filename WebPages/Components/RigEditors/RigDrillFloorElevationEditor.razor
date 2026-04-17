@@ -1,0 +1,12 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<MudInputWithUnitAdornment QuantityName="DepthDrilling"
+                           QuantityLabel="Drill Floor Elevation"
+                           DrillingSignalReference="@DrillingSignalReferenceType.Depth"
+                           SIValueNullable="Rig.DrillFloorElevation"
+                           SIValueNullableChanged="@(value => Rig.DrillFloorElevation = value)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

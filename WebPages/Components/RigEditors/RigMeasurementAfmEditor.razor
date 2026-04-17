@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Measurement AFM"
+                          Value="Rig.MeasurementAfm"
+                          ValueChanged="@(value => Rig.MeasurementAfm = (MeasurementAfm?)value)"
+                          ModelType="@typeof(MeasurementAfm)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

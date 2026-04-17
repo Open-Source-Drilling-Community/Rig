@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Pipe Rack"
+                          Value="RigMast.PipeRack"
+                          ValueChanged="@(value => RigMast.PipeRack = (PipeRack?)value)"
+                          ModelType="@typeof(PipeRack)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}
+

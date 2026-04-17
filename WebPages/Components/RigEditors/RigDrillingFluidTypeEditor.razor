@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Drilling Fluid Type"
+                          Value="Rig.DrillingFluidType"
+                          ValueChanged="@(value => Rig.DrillingFluidType = (DrillingFluidTypeDescriptor?)value)"
+                          ModelType="@typeof(DrillingFluidTypeDescriptor)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

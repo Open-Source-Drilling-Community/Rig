@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Drive Mode"
+                          Value="Rig.DriveMode"
+                          ValueChanged="@(value => Rig.DriveMode = (DriveMode?)value)"
+                          ModelType="@typeof(DriveMode)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

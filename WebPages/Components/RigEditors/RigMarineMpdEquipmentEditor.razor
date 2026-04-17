@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Marine MPD Equipment"
+                          Value="Rig.MarineMpdEquipment"
+                          ValueChanged="@(value => Rig.MarineMpdEquipment = (MarineMpdEquipment?)value)"
+                          ModelType="@typeof(MarineMpdEquipment)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

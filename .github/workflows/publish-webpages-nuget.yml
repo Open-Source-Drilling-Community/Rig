@@ -1,0 +1,47 @@
+name: Publish WebPages NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Package version to publish
+        required: true
+        type: string
+  push:
+    tags:
+      - "webpages-v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Resolve version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "PACKAGE_VERSION=${{ inputs.version }}" >> "$GITHUB_ENV"
+          else
+            TAG="${GITHUB_REF_NAME}"
+            echo "PACKAGE_VERSION=${TAG#webpages-v}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Restore
+        run: dotnet restore WebPages/WebPages.csproj
+
+      - name: Build
+        run: dotnet build WebPages/WebPages.csproj --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack WebPages/WebPages.csproj --configuration Release --no-build -p:PackageVersion=${{ env.PACKAGE_VERSION }} --output artifacts
+
+      - name: Publish to NuGet.org
+        run: dotnet nuget push "artifacts/NORCE.Drilling.Rig.WebPages.${{ env.PACKAGE_VERSION }}.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate

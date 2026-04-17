@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Casing Drive System"
+                          Value="RigMast.CasingDriveSystem"
+                          ValueChanged="@(value => RigMast.CasingDriveSystem = (CasingDriveSystem?)value)"
+                          ModelType="@typeof(CasingDriveSystem)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}
+

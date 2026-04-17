@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Return Flow Line"
+                          Value="Rig.ReturnFlowLine"
+                          ValueChanged="@(value => Rig.ReturnFlowLine = (ReturnFlowLine?)value)"
+                          ModelType="@typeof(ReturnFlowLine)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

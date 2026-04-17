@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Drillstring Heave Compensator"
+                          Value="Rig.DrillstringHeaveCompensator"
+                          ValueChanged="@(value => Rig.DrillstringHeaveCompensator = (DrillstringHeaveCompensator?)value)"
+                          ModelType="@typeof(DrillstringHeaveCompensator)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

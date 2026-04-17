@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Auxiliary Rig Mast"
+                          Value="Rig.AuxiliaryRigMast"
+                          ValueChanged="@(value => Rig.AuxiliaryRigMast = (RigMast?)value)"
+                          ModelType="@typeof(RigMast)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

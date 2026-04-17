@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Iron Roughneck"
+                          Value="RigMast.IronRoughneck"
+                          ValueChanged="@(value => RigMast.IronRoughneck = (IronRoughneck?)value)"
+                          ModelType="@typeof(IronRoughneck)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}
+

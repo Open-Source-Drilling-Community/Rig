@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Multi Phase Separator"
+                          Value="Rig.MultiPhaseSeparator"
+                          ValueChanged="@(value => Rig.MultiPhaseSeparator = (MultiPhaseSeparator?)value)"
+                          ModelType="@typeof(MultiPhaseSeparator)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

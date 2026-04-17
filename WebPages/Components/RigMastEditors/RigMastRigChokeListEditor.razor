@@ -1,0 +1,12 @@
+@using System.Collections
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigListPropertyEditor Title="Rig Choke List"
+                       Items="(IList?)RigMast.RigChokeList"
+                       ItemsChanged="@(items => RigMast.RigChokeList = items.Cast<RigChoke>().ToList())"
+                       ItemType="@typeof(RigChoke)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}
+

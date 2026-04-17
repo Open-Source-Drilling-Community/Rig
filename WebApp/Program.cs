@@ -1,28 +1,23 @@
 using MudBlazor;
 using MudBlazor.Services;
+using NORCE.Drilling.Rig.WebApp;
+using NORCE.Drilling.Rig.WebPages;
+using NORCE.Drilling.Rig.WebPages.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if (!string.IsNullOrEmpty(builder.Configuration["RigHostURL"]))
+WebPagesHostConfiguration webPagesConfiguration = new()
 {
-    NORCE.Drilling.Rig.WebApp.Configuration.RigHostURL = builder.Configuration["RigHostURL"];
-}
-if (!string.IsNullOrEmpty(builder.Configuration["UnitConversionHostURL"]))
-{
-    NORCE.Drilling.Rig.WebApp.Configuration.UnitConversionHostURL = builder.Configuration["UnitConversionHostURL"];
-}
-if (!string.IsNullOrEmpty(builder.Configuration["FieldHostURL"]))
-{
-    NORCE.Drilling.Rig.WebApp.Configuration.FieldHostURL = builder.Configuration["FieldHostURL"];
-}
-if (!string.IsNullOrEmpty(builder.Configuration["ClusterHostURL"]))
-{
-    NORCE.Drilling.Rig.WebApp.Configuration.ClusterHostURL = builder.Configuration["ClusterHostURL"];
-}
+    RigHostURL = builder.Configuration["RigHostURL"] ?? string.Empty,
+    UnitConversionHostURL = builder.Configuration["UnitConversionHostURL"] ?? string.Empty,
+    FieldHostURL = builder.Configuration["FieldHostURL"] ?? string.Empty,
+    ClusterHostURL = builder.Configuration["ClusterHostURL"] ?? string.Empty,
+};
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped(_ => APIUtils.CreateHttpClient(APIUtils.HostNameRig, APIUtils.HostBasePathRig));
+builder.Services.AddSingleton<IRigWebPagesConfiguration>(webPagesConfiguration);
+builder.Services.AddSingleton<IRigAPIUtils, RigAPIUtils>();
 builder.Services.AddScoped<RigApiClient>();
 builder.Services.AddScoped<FieldClusterApiClient>();
 builder.Services.AddMudServices(config =>

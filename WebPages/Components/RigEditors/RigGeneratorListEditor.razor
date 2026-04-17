@@ -1,0 +1,12 @@
+@using System.Collections
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigListPropertyEditor Title="Generator List"
+                       Items="(IList?)Rig.GeneratorList"
+                       ItemsChanged="@(items => Rig.GeneratorList = items.Cast<Generator>().ToList())"
+                       ItemType="@typeof(Generator)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

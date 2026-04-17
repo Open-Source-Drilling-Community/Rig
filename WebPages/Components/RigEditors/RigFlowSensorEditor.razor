@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigComplexPropertyEditor Title="Flow Sensor"
+                          Value="Rig.FlowSensor"
+                          ValueChanged="@(value => Rig.FlowSensor = (FlowSensor?)value)"
+                          ModelType="@typeof(FlowSensor)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

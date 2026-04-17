@@ -1,0 +1,12 @@
+@using System.Collections
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigListPropertyEditor Title="Mud Tank List"
+                       Items="(IList?)Rig.MudTankList"
+                       ItemsChanged="@(items => Rig.MudTankList = items.Cast<MudTank>().ToList())"
+                       ItemType="@typeof(MudTank)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

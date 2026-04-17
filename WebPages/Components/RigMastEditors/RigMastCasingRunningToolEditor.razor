@@ -1,0 +1,11 @@
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigMastEditors
+
+<RigComplexPropertyEditor Title="Casing Running Tool"
+                          Value="RigMast.CasingRunningTool"
+                          ValueChanged="@(value => RigMast.CasingRunningTool = (CasingRunningTool?)value)"
+                          ModelType="@typeof(CasingRunningTool)" />
+
+@code {
+    [Parameter, EditorRequired] public RigMast RigMast { get; set; } = default!;
+}
+

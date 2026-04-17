@@ -1,0 +1,12 @@
+@using System.Collections
+@namespace NORCE.Drilling.Rig.WebPages.Components.RigEditors
+
+<RigListPropertyEditor Title="Mud Gas Separator List"
+                       Items="(IList?)Rig.MudGasSeparatorList"
+                       ItemsChanged="@(items => Rig.MudGasSeparatorList = items.Cast<MudGasSeparator>().ToList())"
+                       ItemType="@typeof(MudGasSeparator)" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+}
+

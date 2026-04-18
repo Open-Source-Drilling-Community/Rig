@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	<AssemblyName>NORCE.Drilling.Rig.WebPages</AssemblyName>
     <RootNamespace>NORCE.Drilling.Rig.WebPages</RootNamespace>
     <PackageId>NORCE.Drilling.Rig.WebPages</PackageId>
     <Title>NORCE.Drilling.Rig.WebPages</Title>

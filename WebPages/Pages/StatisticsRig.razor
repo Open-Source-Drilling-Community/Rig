@@ -13,19 +13,91 @@ else if (_statistics == null)
 }
 else
 {
-    <MudPaper Class="pa-4" Outlined="true">
-        <MudText Typo="Typo.h4" Class="mb-4">Usage Statistics</MudText>
+    <MudStack Spacing="3">
+        <MudText Typo="Typo.h4">Usage Statistics</MudText>
+
         <MudGrid>
-            <MudItem xs="12" md="6"><MudText><strong>Total requests:</strong> @_totalCount</MudText></MudItem>
-            <MudItem xs="12" md="6"><MudText><strong>Rig controller requests:</strong> @_rigCount</MudText></MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Outlined="true">
+                    <MudText Typo="Typo.subtitle2">Total requests</MudText>
+                    <MudText Typo="Typo.h4">@_totalCount</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Outlined="true">
+                    <MudText Typo="Typo.subtitle2">Tracked endpoints</MudText>
+                    <MudText Typo="Typo.h4">@_entries.Count</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Outlined="true">
+                    <MudText Typo="Typo.subtitle2">Latest request date</MudText>
+                    <MudText Typo="Typo.h6">@FormatDate(_latestRequestDate)</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudPaper Class="pa-4" Outlined="true">
+                    <MudText Typo="Typo.subtitle2">Peak daily volume</MudText>
+                    <MudText Typo="Typo.h6">@_peakDailyCount</MudText>
+                    <MudText Typo="Typo.caption">@FormatDate(_peakDailyDate)</MudText>
+                </MudPaper>
+            </MudItem>
         </MudGrid>
-    </MudPaper>
+
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudText Typo="Typo.h6" Class="mb-3">Endpoint breakdown</MudText>
+            <MudTable Items="_entries" Hover="true" Dense="true" Breakpoint="Breakpoint.Sm">
+                <HeaderContent>
+                    <MudTh>Endpoint</MudTh>
+                    <MudTh>Requests</MudTh>
+                    <MudTh>Days with traffic</MudTh>
+                    <MudTh>Latest day</MudTh>
+                    <MudTh>Busiest day</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Endpoint">@context.Label</MudTd>
+                    <MudTd DataLabel="Requests">@context.TotalCount</MudTd>
+                    <MudTd DataLabel="Days with traffic">@context.ActiveDays</MudTd>
+                    <MudTd DataLabel="Latest day">@FormatDate(context.LatestDate)</MudTd>
+                    <MudTd DataLabel="Busiest day">@FormatPeak(context)</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+
+        <MudExpansionPanels MultiExpansion="true">
+            @foreach (StatisticsEntry entry in _entries)
+            {
+                <MudExpansionPanel Text="@($"{entry.Label} ({entry.TotalCount})")">
+                    @if (entry.History.Count == 0)
+                    {
+                        <MudText Typo="Typo.body2">No daily history recorded.</MudText>
+                    }
+                    else
+                    {
+                        <MudTable Items="entry.History" Dense="true" Hover="true" Breakpoint="Breakpoint.Sm">
+                            <HeaderContent>
+                                <MudTh>Date</MudTh>
+                                <MudTh>Requests</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Date">@context.Date.ToString("yyyy-MM-dd")</MudTd>
+                                <MudTd DataLabel="Requests">@context.Count</MudTd>
+                            </RowTemplate>
+                        </MudTable>
+                    }
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    </MudStack>
 }
 
 @code {
     private UsageStatisticsRig? _statistics;
-    private ulong _totalCount;
-    private ulong _rigCount;
+    private readonly List<StatisticsEntry> _entries = new();
+    private long _totalCount;
+    private long _peakDailyCount;
+    private DateTimeOffset? _latestRequestDate;
+    private DateTimeOffset? _peakDailyDate;
     private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
@@ -35,15 +107,7 @@ else
             _statistics = await RigApiClient.GetUsageStatisticsAsync();
             if (_statistics != null)
             {
-                _totalCount = Sum(_statistics.GetAllRigIdPerDay)
-                    + Sum(_statistics.GetAllRigMetaInfoPerDay)
-                    + Sum(_statistics.GetRigByIdPerDay)
-                    + Sum(_statistics.GetAllRigLightPerDay)
-                    + Sum(_statistics.GetAllRigPerDay)
-                    + Sum(_statistics.PostRigPerDay)
-                    + Sum(_statistics.PutRigByIdPerDay)
-                    + Sum(_statistics.DeleteRigByIdPerDay);
-                _rigCount = _totalCount;
+                BuildStatistics();
             }
         }
         catch (Exception ex)
@@ -57,5 +121,75 @@ else
         }
     }
 
-    private static ulong Sum(History? history) => history?.Data?.Aggregate<CountPerDay, ulong>(0, (current, item) => current + (ulong)item.Count) ?? 0;
+    private void BuildStatistics()
+    {
+        _entries.Clear();
+
+        AddEntry("GET Rig IDs", _statistics?.GetAllRigIdPerDay);
+        AddEntry("GET Rig metadata", _statistics?.GetAllRigMetaInfoPerDay);
+        AddEntry("GET Rig by ID", _statistics?.GetRigByIdPerDay);
+        AddEntry("GET Rig light data", _statistics?.GetAllRigLightPerDay);
+        AddEntry("GET Rig heavy data", _statistics?.GetAllRigPerDay);
+        AddEntry("POST Rig", _statistics?.PostRigPerDay);
+        AddEntry("PUT Rig by ID", _statistics?.PutRigByIdPerDay);
+        AddEntry("DELETE Rig by ID", _statistics?.DeleteRigByIdPerDay);
+
+        _totalCount = _entries.Aggregate<StatisticsEntry, long>(0, (sum, entry) => sum + entry.TotalCount);
+
+        CountPerDay? latestPoint = _entries
+            .SelectMany(entry => entry.History)
+            .OrderByDescending(point => point.Date)
+            .FirstOrDefault();
+
+        _latestRequestDate = latestPoint?.Date;
+
+        CountPerDay? peakPoint = _entries
+            .SelectMany(entry => entry.History)
+            .OrderByDescending(point => point.Count)
+            .ThenByDescending(point => point.Date)
+            .FirstOrDefault();
+
+        _peakDailyCount = peakPoint?.Count ?? 0;
+        _peakDailyDate = peakPoint?.Date;
+    }
+
+    private void AddEntry(string label, History? history)
+    {
+        List<CountPerDay> points = history?.Data?
+            .OrderByDescending(point => point.Date)
+            .ToList() ?? new List<CountPerDay>();
+
+        _entries.Add(new StatisticsEntry
+        {
+            Label = label,
+            History = points,
+            TotalCount = points.Aggregate<CountPerDay, long>(0, (sum, point) => sum + point.Count),
+            ActiveDays = points.Count,
+            LatestDate = points.Count > 0 ? points[0].Date : null,
+            PeakDailyCount = points.Count > 0 ? points.Max(point => point.Count) : 0,
+            PeakDailyDate = points.Count > 0
+                ? points
+                    .OrderByDescending(point => point.Count)
+                    .ThenByDescending(point => point.Date)
+                    .First()
+                    .Date
+                : null
+        });
+    }
+
+    private static string FormatDate(DateTimeOffset? value) => value?.ToString("yyyy-MM-dd") ?? "N/A";
+
+    private static string FormatPeak(StatisticsEntry entry) =>
+        entry.PeakDailyDate.HasValue ? $"{entry.PeakDailyCount} on {entry.PeakDailyDate:yyyy-MM-dd}" : "N/A";
+
+    private sealed class StatisticsEntry
+    {
+        public string Label { get; init; } = string.Empty;
+        public List<CountPerDay> History { get; init; } = new();
+        public long TotalCount { get; init; }
+        public int ActiveDays { get; init; }
+        public DateTimeOffset? LatestDate { get; init; }
+        public long PeakDailyCount { get; init; }
+        public DateTimeOffset? PeakDailyDate { get; init; }
+    }
 }

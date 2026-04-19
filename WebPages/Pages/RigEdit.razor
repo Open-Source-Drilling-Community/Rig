@@ -932,7 +932,7 @@
         }
     }
 
-    private void BackToList() => NavigationManager.NavigateTo("/Rig/webapp/Rig");
+    private void BackToList() => NavigationManager.NavigateTo(BuildPageUri("Rig"));
 
     private static IEnumerable<RigTreeNode> FlattenNodes(RigTreeNode node)
     {
@@ -1038,5 +1038,8 @@
     }
 
     private void UpdateCurrentRigDepthReferenceSource() => DataUtils.ApplyRigClusterReferenceValues(_currentRig, CurrentRigCluster);
+
+    private string BuildPageUri(string relativePath) =>
+        new Uri(new Uri(NavigationManager.BaseUri), relativePath).ToString();
 }
 

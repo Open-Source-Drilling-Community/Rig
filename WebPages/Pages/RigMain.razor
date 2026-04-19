@@ -139,9 +139,9 @@ private async Task LoadClusters()
         .ToDictionary(cluster => cluster.MetaInfo.ID, cluster => cluster);
 }
 
-private void CreateRig() => NavigationManager.NavigateTo("/Rig/webapp/Rig/Edit");
+private void CreateRig() => NavigationManager.NavigateTo(BuildPageUri("Rig/Edit"));
 
-private void EditRig(RigLight rig) => NavigationManager.NavigateTo($"/Rig/webapp/Rig/Edit/{rig.MetaInfo?.ID}");
+private void EditRig(RigLight rig) => NavigationManager.NavigateTo(BuildPageUri($"Rig/Edit/{rig.MetaInfo?.ID}"));
 
 private async Task ViewRig(RigLight rig)
 {
@@ -234,5 +234,8 @@ private void CloseSelectedRig()
 
 private void UpdateSelectedRigDepthReferenceSource() =>
     DataUtils.ApplyRigReferenceValues(_selectedRig, _clusters);
+
+private string BuildPageUri(string relativePath) =>
+    new Uri(new Uri(NavigationManager.BaseUri), relativePath).ToString();
 }
 

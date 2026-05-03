@@ -35,7 +35,8 @@ builder.Services.AddMudServices(config =>
 var app = builder.Build();
 
 app.UseForwardedHeaders();
-app.UsePathBase("/Rig/webapp");
+var basePath = "/rig/webapp";
+app.UsePathBase(basePath);
 
 if (!app.Environment.IsDevelopment())
 {
@@ -49,3 +50,4 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.Run();
+

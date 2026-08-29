@@ -44,4 +44,4 @@ jobs:
         run: dotnet pack WebPages/WebPages.csproj --configuration Release --no-build -p:PackageVersion=${{ env.PACKAGE_VERSION }} --output artifacts
 
       - name: Publish to NuGet.org
-        run: dotnet nuget push "artifacts/NORCE.Drilling.Rig.WebPages.${{ env.PACKAGE_VERSION }}.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+        run: dotnet nuget push "artifacts/OSDC.Drilling.Rig.WebPages.${{ env.PACKAGE_VERSION }}.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate

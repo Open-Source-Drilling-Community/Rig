@@ -1,1 +1,1 @@
-namespace NORCE.Drilling.Rig.WebPages.Shared;
+namespace OSDC.Drilling.Rig.WebPages.Shared;

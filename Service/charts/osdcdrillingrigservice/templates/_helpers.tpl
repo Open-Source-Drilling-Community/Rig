@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "norcedrillingrigservice.name" -}}
+{{- define "osdcdrillingrigservice.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "norcedrillingrigservice.fullname" -}}
+{{- define "osdcdrillingrigservice.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "norcedrillingrigservice.chart" -}}
+{{- define "osdcdrillingrigservice.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "norcedrillingrigservice.labels" -}}
-helm.sh/chart: {{ include "norcedrillingrigservice.chart" . }}
-{{ include "norcedrillingrigservice.selectorLabels" . }}
+{{- define "osdcdrillingrigservice.labels" -}}
+helm.sh/chart: {{ include "osdcdrillingrigservice.chart" . }}
+{{ include "osdcdrillingrigservice.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "norcedrillingrigservice.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "norcedrillingrigservice.name" . }}
+{{- define "osdcdrillingrigservice.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "osdcdrillingrigservice.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "norcedrillingrigservice.serviceAccountName" -}}
+{{- define "osdcdrillingrigservice.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "norcedrillingrigservice.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "osdcdrillingrigservice.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

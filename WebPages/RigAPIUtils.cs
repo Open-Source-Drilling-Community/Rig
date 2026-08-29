@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using OSDC.DotnetLibraries.Drilling.WebAppUtils;
 
-namespace NORCE.Drilling.Rig.WebPages;
+namespace OSDC.Drilling.Rig.WebPages;
 
 public class RigAPIUtils : APIUtils, IRigAPIUtils
 {

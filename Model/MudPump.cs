@@ -2,7 +2,7 @@ using OSDC.DotnetLibraries.Drilling.DrillingProperties;
 using OSDC.DotnetLibraries.General.DataManagement;
 using System;
 
-namespace NORCE.Drilling.Rig.Model
+namespace OSDC.Drilling.Rig.Model
 {
     public class MudPump : RigEquipmentBase
     {

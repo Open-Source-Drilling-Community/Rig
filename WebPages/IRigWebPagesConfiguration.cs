@@ -1,6 +1,6 @@
 using OSDC.DotnetLibraries.Drilling.WebAppUtils;
 
-namespace NORCE.Drilling.Rig.WebPages;
+namespace OSDC.Drilling.Rig.WebPages;
 
 public interface IRigWebPagesConfiguration :
     IRigHostURL,

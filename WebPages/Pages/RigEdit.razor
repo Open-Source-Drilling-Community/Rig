@@ -198,14 +198,14 @@
                                     @if (_currentRig.IsFixedPlatform)
                                     {
                                         <MudItem xs="12" md="6">
-                                            <MudSelect T="NORCE.Drilling.Rig.ModelShared.Field"
+                                            <MudSelect T="OSDC.Drilling.Rig.ModelShared.Field"
                                                        Label="Field"
                                                        Value="@_selectedField"
-                                                       ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.Field?>(this, OnFieldChanged))"
+                                                       ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.Field?>(this, OnFieldChanged))"
                                                        Variant="Variant.Outlined"
                                                        Dense="true"
                                                        ToStringFunc="@(s => s?.Name)">
-                                                @foreach (KeyValuePair<Guid, NORCE.Drilling.Rig.ModelShared.Field> fieldKvp in _fields.OrderBy(x => x.Value?.Name))
+                                                @foreach (KeyValuePair<Guid, OSDC.Drilling.Rig.ModelShared.Field> fieldKvp in _fields.OrderBy(x => x.Value?.Name))
                                                 {
                                                     if (fieldKvp.Key != Guid.Empty && fieldKvp.Value != null && !string.IsNullOrWhiteSpace(fieldKvp.Value.Name))
                                                     {
@@ -215,15 +215,15 @@
                                             </MudSelect>
                                         </MudItem>
                                         <MudItem xs="12" md="6">
-                                            <MudSelect T="NORCE.Drilling.Rig.ModelShared.Cluster"
+                                            <MudSelect T="OSDC.Drilling.Rig.ModelShared.Cluster"
                                                        Label="Cluster"
                                                        Value="@_selectedCluster"
-                                                       ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.Cluster?>(this, OnClusterChanged))"
+                                                       ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.Cluster?>(this, OnClusterChanged))"
                                                        Variant="Variant.Outlined"
                                                        Dense="true"
                                                        Disabled="@(_selectedField == null)"
                                                        ToStringFunc="@(s => s?.Name)">
-                                                @foreach (KeyValuePair<Guid, NORCE.Drilling.Rig.ModelShared.Cluster> clusterKvp in AvailableClusters.OrderBy(x => x.Value?.Name))
+                                                @foreach (KeyValuePair<Guid, OSDC.Drilling.Rig.ModelShared.Cluster> clusterKvp in AvailableClusters.OrderBy(x => x.Value?.Name))
                                                 {
                                                     if (clusterKvp.Value != null)
                                                     {
@@ -264,14 +264,14 @@
                                         <MudTextField @bind-Value="selectedHoistingSystem.Description" Label="Description" Variant="Variant.Outlined" Lines="3" />
                                     </MudItem>
                                     <MudItem xs="12" md="6">
-                                        <MudSelect T="NORCE.Drilling.Rig.ModelShared.HoistingSystemType"
+                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.HoistingSystemType"
                                                    Value="selectedHoistingSystem.HoistingSystemType"
-                                                   ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.HoistingSystemType>(this, value => OnHoistingSystemTypeChanged(selectedHoistingSystem, value)))"
+                                                   ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.HoistingSystemType>(this, value => OnHoistingSystemTypeChanged(selectedHoistingSystem, value)))"
                                                    Label="Hoisting System Type"
                                                    Variant="Variant.Outlined">
-                                            @foreach (NORCE.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType in Enum.GetValues<NORCE.Drilling.Rig.ModelShared.HoistingSystemType>())
+                                            @foreach (OSDC.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.HoistingSystemType>())
                                             {
-                                                <MudSelectItem T="NORCE.Drilling.Rig.ModelShared.HoistingSystemType" Value="hoistingSystemType">@DataUtils.GetDisplayName(hoistingSystemType.ToString())</MudSelectItem>
+                                                <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.HoistingSystemType" Value="hoistingSystemType">@DataUtils.GetDisplayName(hoistingSystemType.ToString())</MudSelectItem>
                                             }
                                         </MudSelect>
                                     </MudItem>
@@ -300,14 +300,14 @@
                                             <MudTextField @bind-Value="selectedTopDrive.SerialNumber" Label="Serial Number" Variant="Variant.Outlined" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
-                                            <MudSelect T="NORCE.Drilling.Rig.ModelShared.TopDriveClass"
+                                            <MudSelect T="OSDC.Drilling.Rig.ModelShared.TopDriveClass"
                                                        Value="selectedTopDrive.TopDriveClass"
-                                                       ValueChanged="@(EventCallback.Factory.Create<NORCE.Drilling.Rig.ModelShared.TopDriveClass>(this, value => selectedTopDrive.TopDriveClass = value))"
+                                                       ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.TopDriveClass>(this, value => selectedTopDrive.TopDriveClass = value))"
                                                        Label="Top Drive Class"
                                                        Variant="Variant.Outlined">
-                                                @foreach (NORCE.Drilling.Rig.ModelShared.TopDriveClass topDriveClass in Enum.GetValues<NORCE.Drilling.Rig.ModelShared.TopDriveClass>())
+                                                @foreach (OSDC.Drilling.Rig.ModelShared.TopDriveClass topDriveClass in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.TopDriveClass>())
                                                 {
-                                                    <MudSelectItem T="NORCE.Drilling.Rig.ModelShared.TopDriveClass" Value="topDriveClass">@GetTopDriveClassLabel(topDriveClass)</MudSelectItem>
+                                                    <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.TopDriveClass" Value="topDriveClass">@GetTopDriveClassLabel(topDriveClass)</MudSelectItem>
                                                 }
                                             </MudSelect>
                                         </MudItem>
@@ -494,12 +494,12 @@
     private string _treeFilter = string.Empty;
     private bool _hideUninstantiatedNodes = true;
     private HashSet<string> _expandedTreeKeys = new(StringComparer.Ordinal);
-    private Dictionary<Guid, NORCE.Drilling.Rig.ModelShared.Field> _fields = new();
-    private Dictionary<Guid, NORCE.Drilling.Rig.ModelShared.Cluster> _clusters = new();
-    private NORCE.Drilling.Rig.ModelShared.Field? _selectedField;
-    private NORCE.Drilling.Rig.ModelShared.Cluster? _selectedCluster;
-    private NORCE.Drilling.Rig.ModelShared.Cluster? CurrentRigCluster =>
-        _selectedCluster ?? (_currentRig?.ClusterID.HasValue == true && _clusters.TryGetValue(_currentRig.ClusterID.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+    private Dictionary<Guid, OSDC.Drilling.Rig.ModelShared.Field> _fields = new();
+    private Dictionary<Guid, OSDC.Drilling.Rig.ModelShared.Cluster> _clusters = new();
+    private OSDC.Drilling.Rig.ModelShared.Field? _selectedField;
+    private OSDC.Drilling.Rig.ModelShared.Cluster? _selectedCluster;
+    private OSDC.Drilling.Rig.ModelShared.Cluster? CurrentRigCluster =>
+        _selectedCluster ?? (_currentRig?.ClusterID.HasValue == true && _clusters.TryGetValue(_currentRig.ClusterID.Value, out OSDC.Drilling.Rig.ModelShared.Cluster? cluster)
             ? cluster
             : null);
 
@@ -516,7 +516,7 @@
             .Take(20)
             .ToList();
 
-    private IEnumerable<KeyValuePair<Guid, NORCE.Drilling.Rig.ModelShared.Cluster>> AvailableClusters =>
+    private IEnumerable<KeyValuePair<Guid, OSDC.Drilling.Rig.ModelShared.Cluster>> AvailableClusters =>
         _clusters.Where(x => x.Value != null
             && x.Value.FieldID != null
             && _selectedField != null
@@ -566,8 +566,8 @@
 
     private async Task LoadFieldAndClusterData()
     {
-        List<NORCE.Drilling.Rig.ModelShared.Field> fields = await FieldClusterApiClient.GetFieldsAsync();
-        foreach (NORCE.Drilling.Rig.ModelShared.Field field in fields)
+        List<OSDC.Drilling.Rig.ModelShared.Field> fields = await FieldClusterApiClient.GetFieldsAsync();
+        foreach (OSDC.Drilling.Rig.ModelShared.Field field in fields)
         {
             if (field.MetaInfo != null && field.MetaInfo.ID != Guid.Empty && !_fields.ContainsKey(field.MetaInfo.ID))
             {
@@ -575,8 +575,8 @@
             }
         }
 
-        List<NORCE.Drilling.Rig.ModelShared.Cluster> clusters = await FieldClusterApiClient.GetClustersAsync();
-        foreach (NORCE.Drilling.Rig.ModelShared.Cluster cluster in clusters)
+        List<OSDC.Drilling.Rig.ModelShared.Cluster> clusters = await FieldClusterApiClient.GetClustersAsync();
+        foreach (OSDC.Drilling.Rig.ModelShared.Cluster cluster in clusters)
         {
             if (cluster.MetaInfo != null && cluster.MetaInfo.ID != Guid.Empty && !_clusters.ContainsKey(cluster.MetaInfo.ID))
             {
@@ -598,7 +598,7 @@
             return;
         }
 
-        if (_currentRig.ClusterID.HasValue && _clusters.TryGetValue(_currentRig.ClusterID.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster))
+        if (_currentRig.ClusterID.HasValue && _clusters.TryGetValue(_currentRig.ClusterID.Value, out OSDC.Drilling.Rig.ModelShared.Cluster? cluster))
         {
             _selectedCluster = cluster;
             if (cluster.FieldID.HasValue)
@@ -608,11 +608,11 @@
         }
     }
 
-    private void OnHoistingSystemTypeChanged(HoistingSystem hoistingSystem, NORCE.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType)
+    private void OnHoistingSystemTypeChanged(HoistingSystem hoistingSystem, OSDC.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType)
     {
         hoistingSystem.HoistingSystemType = hoistingSystemType;
 
-        if (hoistingSystemType == NORCE.Drilling.Rig.ModelShared.HoistingSystemType.Drawworks)
+        if (hoistingSystemType == OSDC.Drilling.Rig.ModelShared.HoistingSystemType.Drawworks)
         {
             hoistingSystem.Drawworks ??= new Drawworks { Name = "Drawworks" };
             hoistingSystem.CrownBlock ??= new CrownBlock { Name = "Crown Block" };
@@ -634,10 +634,10 @@
     private static bool IsTopDriveController(TopDrive topDrive, string controllerTypeName) =>
         string.Equals(topDrive.TopDriveControllerType.ToString(), controllerTypeName, StringComparison.Ordinal);
 
-    private static string GetTopDriveClassLabel(NORCE.Drilling.Rig.ModelShared.TopDriveClass topDriveClass) => topDriveClass switch
+    private static string GetTopDriveClassLabel(OSDC.Drilling.Rig.ModelShared.TopDriveClass topDriveClass) => topDriveClass switch
     {
-        NORCE.Drilling.Rig.ModelShared.TopDriveClass.AcTopDrive => "AC Top Drive",
-        NORCE.Drilling.Rig.ModelShared.TopDriveClass.HydraulicTopDrive => "Hydraulic Top Drive",
+        OSDC.Drilling.Rig.ModelShared.TopDriveClass.AcTopDrive => "AC Top Drive",
+        OSDC.Drilling.Rig.ModelShared.TopDriveClass.HydraulicTopDrive => "Hydraulic Top Drive",
         _ => DataUtils.GetDisplayName(topDriveClass.ToString())
     };
 
@@ -654,11 +654,11 @@
     {
         if (string.IsNullOrWhiteSpace(controllerTypeName) || controllerTypeName == "Unknown")
         {
-            topDrive.TopDriveControllerType = NORCE.Drilling.Rig.ModelShared.TopDriveControllerType.Unknown;
+            topDrive.TopDriveControllerType = OSDC.Drilling.Rig.ModelShared.TopDriveControllerType.Unknown;
             return;
         }
 
-        if (Enum.TryParse(controllerTypeName, out NORCE.Drilling.Rig.ModelShared.TopDriveControllerType parsed))
+        if (Enum.TryParse(controllerTypeName, out OSDC.Drilling.Rig.ModelShared.TopDriveControllerType parsed))
         {
             topDrive.TopDriveControllerType = parsed;
         }
@@ -843,7 +843,7 @@
         return Task.CompletedTask;
     }
 
-    private async Task OnFieldChanged(NORCE.Drilling.Rig.ModelShared.Field? field)
+    private async Task OnFieldChanged(OSDC.Drilling.Rig.ModelShared.Field? field)
     {
         _selectedField = field;
         _selectedCluster = null;
@@ -854,7 +854,7 @@
         await UpdateCurrentRigDepthReferenceSourceAsync();
     }
 
-    private async Task OnClusterChanged(NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+    private async Task OnClusterChanged(OSDC.Drilling.Rig.ModelShared.Cluster? cluster)
     {
         _selectedCluster = cluster;
         if (_currentRig != null)

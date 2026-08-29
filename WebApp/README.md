@@ -28,11 +28,11 @@ Its main responsibilities are:
 - generated shared DTOs from `ModelSharedOut`
 - domain model types from `Model`
 
-The project file is [`WebApp.csproj`](c:\NORCE-DrillingAndWells\Rig\WebApp\WebApp.csproj).
+The project file is [`WebApp.csproj`](C:\OSDC\Rig\WebApp\WebApp.csproj).
 
 ## Application Structure
 
-The startup entry point is [`Program.cs`](c:\NORCE-DrillingAndWells\Rig\WebApp\Program.cs).
+The startup entry point is [`Program.cs`](C:\OSDC\Rig\WebApp\Program.cs).
 
 At startup the application:
 
@@ -45,14 +45,14 @@ At startup the application:
 
 The main user-facing pages are:
 
-- [`Pages/RigMain.razor`](c:\NORCE-DrillingAndWells\Rig\WebApp\Pages\RigMain.razor)  
+- [`Pages/RigMain.razor`](C:\OSDC\Rig\WebApp\Pages\RigMain.razor)
   Rig catalog/list page with search, refresh, detail viewing, edit navigation, and delete actions.
-- [`Pages/RigEdit.razor`](c:\NORCE-DrillingAndWells\Rig\WebApp\Pages\RigEdit.razor)  
+- [`Pages/RigEdit.razor`](C:\OSDC\Rig\WebApp\Pages\RigEdit.razor)
   Main editor for creating or updating rigs, including tree-based navigation of the nested Rig object graph.
-- [`Pages/StatisticsMain.razor`](c:\NORCE-DrillingAndWells\Rig\WebApp\Pages\StatisticsMain.razor)  
+- [`Pages/StatisticsMain.razor`](C:\OSDC\Rig\WebApp\Pages\StatisticsMain.razor)
   Summary view of usage statistics returned by the Rig service.
 
-The component library under [`Components`](c:\NORCE-DrillingAndWells\Rig\WebApp\Components) contains reusable editors and viewers for the many nested rig-related model types.
+The component library under [`Components`](C:\OSDC\Rig\WebApp\Components) contains reusable editors and viewers for the many nested rig-related model types.
 
 ## API Integration
 
@@ -65,9 +65,9 @@ The web app talks to several backend services:
 
 The client helpers are defined in:
 
-- [`Shared/APIUtils.cs`](c:\NORCE-DrillingAndWells\Rig\WebApp\Shared\APIUtils.cs)
-- [`Shared/RigApiClient.cs`](c:\NORCE-DrillingAndWells\Rig\WebApp\Shared\RigApiClient.cs)
-- [`Shared/FieldClusterApiClient.cs`](c:\NORCE-DrillingAndWells\Rig\WebApp\Shared\FieldClusterApiClient.cs)
+- [`Shared/APIUtils.cs`](C:\OSDC\Rig\WebApp\Shared\APIUtils.cs)
+- [`Shared/RigApiClient.cs`](C:\OSDC\Rig\WebApp\Shared\RigApiClient.cs)
+- [`Shared/FieldClusterApiClient.cs`](C:\OSDC\Rig\WebApp\Shared\FieldClusterApiClient.cs)
 
 By default:
 
@@ -80,7 +80,7 @@ These values can be overridden through configuration.
 
 ## Configuration
 
-The configurable host URLs are surfaced through [`Configuration.cs`](c:\NORCE-DrillingAndWells\Rig\WebApp\Configuration.cs):
+The configurable host URLs are surfaced through [`Configuration.cs`](C:\OSDC\Rig\WebApp\Configuration.cs):
 
 - `RigHostURL`
 - `UnitConversionHostURL`
@@ -91,9 +91,9 @@ These can be supplied through `appsettings`, environment variables, or other sta
 
 Relevant configuration files include:
 
-- [`appsettings.json`](c:\NORCE-DrillingAndWells\Rig\WebApp\appsettings.json)
-- [`appsettings.Development.json`](c:\NORCE-DrillingAndWells\Rig\WebApp\appsettings.Development.json)
-- [`appsettings.Production.json`](c:\NORCE-DrillingAndWells\Rig\WebApp\appsettings.Production.json)
+- [`appsettings.json`](C:\OSDC\Rig\WebApp\appsettings.json)
+- [`appsettings.Development.json`](C:\OSDC\Rig\WebApp\appsettings.Development.json)
+- [`appsettings.Production.json`](C:\OSDC\Rig\WebApp\appsettings.Production.json)
 
 ## Usage
 
@@ -128,10 +128,10 @@ The current UI supports these primary flows:
 
 This project includes container and Helm deployment assets:
 
-- [`Dockerfile`](c:\NORCE-DrillingAndWells\Rig\WebApp\Dockerfile)
-- [`charts/norcedrillingrigwebappclient`](c:\NORCE-DrillingAndWells\Rig\WebApp\charts\norcedrillingrigwebappclient)
+- [`Dockerfile`](C:\OSDC\Rig\WebApp\Dockerfile)
+- [`charts/osdcdrillingrigwebappclient`](C:\OSDC\Rig\WebApp\charts\osdcdrillingrigwebappclient)
 
-The web app is packaged as the `norcedrillingrigwebappclient` container in the broader deployment setup.
+The web app is packaged as the `osdcdrillingrigwebappclient` container in the broader deployment setup.
 
 ## Notes For Contributors
 
@@ -142,7 +142,7 @@ The web app is packaged as the `norcedrillingrigwebappclient` container in the b
 
 ## License
 
-This project is provided under the MIT License. See [`LICENSE`](c:\NORCE-DrillingAndWells\Rig\WebApp\LICENSE).
+This project is provided under the MIT License. See [`LICENSE`](C:\OSDC\Rig\WebApp\LICENSE).
 
 ## Vertical Datum integration
 

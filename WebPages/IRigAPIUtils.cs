@@ -1,4 +1,4 @@
-namespace NORCE.Drilling.Rig.WebPages;
+namespace OSDC.Drilling.Rig.WebPages;
 
 public interface IRigAPIUtils
 {

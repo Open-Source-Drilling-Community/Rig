@@ -2,7 +2,7 @@
 
 ## Overview
 
-`NORCE.Drilling.Rig.Model` contains the rig master-data model used by the `Rig`
+`OSDC.Drilling.Rig.Model` contains the rig master-data model used by the `Rig`
 solution. The model is centered around the `Rig` aggregate and describes
 drilling equipment, mast configuration, mud-system equipment, MPD equipment,
 BOP-related equipment, and supporting metadata used by the rest of the

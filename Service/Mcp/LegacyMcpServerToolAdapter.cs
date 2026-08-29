@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
-namespace NORCE.Drilling.Rig.Service.Mcp;
+namespace OSDC.Drilling.Rig.Service.Mcp;
 
 internal sealed class LegacyMcpServerToolAdapter : McpServerTool
 {

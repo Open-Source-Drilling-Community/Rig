@@ -3,9 +3,9 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NORCE.Drilling.Rig.Service.Managers;
+using OSDC.Drilling.Rig.Service.Managers;
 
-namespace NORCE.Drilling.Rig.Service.Mcp;
+namespace OSDC.Drilling.Rig.Service.Mcp;
 
 public sealed class McpHubRegistrationService : BackgroundService
 {

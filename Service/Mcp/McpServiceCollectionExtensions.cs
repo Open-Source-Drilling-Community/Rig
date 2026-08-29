@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
 
-namespace NORCE.Drilling.Rig.Service.Mcp;
+namespace OSDC.Drilling.Rig.Service.Mcp;
 
 public static class McpServiceCollectionExtensions
 {

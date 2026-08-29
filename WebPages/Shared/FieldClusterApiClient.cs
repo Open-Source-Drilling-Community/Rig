@@ -1,9 +1,9 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using RigShared = NORCE.Drilling.Rig.ModelShared;
+using RigShared = OSDC.Drilling.Rig.ModelShared;
 
-namespace NORCE.Drilling.Rig.WebPages.Shared;
+namespace OSDC.Drilling.Rig.WebPages.Shared;
 
 public sealed class FieldClusterApiClient
 {

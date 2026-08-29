@@ -2,9 +2,9 @@ using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Server;
-using NORCE.Drilling.Rig.Service.Controllers;
-using NORCE.Drilling.Rig.Service.Mcp;
-using NORCE.Drilling.Rig.Service.Mcp.Tools;
+using OSDC.Drilling.Rig.Service.Controllers;
+using OSDC.Drilling.Rig.Service.Mcp;
+using OSDC.Drilling.Rig.Service.Mcp.Tools;
 
 namespace ServiceTest;
 

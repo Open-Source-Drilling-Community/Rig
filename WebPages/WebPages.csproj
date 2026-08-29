@@ -1,14 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-	<AssemblyName>NORCE.Drilling.Rig.WebPages</AssemblyName>
-    <RootNamespace>NORCE.Drilling.Rig.WebPages</RootNamespace>
-    <PackageId>NORCE.Drilling.Rig.WebPages</PackageId>
-    <Title>NORCE.Drilling.Rig.WebPages</Title>
+	<AssemblyName>OSDC.Drilling.Rig.WebPages</AssemblyName>
+    <RootNamespace>OSDC.Drilling.Rig.WebPages</RootNamespace>
+    <PackageId>OSDC.Drilling.Rig.WebPages</PackageId>
+    <Title>OSDC.Drilling.Rig.WebPages</Title>
     <Authors>Eric Cayeux</Authors>
     <Company>NORCE</Company>
     <Description>Reusable Razor class library containing the Rig pages, editor components, and helper utilities. See the package README for setup, dependencies, and usage.</Description>

@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Reflection;
-using RigShared = NORCE.Drilling.Rig.ModelShared;
+using RigShared = OSDC.Drilling.Rig.ModelShared;
 
-namespace NORCE.Drilling.Rig.WebPages.Shared;
+namespace OSDC.Drilling.Rig.WebPages.Shared;
 
 public static class RigTreeBuilder
 {

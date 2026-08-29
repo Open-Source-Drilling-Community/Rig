@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Reflection;
 using System.Text.Json.Nodes;
-using NORCE.Drilling.Rig.Model;
+using OSDC.Drilling.Rig.Model;
 
-namespace NORCE.Drilling.Rig.Service.Mcp.Tools;
+namespace OSDC.Drilling.Rig.Service.Mcp.Tools;
 
 internal static class McpToolArgumentHelpers
 {

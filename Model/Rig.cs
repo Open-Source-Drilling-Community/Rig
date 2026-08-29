@@ -2,7 +2,7 @@ using OSDC.DotnetLibraries.General.DataManagement;
 using System;
 using System.Collections.Generic;
 
-namespace NORCE.Drilling.Rig.Model
+namespace OSDC.Drilling.Rig.Model
 {
     public class Rig
     {

@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NORCE.Drilling.Rig.Model;
+using OSDC.Drilling.Rig.Model;
 
-namespace NORCE.Drilling.Rig.Service.Controllers
+namespace OSDC.Drilling.Rig.Service.Controllers
 {
     [Produces("application/json")]
     [Route("[controller]")]

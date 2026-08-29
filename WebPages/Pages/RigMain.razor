@@ -33,7 +33,7 @@
     };
 
     private List<RigLight> _rigs = new();
-    private Dictionary<Guid, NORCE.Drilling.Rig.ModelShared.Cluster> _clusters = new();
+    private Dictionary<Guid, OSDC.Drilling.Rig.ModelShared.Cluster> _clusters = new();
     private Rig? _selectedRig;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
@@ -134,7 +134,7 @@ private async Task Reload() => await LoadRigs();
 
 private async Task LoadClusters()
 {
-    List<NORCE.Drilling.Rig.ModelShared.Cluster> clusters = await FieldClusterApiClient.GetClustersAsync();
+    List<OSDC.Drilling.Rig.ModelShared.Cluster> clusters = await FieldClusterApiClient.GetClustersAsync();
     _clusters = clusters
         .Where(cluster => cluster?.MetaInfo != null && cluster.MetaInfo.ID != Guid.Empty)
         .ToDictionary(cluster => cluster.MetaInfo.ID, cluster => cluster);
@@ -210,19 +210,19 @@ private string GetClusterName(Guid? clusterId)
         return string.Empty;
     }
 
-    return _clusters.TryGetValue(clusterId.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+    return _clusters.TryGetValue(clusterId.Value, out OSDC.Drilling.Rig.ModelShared.Cluster? cluster)
         ? cluster.Name ?? clusterId.Value.ToString()
         : clusterId.Value.ToString();
 }
 
-private NORCE.Drilling.Rig.ModelShared.Cluster? GetCluster(Guid? clusterId)
+private OSDC.Drilling.Rig.ModelShared.Cluster? GetCluster(Guid? clusterId)
 {
     if (!clusterId.HasValue)
     {
         return null;
     }
 
-    return _clusters.TryGetValue(clusterId.Value, out NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+    return _clusters.TryGetValue(clusterId.Value, out OSDC.Drilling.Rig.ModelShared.Cluster? cluster)
         ? cluster
         : null;
 }

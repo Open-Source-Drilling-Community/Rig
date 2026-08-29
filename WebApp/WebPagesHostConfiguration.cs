@@ -1,6 +1,6 @@
-using NORCE.Drilling.Rig.WebPages;
+using OSDC.Drilling.Rig.WebPages;
 
-namespace NORCE.Drilling.Rig.WebApp;
+namespace OSDC.Drilling.Rig.WebApp;
 
 public class WebPagesHostConfiguration : IRigWebPagesConfiguration
 {

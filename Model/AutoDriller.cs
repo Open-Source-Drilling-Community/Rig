@@ -1,4 +1,4 @@
-namespace NORCE.Drilling.Rig.Model
+namespace OSDC.Drilling.Rig.Model
 {
     public class AutoDriller : RigEquipmentBase
     {

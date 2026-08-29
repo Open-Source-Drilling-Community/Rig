@@ -2,7 +2,7 @@
 
 `ModelSharedOut` is the outbound shared-model generator for the Rig microservice solution.
 
-This project is a `.NET 8` console application that reads one or more OpenAPI/JSON schema documents from [`json-schemas`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\json-schemas), merges them into a single OpenAPI bundle, normalizes schema references, and then generates a C# client and DTO model for downstream consumers of the Rig service.
+This project is a `.NET 8` console application that reads one or more OpenAPI/JSON schema documents from [`json-schemas`](C:\OSDC\Rig\ModelSharedOut\json-schemas), merges them into a single OpenAPI bundle, normalizes schema references, and then generates a C# client and DTO model for downstream consumers of the Rig service.
 
 The generated code is intended to be referenced by client-side projects in this solution, such as `ServiceTest` and `WebApp`, so they can use a single strongly typed API client and a consistent contract model.
 
@@ -16,19 +16,19 @@ The Rig solution uses a distributed shared-model approach:
 
 `ModelSharedOut` automates that process for the Rig service by:
 
-- loading all `*.json` files in [`json-schemas`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\json-schemas)
+- loading all `*.json` files in [`json-schemas`](C:\OSDC\Rig\ModelSharedOut\json-schemas)
 - merging their OpenAPI `paths` and `components.schemas`
 - rewriting schema references so type names use short, collision-resistant identifiers
 - exporting a merged OpenAPI document for Swagger/UI exposure
-- generating a C# client and DTO set in the namespace `NORCE.Drilling.Rig.ModelShared`
+- generating a C# client and DTO set in the namespace `OSDC.Drilling.Rig.ModelShared`
 
 ## What It Produces
 
 Running the generator creates or overwrites these main artifacts:
 
-- [`RigMergedModel.cs`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\RigMergedModel.cs)  
+- [`RigMergedModel.cs`](C:\OSDC\Rig\ModelSharedOut\RigMergedModel.cs)
   Generated C# client and DTO classes used by consumers of the Rig microservice.
-- [`RigMergedModel.json`](C:\NORCE-DrillingAndWells\Rig\Service\wwwroot\json-schema\RigMergedModel.json)  
+- [`RigMergedModel.json`](C:\OSDC\Rig\Service\wwwroot\json-schema\RigMergedModel.json)
   Merged OpenAPI document copied into the `Service` project so it can be exposed publicly.
 
 The generated C# file includes:
@@ -39,14 +39,14 @@ The generated C# file includes:
 
 ## How It Works
 
-The generator entry point is [`Program.cs`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\Program.cs).
+The generator entry point is [`Program.cs`](C:\OSDC\Rig\ModelSharedOut\Program.cs).
 
 At runtime it:
 
 1. Locates the solution root by walking upward until it finds a `*.sln` file.
 2. Reads all local OpenAPI JSON files from `ModelSharedOut/json-schemas/`.
 3. Merges them into a single `OpenApiDocument`.
-4. Uses [`OpenApiSchemaReferenceUpdater.cs`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\OpenApiSchemaReferenceUpdater.cs) to:
+4. Uses [`OpenApiSchemaReferenceUpdater.cs`](C:\OSDC\Rig\ModelSharedOut\OpenApiSchemaReferenceUpdater.cs) to:
    - clone schemas safely
    - strip namespace-qualified schema names down to short names
    - update all `$ref` schema references in paths, request bodies, responses, and nested schema graphs
@@ -58,7 +58,7 @@ At runtime it:
 
 - .NET SDK 8.0
 - Restored NuGet packages for the solution
-- One or more valid OpenAPI JSON files in [`json-schemas`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\json-schemas)
+- One or more valid OpenAPI JSON files in [`json-schemas`](C:\OSDC\Rig\ModelSharedOut\json-schemas)
 
 ## Usage
 
@@ -76,9 +76,9 @@ Behavior to expect:
 
 ## Typical Workflow
 
-1. Add or update dependency OpenAPI JSON files in [`json-schemas`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\json-schemas).
+1. Add or update dependency OpenAPI JSON files in [`json-schemas`](C:\OSDC\Rig\ModelSharedOut\json-schemas).
 2. Run the generator.
-3. Review the regenerated [`RigMergedModel.cs`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\RigMergedModel.cs) and merged JSON bundle.
+3. Review the regenerated [`RigMergedModel.cs`](C:\OSDC\Rig\ModelSharedOut\RigMergedModel.cs) and merged JSON bundle.
 4. Rebuild the solution and run any relevant tests or client applications that consume the shared model.
 
 ## Maintaining Input Schemas
@@ -94,7 +94,7 @@ This is deliberate because it makes contract changes visible in commits and avoi
 
 ## Notes For Contributors
 
-- Treat [`RigMergedModel.cs`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\RigMergedModel.cs) as generated code. Do not make manual edits that you expect to keep.
+- Treat [`RigMergedModel.cs`](C:\OSDC\Rig\ModelSharedOut\RigMergedModel.cs) as generated code. Do not make manual edits that you expect to keep.
 - Make changes in the input schemas or generator logic instead.
 - Keep schema naming consistent to reduce collisions when type names are shortened during merge.
 - If you change the generation strategy, verify both generated outputs:
@@ -108,11 +108,11 @@ The generator relies primarily on:
 - `Microsoft.OpenApi.Readers`
 - `NSwag.CodeGeneration.CSharp`
 
-These are declared in [`ModelSharedOut.csproj`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\ModelSharedOut.csproj).
+These are declared in [`ModelSharedOut.csproj`](C:\OSDC\Rig\ModelSharedOut\ModelSharedOut.csproj).
 
 ## License
 
-This project is provided under the MIT License. See [`LICENSE`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\LICENSE).
+This project is provided under the MIT License. See [`LICENSE`](C:\OSDC\Rig\ModelSharedOut\LICENSE).
 
 ## Current schema inputs
 

@@ -1,3 +1,3 @@
 using System.Text.Json.Nodes;
-namespace NORCE.Drilling.Rig.Service.Mcp;
+namespace OSDC.Drilling.Rig.Service.Mcp;
 public sealed record McpHandshake(string ProtocolVersion, string? ClientName, string? ClientVersion, string? SessionId, JsonObject? Capabilities);

@@ -1,4 +1,4 @@
-# NORCE.Drilling.Rig.WebPages
+# OSDC.Drilling.Rig.WebPages
 
 Reusable Razor class library for the Rig web UI.
 

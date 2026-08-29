@@ -3,11 +3,11 @@ using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NORCE.Drilling.Rig.Service.Controllers;
-using NORCE.Drilling.Rig.Service.Managers;
-using RigModel = NORCE.Drilling.Rig.Model.Rig;
+using OSDC.Drilling.Rig.Service.Controllers;
+using OSDC.Drilling.Rig.Service.Managers;
+using RigModel = OSDC.Drilling.Rig.Model.Rig;
 
-namespace NORCE.Drilling.Rig.Service.Mcp.Tools;
+namespace OSDC.Drilling.Rig.Service.Mcp.Tools;
 
 public static class RigRestMcpToolRegistrations
 {

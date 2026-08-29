@@ -1,10 +1,10 @@
-using NORCE.Drilling.Rig.Model;
+using OSDC.Drilling.Rig.Model;
 using OSDC.DotnetLibraries.General.DataManagement;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NORCE.Drilling.Rig.ModelTest
+namespace OSDC.Drilling.Rig.ModelTest
 {
     public class Tests
     {

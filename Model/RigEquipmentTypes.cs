@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace NORCE.Drilling.Rig.Model
+namespace OSDC.Drilling.Rig.Model
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum GeneratorClass

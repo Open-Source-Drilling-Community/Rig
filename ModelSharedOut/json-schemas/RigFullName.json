@@ -37,17 +37,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
               }
             }
           }
@@ -105,7 +105,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
                 }
               }
             }
@@ -132,17 +132,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
               }
             }
           }
@@ -190,7 +190,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigLight"
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigLight"
                   }
                 }
               }
@@ -213,7 +213,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Rig"
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
                   }
                 }
               }
@@ -234,7 +234,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.UsageStatisticsRig"
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.UsageStatisticsRig"
                 }
               }
             }
@@ -245,7 +245,7 @@
   },
   "components": {
     "schemas": {
-      "NORCE.Drilling.Rig.Model.Accumulator": {
+      "OSDC.Drilling.Rig.Model.Accumulator": {
         "type": "object",
         "properties": {
           "Name": {
@@ -273,7 +273,7 @@
             "nullable": true
           },
           "AccumulatorClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AccumulatorClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AccumulatorClass"
           },
           "Capacity": {
             "type": "number",
@@ -293,7 +293,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.AccumulatorClass": {
+      "OSDC.Drilling.Rig.Model.AccumulatorClass": {
         "enum": [
           "Bladder",
           "Diaphragm",
@@ -303,7 +303,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.AutoDriller": {
+      "OSDC.Drilling.Rig.Model.AutoDriller": {
         "type": "object",
         "properties": {
           "Name": {
@@ -331,7 +331,7 @@
             "nullable": true
           },
           "ControlMode": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AutodrillerControlMode"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AutodrillerControlMode"
           },
           "MaxLimitRop": {
             "type": "number",
@@ -396,7 +396,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.AutodrillerControlMode": {
+      "OSDC.Drilling.Rig.Model.AutodrillerControlMode": {
         "enum": [
           "Rop",
           "Diffp",
@@ -406,7 +406,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.AuxSolidsControl": {
+      "OSDC.Drilling.Rig.Model.AuxSolidsControl": {
         "type": "object",
         "properties": {
           "Name": {
@@ -434,7 +434,7 @@
             "nullable": true
           },
           "SolidsControlClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SolidsControlClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SolidsControlClass"
           },
           "DesanderOn": {
             "type": "boolean",
@@ -455,7 +455,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.BopComponentClass": {
+      "OSDC.Drilling.Rig.Model.BopComponentClass": {
         "enum": [
           "AnnularPreventer",
           "BlindRam",
@@ -468,7 +468,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.BopLineClass": {
+      "OSDC.Drilling.Rig.Model.BopLineClass": {
         "enum": [
           "ChokeLine",
           "KillLine",
@@ -478,11 +478,11 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.BopLineDefinition": {
+      "OSDC.Drilling.Rig.Model.BopLineDefinition": {
         "type": "object",
         "properties": {
           "BopLinesClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopLineClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopLineClass"
           },
           "LineOd": {
             "type": "number",
@@ -502,7 +502,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.BopStack": {
+      "OSDC.Drilling.Rig.Model.BopStack": {
         "type": "object",
         "properties": {
           "Name": {
@@ -530,14 +530,14 @@
             "nullable": true
           },
           "BopStackClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopStackClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStackClass"
           },
           "UnitReferenceList": {
             "type": "string",
             "nullable": true
           },
           "BopControlType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControllerType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControllerType"
           },
           "BoreDiameter": {
             "type": "number",
@@ -557,14 +557,14 @@
           "BopComponents": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopStackComponentDefinition"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStackComponentDefinition"
             },
             "nullable": true
           },
           "BopLines": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopLineDefinition"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopLineDefinition"
             },
             "nullable": true
           },
@@ -616,7 +616,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.BopStackClass": {
+      "OSDC.Drilling.Rig.Model.BopStackClass": {
         "enum": [
           "LandBop",
           "MarineSurfaceBop",
@@ -625,11 +625,11 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.BopStackComponentDefinition": {
+      "OSDC.Drilling.Rig.Model.BopStackComponentDefinition": {
         "type": "object",
         "properties": {
           "BopStackComponentClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopComponentClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopComponentClass"
           },
           "BoreDiameter": {
             "type": "number",
@@ -644,7 +644,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CasingDriveClass": {
+      "OSDC.Drilling.Rig.Model.CasingDriveClass": {
         "enum": [
           "Internal",
           "External",
@@ -652,7 +652,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.CasingDriveSystem": {
+      "OSDC.Drilling.Rig.Model.CasingDriveSystem": {
         "type": "object",
         "properties": {
           "Name": {
@@ -680,7 +680,7 @@
             "nullable": true
           },
           "CsgDrvClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingDriveClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingDriveClass"
           },
           "HoistingCapacity": {
             "type": "number",
@@ -730,7 +730,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CasingRunningTool": {
+      "OSDC.Drilling.Rig.Model.CasingRunningTool": {
         "type": "object",
         "properties": {
           "Name": {
@@ -744,7 +744,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CasingTongs": {
+      "OSDC.Drilling.Rig.Model.CasingTongs": {
         "type": "object",
         "properties": {
           "Name": {
@@ -758,7 +758,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CatWalk": {
+      "OSDC.Drilling.Rig.Model.CatWalk": {
         "type": "object",
         "properties": {
           "Name": {
@@ -772,7 +772,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CementPump": {
+      "OSDC.Drilling.Rig.Model.CementPump": {
         "type": "object",
         "properties": {
           "Name": {
@@ -800,7 +800,7 @@
             "nullable": true
           },
           "PumpClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PumpClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PumpClass"
           },
           "PlungerDiameter": {
             "type": "number",
@@ -815,7 +815,7 @@
           "CementPumpDisplacement": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CementPumpDisplacementPoint"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CementPumpDisplacementPoint"
             },
             "nullable": true
           },
@@ -832,7 +832,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CementPumpDisplacementPoint": {
+      "OSDC.Drilling.Rig.Model.CementPumpDisplacementPoint": {
         "type": "object",
         "properties": {
           "StrokeRate": {
@@ -853,7 +853,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CementUnit": {
+      "OSDC.Drilling.Rig.Model.CementUnit": {
         "type": "object",
         "properties": {
           "Name": {
@@ -881,7 +881,7 @@
             "nullable": true
           },
           "Mounting": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MountingType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MountingType"
           },
           "Features": {
             "type": "string",
@@ -895,7 +895,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Centrifuge": {
+      "OSDC.Drilling.Rig.Model.Centrifuge": {
         "type": "object",
         "properties": {
           "Name": {
@@ -909,7 +909,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.ChokeCvCurvePoint": {
+      "OSDC.Drilling.Rig.Model.ChokeCvCurvePoint": {
         "type": "object",
         "properties": {
           "Pressure": {
@@ -925,14 +925,14 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.ChokeFunction": {
+      "OSDC.Drilling.Rig.Model.ChokeFunction": {
         "enum": [
           "PressureControl",
           "Safety"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ChokeManifold": {
+      "OSDC.Drilling.Rig.Model.ChokeManifold": {
         "type": "object",
         "properties": {
           "Name": {
@@ -960,7 +960,7 @@
             "nullable": true
           },
           "ChokeControlClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControlClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControlClass"
           },
           "MaxLimitDesignPressure": {
             "type": "number",
@@ -995,7 +995,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.ChokeNumber": {
+      "OSDC.Drilling.Rig.Model.ChokeNumber": {
         "enum": [
           "Single",
           "Dual",
@@ -1003,7 +1003,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.CoilDriveSystem": {
+      "OSDC.Drilling.Rig.Model.CoilDriveSystem": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1031,7 +1031,7 @@
             "nullable": true
           },
           "CoilDrvClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MountingType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MountingType"
           },
           "ReelPayloadCapacity": {
             "type": "number",
@@ -1131,14 +1131,14 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CompensatorStatus": {
+      "OSDC.Drilling.Rig.Model.CompensatorStatus": {
         "enum": [
           "Active",
           "Inactive"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ContinuousCirculationDevice": {
+      "OSDC.Drilling.Rig.Model.ContinuousCirculationDevice": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1166,7 +1166,7 @@
             "nullable": true
           },
           "CcdControlClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControlClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControlClass"
           },
           "WorkingPumpPressure": {
             "type": "number",
@@ -1216,7 +1216,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.ControlClass": {
+      "OSDC.Drilling.Rig.Model.ControlClass": {
         "enum": [
           "Manual",
           "Automatic",
@@ -1224,7 +1224,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ControllerType": {
+      "OSDC.Drilling.Rig.Model.ControllerType": {
         "enum": [
           "Hydraulic",
           "Electrical",
@@ -1234,7 +1234,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.CountPerDay": {
+      "OSDC.Drilling.Rig.Model.CountPerDay": {
         "type": "object",
         "properties": {
           "Date": {
@@ -1248,7 +1248,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CrownBlock": {
+      "OSDC.Drilling.Rig.Model.CrownBlock": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1313,7 +1313,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CuttingsDryer": {
+      "OSDC.Drilling.Rig.Model.CuttingsDryer": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1327,7 +1327,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.CuttingsTransportSystem": {
+      "OSDC.Drilling.Rig.Model.CuttingsTransportSystem": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1341,7 +1341,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Degasser": {
+      "OSDC.Drilling.Rig.Model.Degasser": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1355,7 +1355,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Derrick": {
+      "OSDC.Drilling.Rig.Model.Derrick": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1383,7 +1383,7 @@
             "nullable": true
           },
           "DerrickClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DerrickClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DerrickClass"
           },
           "Height": {
             "type": "number",
@@ -1413,7 +1413,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DerrickClass": {
+      "OSDC.Drilling.Rig.Model.DerrickClass": {
         "enum": [
           "Conventional",
           "Slant",
@@ -1421,7 +1421,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.Desander": {
+      "OSDC.Drilling.Rig.Model.Desander": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1435,7 +1435,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Desilter": {
+      "OSDC.Drilling.Rig.Model.Desilter": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1449,7 +1449,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Drawworks": {
+      "OSDC.Drilling.Rig.Model.Drawworks": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1477,7 +1477,7 @@
             "nullable": true
           },
           "DrawworksClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrawworksClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrawworksClass"
           },
           "MaxLimitDesignLoad": {
             "type": "number",
@@ -1502,7 +1502,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DrawworksClass": {
+      "OSDC.Drilling.Rig.Model.DrawworksClass": {
         "enum": [
           "DirectDrive",
           "SingleSpeedGearDriven",
@@ -1513,7 +1513,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.DrillLine": {
+      "OSDC.Drilling.Rig.Model.DrillLine": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1573,7 +1573,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DrillingChokeManifold": {
+      "OSDC.Drilling.Rig.Model.DrillingChokeManifold": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1601,7 +1601,7 @@
             "nullable": true
           },
           "ManifoldType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ManifoldClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldClass"
           },
           "TrimSize": {
             "type": "number",
@@ -1639,15 +1639,15 @@
             "nullable": true
           },
           "ChokeNumber": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeNumber"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeNumber"
           },
           "ChokeFunction": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeFunction"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeFunction"
           },
           "ChokeCvCurves": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeCvCurvePoint"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeCvCurvePoint"
             },
             "nullable": true
           },
@@ -1769,7 +1769,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DrillingFluidClass": {
+      "OSDC.Drilling.Rig.Model.DrillingFluidClass": {
         "enum": [
           "OilBased",
           "WaterBased",
@@ -1777,7 +1777,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.DrillingFluidType": {
+      "OSDC.Drilling.Rig.Model.DrillingFluidType": {
         "enum": [
           "AeratedMud",
           "Air",
@@ -1822,7 +1822,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.DrillingFluidTypeDescriptor": {
+      "OSDC.Drilling.Rig.Model.DrillingFluidTypeDescriptor": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1834,15 +1834,15 @@
             "nullable": true
           },
           "DrillingFluidClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingFluidClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidClass"
           },
           "DrillingFluidType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingFluidType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidType"
           }
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DrillingMarineRiser": {
+      "OSDC.Drilling.Rig.Model.DrillingMarineRiser": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1870,7 +1870,7 @@
             "nullable": true
           },
           "RiserClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RiserClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserClass"
           },
           "JointWeight": {
             "type": "number",
@@ -1945,7 +1945,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DrillstringHeaveCompensator": {
+      "OSDC.Drilling.Rig.Model.DrillstringHeaveCompensator": {
         "type": "object",
         "properties": {
           "Name": {
@@ -1973,7 +1973,7 @@
             "nullable": true
           },
           "HeaveCompClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.HeaveCompensatorClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HeaveCompensatorClass"
           },
           "CompensatorCapacity": {
             "type": "number",
@@ -1981,7 +1981,7 @@
             "nullable": true
           },
           "CompensatorStatus": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CompensatorStatus"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CompensatorStatus"
           },
           "MaxLimitCompensatorStroke": {
             "type": "number",
@@ -1991,7 +1991,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DriveMode": {
+      "OSDC.Drilling.Rig.Model.DriveMode": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2019,12 +2019,12 @@
             "nullable": true
           },
           "DriveModeClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DriveModeClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DriveModeClass"
           }
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.DriveModeClass": {
+      "OSDC.Drilling.Rig.Model.DriveModeClass": {
         "enum": [
           "Mechanical",
           "ElectricalDcScr",
@@ -2034,14 +2034,14 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.EngineModelType": {
+      "OSDC.Drilling.Rig.Model.EngineModelType": {
         "enum": [
           "Reciprocating",
           "Turbine"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.FloatValve": {
+      "OSDC.Drilling.Rig.Model.FloatValve": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2069,7 +2069,7 @@
             "nullable": true
           },
           "FloatValveClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FloatValveClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FloatValveClass"
           },
           "Diameter": {
             "type": "number",
@@ -2094,7 +2094,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.FloatValveClass": {
+      "OSDC.Drilling.Rig.Model.FloatValveClass": {
         "enum": [
           "PlungerFloatValve",
           "PortedPlungerValve",
@@ -2103,7 +2103,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.FlowRoutingManifold": {
+      "OSDC.Drilling.Rig.Model.FlowRoutingManifold": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2131,7 +2131,7 @@
             "nullable": true
           },
           "ManifoldType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ManifoldClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldClass"
           },
           "FlangeSize": {
             "type": "number",
@@ -2154,12 +2154,12 @@
             "nullable": true
           },
           "ManifoldFlowPath": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ManifoldFlowPath"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldFlowPath"
           },
           "ManifoldFlowcurves": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RoutingManifoldCurvePoint"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RoutingManifoldCurvePoint"
             },
             "nullable": true
           },
@@ -2221,7 +2221,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.FlowSensor": {
+      "OSDC.Drilling.Rig.Model.FlowSensor": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2249,7 +2249,7 @@
             "nullable": true
           },
           "FlowTransducer": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FlowSensorType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowSensorType"
           },
           "FlowOutOfBorehole": {
             "type": "boolean",
@@ -2268,7 +2268,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.FlowSensorType": {
+      "OSDC.Drilling.Rig.Model.FlowSensorType": {
         "enum": [
           "Coriollis",
           "Paddle",
@@ -2276,7 +2276,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.Generator": {
+      "OSDC.Drilling.Rig.Model.Generator": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2304,7 +2304,7 @@
             "nullable": true
           },
           "GeneratorClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.GeneratorClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorClass"
           },
           "Speed": {
             "type": "number",
@@ -2327,10 +2327,10 @@
             "nullable": true
           },
           "SpeedMode": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SpeedMode"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SpeedMode"
           },
           "EngineModel": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.EngineModelType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EngineModelType"
           },
           "PowerplantGeneratorNumber": {
             "type": "integer",
@@ -2353,10 +2353,10 @@
             "nullable": true
           },
           "CoolingMedium": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.GeneratorCooling"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorCooling"
           },
           "Phases": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.GeneratorPhases"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorPhases"
           },
           "MaxLimitPower": {
             "type": "number",
@@ -2456,7 +2456,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.GeneratorClass": {
+      "OSDC.Drilling.Rig.Model.GeneratorClass": {
         "enum": [
           "Diesel",
           "Gas",
@@ -2470,7 +2470,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.GeneratorCooling": {
+      "OSDC.Drilling.Rig.Model.GeneratorCooling": {
         "enum": [
           "Air",
           "Water",
@@ -2478,7 +2478,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.GeneratorPhases": {
+      "OSDC.Drilling.Rig.Model.GeneratorPhases": {
         "enum": [
           "SinglePhase",
           "TwoPhase",
@@ -2486,7 +2486,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.HeaveCompensatorClass": {
+      "OSDC.Drilling.Rig.Model.HeaveCompensatorClass": {
         "enum": [
           "PassiveCrownMounted",
           "ActiveCrownMounted",
@@ -2497,20 +2497,20 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.History": {
+      "OSDC.Drilling.Rig.Model.History": {
         "type": "object",
         "properties": {
           "Data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CountPerDay"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CountPerDay"
             },
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.HoistingSystem": {
+      "OSDC.Drilling.Rig.Model.HoistingSystem": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2522,24 +2522,24 @@
             "nullable": true
           },
           "HoistingSystemType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.HoistingSystemType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HoistingSystemType"
           },
           "Drawworks": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Drawworks"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Drawworks"
           },
           "CrownBlock": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CrownBlock"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CrownBlock"
           },
           "TravellingBlock": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TravellingBlock"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TravellingBlock"
           },
           "DrillLine": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillLine"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillLine"
           }
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.HoistingSystemType": {
+      "OSDC.Drilling.Rig.Model.HoistingSystemType": {
         "enum": [
           "Drawworks",
           "RamRig",
@@ -2547,7 +2547,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.IronRoughneck": {
+      "OSDC.Drilling.Rig.Model.IronRoughneck": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2561,7 +2561,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Kelly": {
+      "OSDC.Drilling.Rig.Model.Kelly": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2589,7 +2589,7 @@
             "nullable": true
           },
           "KellyClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.KellyClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.KellyClass"
           },
           "KellyJointLength": {
             "type": "number",
@@ -2639,7 +2639,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.KellyClass": {
+      "OSDC.Drilling.Rig.Model.KellyClass": {
         "enum": [
           "Hexagonal",
           "Square",
@@ -2647,14 +2647,14 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ManifoldClass": {
+      "OSDC.Drilling.Rig.Model.ManifoldClass": {
         "enum": [
           "Standalone",
           "Integrated"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ManifoldFlowPath": {
+      "OSDC.Drilling.Rig.Model.ManifoldFlowPath": {
         "enum": [
           "One",
           "Two",
@@ -2662,7 +2662,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.MarineMpdClass": {
+      "OSDC.Drilling.Rig.Model.MarineMpdClass": {
         "enum": [
           "RiserGasHandlingSystem",
           "IntegratedRiserJoint",
@@ -2670,7 +2670,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.MarineMpdEquipment": {
+      "OSDC.Drilling.Rig.Model.MarineMpdEquipment": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2698,7 +2698,7 @@
             "nullable": true
           },
           "MarineMpdClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MarineMpdClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineMpdClass"
           },
           "Length": {
             "type": "number",
@@ -2716,7 +2716,7 @@
             "nullable": true
           },
           "ControlMeans": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ControllerType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControllerType"
           },
           "ContainsFlowSpool": {
             "type": "boolean",
@@ -2748,7 +2748,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.MeasurementAfm": {
+      "OSDC.Drilling.Rig.Model.MeasurementAfm": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2807,7 +2807,7 @@
           "AfmRheometerMeasurements": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RheometerAfmMeasurement"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RheometerAfmMeasurement"
             },
             "nullable": true
           },
@@ -2824,7 +2824,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.MountingType": {
+      "OSDC.Drilling.Rig.Model.MountingType": {
         "enum": [
           "TruckMounted",
           "SkidMounted",
@@ -2834,7 +2834,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.MpdControlDevice": {
+      "OSDC.Drilling.Rig.Model.MpdControlDevice": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2862,7 +2862,7 @@
             "nullable": true
           },
           "MpdControlDeviceClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdControlDeviceClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdControlDeviceClass"
           },
           "NominalSize": {
             "type": "number",
@@ -2906,14 +2906,14 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.MpdControlDeviceClass": {
+      "OSDC.Drilling.Rig.Model.MpdControlDeviceClass": {
         "enum": [
           "Rotating",
           "NonRotating"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.MpdController": {
+      "OSDC.Drilling.Rig.Model.MpdController": {
         "type": "object",
         "properties": {
           "Name": {
@@ -2941,7 +2941,7 @@
             "nullable": true
           },
           "MpdGradientMode": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdGradientMode"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdGradientMode"
           },
           "PrimaryChokeTrim": {
             "type": "number",
@@ -2991,7 +2991,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.MpdGradientMode": {
+      "OSDC.Drilling.Rig.Model.MpdGradientMode": {
         "enum": [
           "Single",
           "Dual",
@@ -3000,7 +3000,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.MudGasSeparator": {
+      "OSDC.Drilling.Rig.Model.MudGasSeparator": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3014,7 +3014,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.MudPump": {
+      "OSDC.Drilling.Rig.Model.MudPump": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3042,10 +3042,10 @@
             "nullable": true
           },
           "Type": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudPumpType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudPumpType"
           },
           "PumpClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PumpClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PumpClass"
           },
           "PumpAction": {
             "type": "integer",
@@ -3120,14 +3120,14 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.MudPumpType": {
+      "OSDC.Drilling.Rig.Model.MudPumpType": {
         "enum": [
           "Variant1",
           "Variant2"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.MudTank": {
+      "OSDC.Drilling.Rig.Model.MudTank": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3155,10 +3155,10 @@
             "nullable": true
           },
           "TankClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TankClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TankClass"
           },
           "TankFluidType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TankFluidType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TankFluidType"
           },
           "MaxLimitOperatingVolume": {
             "type": "number",
@@ -3168,7 +3168,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.MultiPhaseSeparator": {
+      "OSDC.Drilling.Rig.Model.MultiPhaseSeparator": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3196,7 +3196,7 @@
             "nullable": true
           },
           "SeparatorClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SeparatorPhaseClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SeparatorPhaseClass"
           },
           "MaximumOperatingPressure": {
             "type": "number",
@@ -3214,7 +3214,7 @@
             "nullable": true
           },
           "SeparatorMedium": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SeparatorMedium"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SeparatorMedium"
           },
           "MaxLimitDesignPressure": {
             "type": "number",
@@ -3254,7 +3254,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.PipeDeck": {
+      "OSDC.Drilling.Rig.Model.PipeDeck": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3268,7 +3268,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.PipeRack": {
+      "OSDC.Drilling.Rig.Model.PipeRack": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3282,7 +3282,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.PumpClass": {
+      "OSDC.Drilling.Rig.Model.PumpClass": {
         "enum": [
           "DuplexPump",
           "TriplexPump",
@@ -3292,7 +3292,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ReturnFlowLine": {
+      "OSDC.Drilling.Rig.Model.ReturnFlowLine": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3306,7 +3306,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RheometerAfmMeasurement": {
+      "OSDC.Drilling.Rig.Model.RheometerAfmMeasurement": {
         "type": "object",
         "properties": {
           "AfmViscShearRate": {
@@ -3322,7 +3322,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Rig": {
+      "OSDC.Drilling.Rig.Model.Rig": {
         "type": "object",
         "properties": {
           "MetaInfo": {
@@ -3349,157 +3349,157 @@
           "MudPumpList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudPump"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudPump"
             },
             "nullable": true
           },
           "CementPumpList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CementPump"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CementPump"
             },
             "nullable": true
           },
           "CementUnit": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CementUnit"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CementUnit"
           },
           "DriveMode": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DriveMode"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DriveMode"
           },
           "MainRigMast": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigMast"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
           },
           "AuxiliaryRigMast": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigMast"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
           },
           "MudTankList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudTank"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudTank"
             },
             "nullable": true
           },
           "GeneratorList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Generator"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Generator"
             },
             "nullable": true
           },
           "ShaleShakerList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ShaleShaker"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ShaleShaker"
             },
             "nullable": true
           },
           "AuxSolidsControl": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AuxSolidsControl"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AuxSolidsControl"
           },
           "DrillingFluidType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingFluidTypeDescriptor"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidTypeDescriptor"
           },
           "FlowSensor": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FlowSensor"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowSensor"
           },
           "MeasurementAfm": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MeasurementAfm"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MeasurementAfm"
           },
           "ReturnFlowLine": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ReturnFlowLine"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ReturnFlowLine"
           },
           "MudGasSeparatorList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MudGasSeparator"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudGasSeparator"
             },
             "nullable": true
           },
           "DesanderList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Desander"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Desander"
             },
             "nullable": true
           },
           "DesilterList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Desilter"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Desilter"
             },
             "nullable": true
           },
           "CentrifugeList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Centrifuge"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Centrifuge"
             },
             "nullable": true
           },
           "DegasserList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Degasser"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Degasser"
             },
             "nullable": true
           },
           "CuttingsTransportSystem": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CuttingsTransportSystem"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CuttingsTransportSystem"
           },
           "CuttingsDryerList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CuttingsDryer"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CuttingsDryer"
             },
             "nullable": true
           },
           "PipeDeck": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PipeDeck"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PipeDeck"
           },
           "Accumulator": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Accumulator"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Accumulator"
           },
           "BopStack": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.BopStack"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStack"
           },
           "FloatValve": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FloatValve"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FloatValve"
           },
           "AutoDriller": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.AutoDriller"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AutoDriller"
           },
           "MpdController": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdController"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdController"
           },
           "MpdControlDevice": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MpdControlDevice"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdControlDevice"
           },
           "ContinuousCirculationDevice": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ContinuousCirculationDevice"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ContinuousCirculationDevice"
           },
           "DrillingChokeManifold": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingChokeManifold"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingChokeManifold"
           },
           "SurfaceMpdEquipment": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SurfaceMpdEquipment"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SurfaceMpdEquipment"
           },
           "MarineMpdEquipment": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MarineMpdEquipment"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineMpdEquipment"
           },
           "MultiPhaseSeparator": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.MultiPhaseSeparator"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MultiPhaseSeparator"
           },
           "FlowRoutingManifold": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.FlowRoutingManifold"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowRoutingManifold"
           },
           "DrillstringHeaveCompensator": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillstringHeaveCompensator"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillstringHeaveCompensator"
           },
           "DrillingMarineRiser": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.DrillingMarineRiser"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingMarineRiser"
           },
           "RiserHeaveCompensator": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RiserHeaveCompensator"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserHeaveCompensator"
           },
           "DrillFloorElevation": {
             "type": "number",
@@ -3517,7 +3517,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RigChoke": {
+      "OSDC.Drilling.Rig.Model.RigChoke": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3531,7 +3531,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RigLight": {
+      "OSDC.Drilling.Rig.Model.RigLight": {
         "type": "object",
         "properties": {
           "MetaInfo": {
@@ -3566,7 +3566,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RigMast": {
+      "OSDC.Drilling.Rig.Model.RigMast": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3578,70 +3578,70 @@
             "nullable": true
           },
           "HoistingSystem": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.HoistingSystem"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HoistingSystem"
           },
           "CatWalk": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CatWalk"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CatWalk"
           },
           "PipeRack": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.PipeRack"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PipeRack"
           },
           "CasingDriveSystem": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingDriveSystem"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingDriveSystem"
           },
           "CoilDriveSystem": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CoilDriveSystem"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CoilDriveSystem"
           },
           "Derrick": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Derrick"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Derrick"
           },
           "TorqueTurnSub": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TorqueTurnSub"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TorqueTurnSub"
           },
           "RotaryTable": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryTable"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTable"
           },
           "TopDrive": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TopDrive"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDrive"
           },
           "Kelly": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Kelly"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Kelly"
           },
           "IronRoughneck": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.IronRoughneck"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.IronRoughneck"
           },
           "CasingTongs": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingTongs"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingTongs"
           },
           "CasingRunningTool": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CasingRunningTool"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingRunningTool"
           },
           "StandPipe": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.StandPipe"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandPipe"
           },
           "StandPipeManifold": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.StandPipeManifold"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandPipeManifold"
           },
           "RotaryHose": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryHose"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryHose"
           },
           "ChokeManifold": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ChokeManifold"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeManifold"
           },
           "RigChokeList": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RigChoke"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigChoke"
             },
             "nullable": true
           },
           "Slips": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.Slips"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Slips"
           }
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RiserClass": {
+      "OSDC.Drilling.Rig.Model.RiserClass": {
         "enum": [
           "MarineDrillingRiser",
           "TieBackDrillingRiser",
@@ -3650,14 +3650,14 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.RiserCompensatorClass": {
+      "OSDC.Drilling.Rig.Model.RiserCompensatorClass": {
         "enum": [
           "PassiveRiserTensioner",
           "Other"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.RiserHeaveCompensator": {
+      "OSDC.Drilling.Rig.Model.RiserHeaveCompensator": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3685,7 +3685,7 @@
             "nullable": true
           },
           "RiserCompensatorClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RiserCompensatorClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserCompensatorClass"
           },
           "CompensatorCapacity": {
             "type": "number",
@@ -3693,7 +3693,7 @@
             "nullable": true
           },
           "CompensatorStatus": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.CompensatorStatus"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CompensatorStatus"
           },
           "MaxLimitCompensatorStroke": {
             "type": "number",
@@ -3703,7 +3703,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RotaryHose": {
+      "OSDC.Drilling.Rig.Model.RotaryHose": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3717,7 +3717,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RotaryTable": {
+      "OSDC.Drilling.Rig.Model.RotaryTable": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3745,7 +3745,7 @@
             "nullable": true
           },
           "RotaryTableType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryTableType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTableType"
           },
           "TableOpeningDiameter": {
             "type": "number",
@@ -3753,7 +3753,7 @@
             "nullable": true
           },
           "BushingType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.RotaryTableBushingType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTableBushingType"
           },
           "BushingSize": {
             "type": "number",
@@ -3813,7 +3813,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.RotaryTableBushingType": {
+      "OSDC.Drilling.Rig.Model.RotaryTableBushingType": {
         "enum": [
           "Master",
           "Kelly",
@@ -3821,7 +3821,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.RotaryTableType": {
+      "OSDC.Drilling.Rig.Model.RotaryTableType": {
         "enum": [
           "DcDrive",
           "AcDrive",
@@ -3830,7 +3830,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.RoutingManifoldCurvePoint": {
+      "OSDC.Drilling.Rig.Model.RoutingManifoldCurvePoint": {
         "type": "object",
         "properties": {
           "Pressure": {
@@ -3846,14 +3846,14 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.SeparatorMedium": {
+      "OSDC.Drilling.Rig.Model.SeparatorMedium": {
         "enum": [
           "Mud",
           "WellboreFluid"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.SeparatorPhaseClass": {
+      "OSDC.Drilling.Rig.Model.SeparatorPhaseClass": {
         "enum": [
           "TwoPhases",
           "ThreePhases",
@@ -3861,7 +3861,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ShakerClass": {
+      "OSDC.Drilling.Rig.Model.ShakerClass": {
         "enum": [
           "Linear",
           "Elliptical",
@@ -3870,7 +3870,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.ShakerScreenDefinition": {
+      "OSDC.Drilling.Rig.Model.ShakerScreenDefinition": {
         "type": "object",
         "properties": {
           "ScreenDeck": {
@@ -3885,7 +3885,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.ShaleShaker": {
+      "OSDC.Drilling.Rig.Model.ShaleShaker": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3913,7 +3913,7 @@
             "nullable": true
           },
           "ShakerClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ShakerClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ShakerClass"
           },
           "ActiveShakers": {
             "type": "string",
@@ -3922,7 +3922,7 @@
           "ShakerScreens": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.ShakerScreenDefinition"
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ShakerScreenDefinition"
             },
             "nullable": true
           },
@@ -3934,7 +3934,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.Slips": {
+      "OSDC.Drilling.Rig.Model.Slips": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3948,7 +3948,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.SolidsControlClass": {
+      "OSDC.Drilling.Rig.Model.SolidsControlClass": {
         "enum": [
           "Desander",
           "Desilter",
@@ -3958,14 +3958,14 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.SpeedMode": {
+      "OSDC.Drilling.Rig.Model.SpeedMode": {
         "enum": [
           "ConstantSpeed",
           "VariableSpeed"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.StandPipe": {
+      "OSDC.Drilling.Rig.Model.StandPipe": {
         "type": "object",
         "properties": {
           "Name": {
@@ -3989,7 +3989,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.StandPipeManifold": {
+      "OSDC.Drilling.Rig.Model.StandPipeManifold": {
         "type": "object",
         "properties": {
           "Name": {
@@ -4022,7 +4022,7 @@
             "nullable": true
           },
           "StandpipeSpecLevel": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.StandpipeSpecLevel"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandpipeSpecLevel"
           },
           "MaxLimitDesignPressure": {
             "type": "number",
@@ -4047,7 +4047,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.StandpipeSpecLevel": {
+      "OSDC.Drilling.Rig.Model.StandpipeSpecLevel": {
         "enum": [
           "Psl1LowPressureRating",
           "Psl2ModeratePressureRating",
@@ -4055,14 +4055,14 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.SurfaceMpdClass": {
+      "OSDC.Drilling.Rig.Model.SurfaceMpdClass": {
         "enum": [
           "BackPressurePump",
           "Other"
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.SurfaceMpdEquipment": {
+      "OSDC.Drilling.Rig.Model.SurfaceMpdEquipment": {
         "type": "object",
         "properties": {
           "Name": {
@@ -4090,7 +4090,7 @@
             "nullable": true
           },
           "SurfaceMpdClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.SurfaceMpdClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SurfaceMpdClass"
           },
           "MinimumBoreholeSize": {
             "type": "number",
@@ -4170,7 +4170,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.TankClass": {
+      "OSDC.Drilling.Rig.Model.TankClass": {
         "enum": [
           "Active",
           "Reserve",
@@ -4181,7 +4181,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.TankFluidType": {
+      "OSDC.Drilling.Rig.Model.TankFluidType": {
         "enum": [
           "DrillingMud",
           "Brine",
@@ -4190,7 +4190,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.TopDrive": {
+      "OSDC.Drilling.Rig.Model.TopDrive": {
         "type": "object",
         "properties": {
           "Name": {
@@ -4218,10 +4218,10 @@
             "nullable": true
           },
           "TopDriveClass": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TopDriveClass"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDriveClass"
           },
           "TopDriveControllerType": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.TopDriveControllerType"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDriveControllerType"
           },
           "Orientable": {
             "type": "boolean",
@@ -4330,7 +4330,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.TopDriveClass": {
+      "OSDC.Drilling.Rig.Model.TopDriveClass": {
         "enum": [
           "AcTopDrive",
           "HydraulicTopDrive",
@@ -4338,7 +4338,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.TopDriveControllerType": {
+      "OSDC.Drilling.Rig.Model.TopDriveControllerType": {
         "enum": [
           "Unknown",
           "StiffPIController",
@@ -4347,7 +4347,7 @@
         ],
         "type": "string"
       },
-      "NORCE.Drilling.Rig.Model.TorqueTurnSub": {
+      "OSDC.Drilling.Rig.Model.TorqueTurnSub": {
         "type": "object",
         "properties": {
           "Name": {
@@ -4487,7 +4487,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.TravellingBlock": {
+      "OSDC.Drilling.Rig.Model.TravellingBlock": {
         "type": "object",
         "properties": {
           "Name": {
@@ -4557,7 +4557,7 @@
         },
         "additionalProperties": false
       },
-      "NORCE.Drilling.Rig.Model.UsageStatisticsRig": {
+      "OSDC.Drilling.Rig.Model.UsageStatisticsRig": {
         "type": "object",
         "properties": {
           "LastSaved": {
@@ -4569,28 +4569,28 @@
             "format": "date-span"
           },
           "GetAllRigIdPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           },
           "GetAllRigMetaInfoPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           },
           "GetRigByIdPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           },
           "GetAllRigLightPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           },
           "GetAllRigPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           },
           "PostRigPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           },
           "PutRigByIdPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           },
           "DeleteRigByIdPerDay": {
-            "$ref": "#/components/schemas/NORCE.Drilling.Rig.Model.History"
+            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
           }
         },
         "additionalProperties": false

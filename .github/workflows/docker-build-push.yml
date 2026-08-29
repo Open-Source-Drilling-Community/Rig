@@ -19,13 +19,13 @@ jobs:
       run: docker login -u="${{ secrets.DOCKERHUB_USERNAME }}" -p="${{ secrets.DOCKERHUB_PASSWORD }}"
       
     - name: Build Service Docker image
-      run: docker build --file "${{ github.workspace }}/Service/Dockerfile" --tag digiwells/norcedrillingrigservice:stable .
+      run: docker build --file "${{ github.workspace }}/Service/Dockerfile" --tag digiwells/osdcdrillingrigservice:stable .
 
     - name: Push Docker image for Service to DockerHub
-      run: docker push digiwells/norcedrillingrigservice:stable
+      run: docker push digiwells/osdcdrillingrigservice:stable
 
     - name: Build WebApp Docker image
-      run: docker build --file "${{ github.workspace }}/WebApp/Dockerfile" --tag digiwells/norcedrillingrigwebappclient:stable .
+      run: docker build --file "${{ github.workspace }}/WebApp/Dockerfile" --tag digiwells/osdcdrillingrigwebappclient:stable .
 
     - name: Push Docker image for WebApp to DockerHub
-      run: docker push digiwells/norcedrillingrigwebappclient:stable
+      run: docker push digiwells/osdcdrillingrigwebappclient:stable

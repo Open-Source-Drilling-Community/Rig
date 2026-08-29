@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace NORCE.Drilling.Rig.Model
+namespace OSDC.Drilling.Rig.Model
 {
     /// <summary>
     /// Describes the mud pump variants represented by <see cref="MudPump.Type"/>.

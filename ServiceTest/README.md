@@ -19,7 +19,7 @@ The current suite focuses on the `RigController` endpoints and their interaction
 
 ## What It Tests
 
-The main test fixture is [`Tests.cs`](c:\NORCE-DrillingAndWells\Rig\ServiceTest\Tests.cs).
+The main test fixture is [`Tests.cs`](C:\OSDC\Rig\ServiceTest\Tests.cs).
 
 It currently verifies behavior such as:
 
@@ -48,10 +48,10 @@ The database path is derived from `SqlConnectionManager.HOME_DIRECTORY` and `Sql
 
 ## Project Dependencies
 
-[`ServiceTest.csproj`](c:\NORCE-DrillingAndWells\Rig\ServiceTest\ServiceTest.csproj) references:
+[`ServiceTest.csproj`](C:\OSDC\Rig\ServiceTest\ServiceTest.csproj) references:
 
-- [`Model`](c:\NORCE-DrillingAndWells\Rig\Model\Model.csproj)
-- [`Service`](c:\NORCE-DrillingAndWells\Rig\Service\Service.csproj)
+- [`Model`](C:\OSDC\Rig\Model\Model.csproj)
+- [`Service`](C:\OSDC\Rig\Service\Service.csproj)
 
 It also uses:
 
@@ -99,12 +99,12 @@ If a new API capability is added to the service, this project should usually gai
 
 - Keep tests isolated. Each test should be able to run independently.
 - Prefer verifying externally observable controller behavior rather than internal implementation details.
-- Reuse the helper methods in [`Tests.cs`](c:\NORCE-DrillingAndWells\Rig\ServiceTest\Tests.cs) for object creation and `OkObjectResult` assertions when they fit.
+- Reuse the helper methods in [`Tests.cs`](C:\OSDC\Rig\ServiceTest\Tests.cs) for object creation and `OkObjectResult` assertions when they fit.
 - If test coverage expands beyond `RigController`, consider splitting the fixture into smaller controller-specific files to keep the suite maintainable.
 
 ## License
 
-This project is provided under the MIT License. See [`LICENSE`](c:\NORCE-DrillingAndWells\Rig\ServiceTest\LICENSE).
+This project is provided under the MIT License. See [`LICENSE`](C:\OSDC\Rig\ServiceTest\LICENSE).
 
 ## MCP coverage
 

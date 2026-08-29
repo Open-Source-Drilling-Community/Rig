@@ -2,7 +2,7 @@
 
 ## Overview
 
-`NORCE.Drilling.Rig.Service` is the ASP.NET Core microservice for storing,
+`OSDC.Drilling.Rig.Service` is the ASP.NET Core microservice for storing,
 retrieving, updating, and deleting `Rig` objects from the `Model` project.
 
 The service exposes a JSON-based HTTP API under the path base:
@@ -165,7 +165,7 @@ the schema artifact consumed by the service.
 The service is container-oriented and includes:
 
 - `Dockerfile`
-- Helm chart files under `charts/norcedrillingrigservice`
+- Helm chart files under `charts/osdcdrillingrigservice`
 
 The historical project README referenced Docker Hub and hosted environments.
 Those deployment references may still be valid operationally, but this README

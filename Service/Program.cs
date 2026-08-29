@@ -4,10 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Protocol;
-using NORCE.Drilling.Rig.Service;
-using NORCE.Drilling.Rig.Service.Managers;
-using NORCE.Drilling.Rig.Service.Mcp;
-using NORCE.Drilling.Rig.Service.Mcp.Tools;
+using OSDC.Drilling.Rig.Service;
+using OSDC.Drilling.Rig.Service.Managers;
+using OSDC.Drilling.Rig.Service.Mcp;
+using OSDC.Drilling.Rig.Service.Mcp.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
 

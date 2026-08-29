@@ -1,7 +1,7 @@
 using OSDC.UnitConversion.DrillingRazorMudComponents;
-using RigModel = NORCE.Drilling.Rig.ModelShared;
+using RigModel = OSDC.Drilling.Rig.ModelShared;
 
-namespace NORCE.Drilling.Rig.WebPages.Shared;
+namespace OSDC.Drilling.Rig.WebPages.Shared;
 
 public static class DataUtils
 {

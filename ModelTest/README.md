@@ -2,8 +2,8 @@
 
 ## Overview
 
-`NORCE.Drilling.Rig.ModelTest` contains the NUnit-based test suite for the
-`NORCE.Drilling.Rig.Model` project.
+`OSDC.Drilling.Rig.ModelTest` contains the NUnit-based test suite for the
+`OSDC.Drilling.Rig.Model` project.
 
 The purpose of this project is to verify that the rig data model remains
 consistent, serialization-friendly, and aligned with the spreadsheet-driven

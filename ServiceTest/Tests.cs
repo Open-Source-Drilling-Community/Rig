@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NORCE.Drilling.Rig.Model;
-using NORCE.Drilling.Rig.Service.Controllers;
-using NORCE.Drilling.Rig.Service.Managers;
+using OSDC.Drilling.Rig.Model;
+using OSDC.Drilling.Rig.Service.Controllers;
+using OSDC.Drilling.Rig.Service.Managers;
 using OSDC.DotnetLibraries.General.DataManagement;
 using System.Reflection;
 

@@ -63,3 +63,10 @@ The current work has been funded by the [Research Council of Norway](https://www
 # Contributors
 
 **Eric Cayeux**, *NORCE Energy Modelling and Automation*
+
+## Current implementation
+
+- The Rig service exposes all eight non-statistics REST operations as MCP tools, together with a `ping` tool. Access-statistics endpoints are intentionally excluded.
+- MCP is available over streamable HTTP at `/rig/api/mcp` and WebSocket at `/rig/api/mcp/ws`; external MCP-hub registration is optional and disabled by default.
+- Rig MCP tools now provide detailed operational descriptions and an explicit schema for the complete nested Rig payload. The schema covers caller-generated UUIDs, replacement-update semantics, fixed-platform `ClusterID` references, mast and equipment trees, exact enum strings, and SI units for physical values. Access-statistics endpoints remain excluded.
+- The WebApp and reusable WebPages now integrate Vertical Datum data for mean-sea-level depth references.

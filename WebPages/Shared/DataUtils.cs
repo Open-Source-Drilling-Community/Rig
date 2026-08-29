@@ -17,6 +17,7 @@ public static class DataUtils
         public static string? PressureReferenceName { get; set; }
         public static string? DateReferenceName { get; set; }
         public static GroundMudLineDepthReferenceSource GroundMudLineDepthReferenceSource { get; set; } = new();
+        public static MeanSeaLevelDepthReferenceSource MeanSeaLevelDepthReferenceSource { get; set; } = new();
         public static RotaryTableDepthReferenceSource RotaryTableDepthReferenceSource { get; set; } = new();
         public static SeaWaterLevelDepthReferenceSource SeaWaterLevelDepthReferenceSource { get; set; } = new();
     }
@@ -38,6 +39,7 @@ public static class DataUtils
     public static void ApplyRigClusterReferenceValues(RigModel.Rig? rig, RigModel.Cluster? cluster)
     {
         UnitAndReferenceParameters.GroundMudLineDepthReferenceSource.GroundMudLineDepthReference = 0;
+        UnitAndReferenceParameters.MeanSeaLevelDepthReferenceSource.MeanSeaLevelDepthReference = null;
         UnitAndReferenceParameters.RotaryTableDepthReferenceSource.RotaryTableDepthReference = 0;
         UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource.SeaWaterLevelDepthReference = 0;
         if (rig != null)
@@ -177,6 +179,11 @@ public static class DataUtils
     public class GroundMudLineDepthReferenceSource : IGroundMudLineDepthReferenceSource
     {
         public double? GroundMudLineDepthReference { get; set; }
+    }
+
+    public class MeanSeaLevelDepthReferenceSource : IMeanSeaLevelDepthReferenceSource
+    {
+        public double? MeanSeaLevelDepthReference { get; set; }
     }
 
     public class RotaryTableDepthReferenceSource : IRotaryTableDepthReferenceSource

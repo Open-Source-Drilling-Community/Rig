@@ -105,3 +105,11 @@ If a new API capability is added to the service, this project should usually gai
 ## License
 
 This project is provided under the MIT License. See [`LICENSE`](c:\NORCE-DrillingAndWells\Rig\ServiceTest\LICENSE).
+
+## MCP coverage
+
+- `McpToolRegistrationTests.cs` verifies the published Rig tool set and confirms that statistics operations are absent.
+- The registration tests also guard the detailed descriptions, explicit nested Rig schema, platform-to-Cluster relationship, enum publication, SI-unit guidance, and update ID-matching rule.
+- `McpServerHttpTests.cs` verifies MCP initialization, tool listing, and representative calls against a live service.
+
+The HTTP tests require the Rig service to be running at the configured test URL.

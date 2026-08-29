@@ -10,5 +10,7 @@ public interface IRigAPIUtils
     string HostBasePathField { get; }
     string HostNameCluster { get; }
     string HostBasePathCluster { get; }
+    string HostNameVerticalDatum { get; }
+    string HostBasePathVerticalDatum { get; }
     HttpClient CreateHttpClient(string host, string microServiceUri);
 }

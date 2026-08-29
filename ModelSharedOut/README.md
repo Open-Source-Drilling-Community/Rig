@@ -113,3 +113,7 @@ These are declared in [`ModelSharedOut.csproj`](C:\NORCE-DrillingAndWells\Rig\Mo
 ## License
 
 This project is provided under the MIT License. See [`LICENSE`](C:\NORCE-DrillingAndWells\Rig\ModelSharedOut\LICENSE).
+
+## Current schema inputs
+
+`json-schemas/VerticalDatumModel.json` supplies the generated Vertical Datum contract used by the Rig user interface. Regenerate the shared output after changing this schema so the consuming pages remain type-compatible.

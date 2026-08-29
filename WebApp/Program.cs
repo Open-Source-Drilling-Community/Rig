@@ -12,6 +12,7 @@ WebPagesHostConfiguration webPagesConfiguration = new()
     UnitConversionHostURL = builder.Configuration["UnitConversionHostURL"] ?? string.Empty,
     FieldHostURL = builder.Configuration["FieldHostURL"] ?? string.Empty,
     ClusterHostURL = builder.Configuration["ClusterHostURL"] ?? string.Empty,
+    VerticalDatumHostURL = builder.Configuration["VerticalDatumHostURL"] ?? string.Empty,
 };
 
 builder.Services.AddRazorPages();

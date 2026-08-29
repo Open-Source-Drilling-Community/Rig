@@ -8,4 +8,5 @@ public interface IRigWebPagesConfiguration :
     IFieldHostURL,
     IClusterHostURL
 {
+    string VerticalDatumHostURL { get; set; }
 }

@@ -11,6 +11,7 @@ public class RigAPIUtils : APIUtils, IRigAPIUtils
         HostNameUnitConversion = Require(configuration.UnitConversionHostURL, nameof(configuration.UnitConversionHostURL));
         HostNameField = Require(configuration.FieldHostURL, nameof(configuration.FieldHostURL));
         HostNameCluster = Require(configuration.ClusterHostURL, nameof(configuration.ClusterHostURL));
+        HostNameVerticalDatum = Require(configuration.VerticalDatumHostURL, nameof(configuration.VerticalDatumHostURL));
     }
 
     private static string Require(string? value, string propertyName)
@@ -31,6 +32,8 @@ public class RigAPIUtils : APIUtils, IRigAPIUtils
     public string HostBasePathField => "Field/api/";
     public string HostNameCluster { get; }
     public string HostBasePathCluster => "Cluster/api/";
+    public string HostNameVerticalDatum { get; }
+    public string HostBasePathVerticalDatum => "VerticalDatum/api/";
 
     public HttpClient CreateHttpClient(string host, string microServiceUri)
     {

@@ -208,3 +208,16 @@ The current work has been funded by the
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
+## MCP server
+
+The service publishes the eight non-statistics Rig REST operations as MCP tools and deliberately omits access-statistics endpoints.
+
+Descriptions distinguish compact discovery (`rig_get_all_ids`, `rig_get_all_meta_info`, and `rig_get_all_light`) from complete retrieval. The create and update tools expose an explicit schema generated from the service's Rig model, including every nested mast/equipment object, collection, enum value, rating, limit, and measurement. This keeps the MCP contract synchronized as the Rig model evolves.
+
+The schema documents caller-owned `MetaInfo.ID` values, the update path/body ID match, and the fixed-platform relationship: set `ClusterID` to an existing Cluster UUID when `IsFixedPlatform` is true and leave it null otherwise. Equipment objects are embedded full definitions, not separate resource references. Physical numbers use SI values (for example metres, pascals, kelvin, newtons, newton metres, watts, cubic metres per second, and radians). `DrillFloorElevation` is stored as a scalar in metres; because the payload has no vertical-datum field, callers must consistently apply their configured depth-reference convention.
+
+- Streamable HTTP: `/rig/api/mcp`
+- WebSocket: `/rig/api/mcp/ws`
+- Utility tool: `ping`
+- Optional external MCP-hub registration: configured in `appsettings.json`, disabled by default

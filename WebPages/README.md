@@ -35,3 +35,8 @@ The consuming app should:
 - `UnitConversionHostURL`
 - `FieldHostURL`
 - `ClusterHostURL`
+- `VerticalDatumHostURL`
+
+## Mean-sea-level depth references
+
+The Rig editor retrieves Vertical Datum data and resolves display labels through `MslDepthReferenceUtils`. The page configuration therefore requires a Vertical Datum endpoint in addition to the existing Rig, Unit Conversion, Field, and Cluster services. This package uses `OSDC.DotnetLibraries.Drilling.WebAppUtils` 1.1.3.

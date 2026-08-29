@@ -15,6 +15,7 @@
                               DepthReferenceNameChanged="@DataUtils.UpdateDepthReferenceName"
                               RotaryTableDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.RotaryTableDepthReferenceSource"
                               GroundMudLineDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.GroundMudLineDepthReferenceSource"
+                              MeanSeaLevelDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.MeanSeaLevelDepthReferenceSource"
                               SeaWaterLevelDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource">
     @PageContent
 </MudUnitAndReferenceChoiceTag>
@@ -124,7 +125,7 @@ private async Task LoadRigs()
     }
     finally
     {
-        UpdateSelectedRigDepthReferenceSource();
+        await UpdateSelectedRigDepthReferenceSourceAsync();
         _isLoading = false;
     }
 }
@@ -153,7 +154,7 @@ private async Task ViewRig(RigLight rig)
     try
     {
         _selectedRig = await RigApiClient.GetRigAsync(rig.MetaInfo.ID);
-        UpdateSelectedRigDepthReferenceSource();
+        await UpdateSelectedRigDepthReferenceSourceAsync();
     }
     catch (Exception ex)
     {
@@ -178,7 +179,7 @@ private async Task DeleteRig(RigLight rig)
             if (_selectedRig?.MetaInfo?.ID == rig.MetaInfo.ID)
             {
                 _selectedRig = null;
-                UpdateSelectedRigDepthReferenceSource();
+                await UpdateSelectedRigDepthReferenceSourceAsync();
             }
             await LoadRigs();
         }
@@ -226,14 +227,18 @@ private NORCE.Drilling.Rig.ModelShared.Cluster? GetCluster(Guid? clusterId)
         : null;
 }
 
-private void CloseSelectedRig()
+private async Task CloseSelectedRig()
 {
     _selectedRig = null;
-    UpdateSelectedRigDepthReferenceSource();
+    await UpdateSelectedRigDepthReferenceSourceAsync();
 }
 
-private void UpdateSelectedRigDepthReferenceSource() =>
+private async Task UpdateSelectedRigDepthReferenceSourceAsync()
+{
     DataUtils.ApplyRigReferenceValues(_selectedRig, _clusters);
+    DataUtils.UnitAndReferenceParameters.MeanSeaLevelDepthReferenceSource.MeanSeaLevelDepthReference =
+        await MslDepthReferenceUtils.ResolveMeanSeaLevelDepthReferenceAsync(Api, GetCluster(_selectedRig?.ClusterID));
+}
 
 private string BuildPageUri(string relativePath) =>
     new Uri(new Uri(NavigationManager.BaseUri), relativePath).ToString();

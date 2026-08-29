@@ -16,6 +16,7 @@
                               DepthReferenceNameChanged="@DataUtils.UpdateDepthReferenceName"
                               RotaryTableDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.RotaryTableDepthReferenceSource"
                               GroundMudLineDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.GroundMudLineDepthReferenceSource"
+                              MeanSeaLevelDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.MeanSeaLevelDepthReferenceSource"
                               SeaWaterLevelDepthReferenceSource="@DataUtils.UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource">
     @if (_isLoading)
     {
@@ -550,7 +551,7 @@
             _selectedNodeKey = "Rig";
             ExpandPath(_selectedNodeKey);
             InitializeSelectedFieldAndCluster();
-            UpdateCurrentRigDepthReferenceSource();
+            await UpdateCurrentRigDepthReferenceSourceAsync();
         }
         catch (Exception ex)
         {
@@ -804,11 +805,11 @@
 
     private int GetListCount(RigTreeNode node) => node.Value is System.Collections.IList list ? list.Count : 0;
 
-    private Task OnFixedPlatformChanged(bool value)
+    private async Task OnFixedPlatformChanged(bool value)
     {
         if (_currentRig == null)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         _currentRig.IsFixedPlatform = value;
@@ -819,9 +820,7 @@
             _currentRig.ClusterID = null;
         }
 
-        UpdateCurrentRigDepthReferenceSource();
-
-        return Task.CompletedTask;
+        await UpdateCurrentRigDepthReferenceSourceAsync();
     }
 
     private string FormatDate(DateTimeOffset? value) => value?.ToString("O") ?? string.Empty;
@@ -844,7 +843,7 @@
         return Task.CompletedTask;
     }
 
-    private Task OnFieldChanged(NORCE.Drilling.Rig.ModelShared.Field? field)
+    private async Task OnFieldChanged(NORCE.Drilling.Rig.ModelShared.Field? field)
     {
         _selectedField = field;
         _selectedCluster = null;
@@ -852,30 +851,27 @@
         {
             _currentRig.ClusterID = null;
         }
-        UpdateCurrentRigDepthReferenceSource();
-        return Task.CompletedTask;
+        await UpdateCurrentRigDepthReferenceSourceAsync();
     }
 
-    private Task OnClusterChanged(NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
+    private async Task OnClusterChanged(NORCE.Drilling.Rig.ModelShared.Cluster? cluster)
     {
         _selectedCluster = cluster;
         if (_currentRig != null)
         {
             _currentRig.ClusterID = cluster?.MetaInfo?.ID;
         }
-        UpdateCurrentRigDepthReferenceSource();
-        return Task.CompletedTask;
+        await UpdateCurrentRigDepthReferenceSourceAsync();
     }
 
-    private Task OnDrillFloorElevationChanged(double? value)
+    private async Task OnDrillFloorElevationChanged(double? value)
     {
         if (_currentRig != null)
         {
             _currentRig.DrillFloorElevation = value;
         }
 
-        UpdateCurrentRigDepthReferenceSource();
-        return Task.CompletedTask;
+        await UpdateCurrentRigDepthReferenceSourceAsync();
     }
 
     private async Task SaveRig()
@@ -1037,7 +1033,12 @@
         return "rig-tree-node-disabled";
     }
 
-    private void UpdateCurrentRigDepthReferenceSource() => DataUtils.ApplyRigClusterReferenceValues(_currentRig, CurrentRigCluster);
+    private async Task UpdateCurrentRigDepthReferenceSourceAsync()
+    {
+        DataUtils.ApplyRigClusterReferenceValues(_currentRig, CurrentRigCluster);
+        DataUtils.UnitAndReferenceParameters.MeanSeaLevelDepthReferenceSource.MeanSeaLevelDepthReference =
+            await MslDepthReferenceUtils.ResolveMeanSeaLevelDepthReferenceAsync(Api, CurrentRigCluster);
+    }
 
     private string BuildPageUri(string relativePath) =>
         new Uri(new Uri(NavigationManager.BaseUri), relativePath).ToString();

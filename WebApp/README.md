@@ -143,3 +143,7 @@ The web app is packaged as the `norcedrillingrigwebappclient` container in the b
 ## License
 
 This project is provided under the MIT License. See [`LICENSE`](c:\NORCE-DrillingAndWells\Rig\WebApp\LICENSE).
+
+## Vertical Datum integration
+
+The host now supplies the Vertical Datum service and WebApp URLs used by the reusable Rig pages. Development and production settings should point these values to the matching deployment so mean-sea-level depth-reference selection and navigation work correctly.

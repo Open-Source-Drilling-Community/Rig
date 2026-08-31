@@ -61,6 +61,10 @@ public sealed class McpToolRegistrationTests
     }
 
     [Test]
+    public void Rig_controller_has_one_unambiguous_public_constructor() =>
+        Assert.That(typeof(RigController).GetConstructors(), Has.Length.EqualTo(1));
+
+    [Test]
     public void Usage_statistics_are_not_exposed() => Assert.That(_tools.Keys, Has.None.Contains("statistics"));
 
     [Test]

@@ -20,17 +20,14 @@ namespace OSDC.Drilling.Rig.Service.Controllers
         private readonly RigPhotoManager _photoManager;
         private readonly IRigExternalReferenceResolver _externalReferenceResolver;
 
-        public RigController(ILogger<RigManager> logger, SqlConnectionManager connectionManager)
-            : this(logger, connectionManager, new UnavailableExternalReferenceResolver()) { }
-
         public RigController(ILogger<RigManager> logger, SqlConnectionManager connectionManager,
-            IRigExternalReferenceResolver externalReferenceResolver)
+            IRigExternalReferenceResolver? externalReferenceResolver = null)
         {
             _logger = logger;
             _rigManager = RigManager.GetInstance(_logger, connectionManager);
             _featureManager = new RigFeatureCategoryManager(_logger, connectionManager);
             _photoManager = new RigPhotoManager(connectionManager);
-            _externalReferenceResolver = externalReferenceResolver;
+            _externalReferenceResolver = externalReferenceResolver ?? new UnavailableExternalReferenceResolver();
         }
 
         /// <summary>

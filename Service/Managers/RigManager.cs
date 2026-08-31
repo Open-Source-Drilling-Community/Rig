@@ -300,7 +300,13 @@ namespace OSDC.Drilling.Rig.Service.Managers
                         CopyIfDefined(pump, "PumpDisplacement", row, "DisplacementPerStroke");
                         CopyIfDefined(pump, "MaxLimitOperatingFlowRate", row, "MaximumVolumetricFlowRate");
                         CopyIfDefined(pump, "MaxLimitOperatingPressure", row, "MaximumDischargePressure");
-                        if (row.Count > 0) pump["LinerConfigurations"] = new JsonArray(row);
+                        // A liner performance row is meaningful only when all three rated values are known.
+                        // Do not turn incomplete historical pump scalars into a new, invalid configuration or
+                        // infer the liner pressure from the more general pump design-pressure limit.
+                        if (IsPositiveFinite(row["LinerInnerDiameter"]) &&
+                            IsPositiveFinite(row["MaximumVolumetricFlowRate"]) &&
+                            IsPositiveFinite(row["MaximumDischargePressure"]))
+                            pump["LinerConfigurations"] = new JsonArray(row);
                     }
 
                     pump.Remove("LinerId");
@@ -318,6 +324,10 @@ namespace OSDC.Drilling.Rig.Service.Managers
             if (source[sourceName] is JsonNode value)
                 target[targetName] = value.DeepClone();
         }
+
+        private static bool IsPositiveFinite(JsonNode? value) =>
+            value is JsonValue jsonValue && jsonValue.TryGetValue(out double number) &&
+            number > 0 && double.IsFinite(number);
 
         /// <summary>
         /// Returns the list of all RigLight present in the microservice database 

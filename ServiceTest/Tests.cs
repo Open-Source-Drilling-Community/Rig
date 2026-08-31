@@ -421,6 +421,31 @@ namespace ServiceTest
             Assert.That(row.MaximumDischargePressure, Is.EqualTo(30_000_000));
         }
 
+        [Test]
+        public void RigRead_DoesNotCreateLinerConfigurationFromIncompleteHistoricalScalars()
+        {
+            Guid id = Guid.NewGuid();
+            Rig rig = CreateRig(id, "incomplete-stored-liner-shape");
+            rig.MudPumpList = [new MudPump { Name = "Mud pump 1", MaxLimitDesignPressure = 35_000_000 }];
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
+
+            using (SqliteConnection connection = _connectionManager.GetConnection()!)
+            using (SqliteCommand command = connection.CreateCommand())
+            {
+                command.CommandText = """
+                    UPDATE RigTable SET data=json_set(data,
+                      '$.MudPumpList[0].LinerId', 0.127,
+                      '$.MudPumpList[0].MaxLimitOperatingFlowRate', 0.025)
+                    WHERE json_extract(MetaInfo,'$.ID')=$id
+                    """;
+                command.Parameters.AddWithValue("$id", id.ToString());
+                Assert.That(command.ExecuteNonQuery(), Is.EqualTo(1));
+            }
+
+            RigReadResponse read = AssertOk<RigReadResponse>(_controller.GetRigById(id).Result);
+            Assert.That(read.MudPumpList!.Single().LinerConfigurations, Is.Null.Or.Empty);
+        }
+
         private static Rig CreateRig(Guid id, string name)
         {
             DateTimeOffset now = DateTimeOffset.UtcNow;

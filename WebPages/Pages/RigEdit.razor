@@ -548,7 +548,9 @@
                             }
                             else
                             {
-                                <ModelDirectEditor Value="SelectedNode.Value" ModelType="SelectedNode.ValueType" />
+                                <ModelDirectEditor @key="_selectedNodeKey"
+                                                   Value="SelectedNode.Value"
+                                                   ModelType="SelectedNode.ValueType" />
                             }
                         }
                     </MudPaper>

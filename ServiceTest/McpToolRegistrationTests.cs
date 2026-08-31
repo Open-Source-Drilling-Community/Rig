@@ -119,6 +119,8 @@ public sealed class McpToolRegistrationTests
         Assert.That(createSchema, Does.Contain("pascal (Pa)"));
         Assert.That(createSchema, Does.Contain("newton metre"));
         Assert.That(createSchema, Does.Contain("radian per second"));
+        Assert.That(createSchema, Does.Contain("Operating Displacement in kilogram (kg), physical quantity MassDrilling"));
+        Assert.That(createSchema, Does.Contain("Variable Deck Load in newton (N), physical quantity ForceDrilling"));
         Assert.That(createSchema, Does.Contain("do not send a display-unit value"));
         Assert.That(updateSchema, Does.Contain("must exactly equal rig.MetaInfo.ID"));
         Assert.That(updateSchema, Does.Contain("expectedModifiedUtc"));

@@ -13,7 +13,7 @@ else
             Type coreType = GetCoreType(property.PropertyType);
             object? propertyValue = property.GetValue(Value);
 
-            <MudItem xs="12" md="6">
+            <MudItem @key="@(ModelType.FullName + "." + property.Name)" xs="12" md="6">
                 @if (coreType == typeof(string))
                 {
                     <MudTextField Value="@(propertyValue as string)"

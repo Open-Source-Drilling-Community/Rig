@@ -126,6 +126,24 @@ public sealed class McpToolRegistrationTests
     }
 
     [Test]
+    public void Required_resource_bodies_and_single_resource_outputs_use_direct_non_null_references()
+    {
+        JsonNode rigBody = _tools["rig_create"].InputSchema["properties"]!["rig"]!;
+        JsonNode categoryBody = _tools["rig_feature_category_create"].InputSchema["properties"]!["category"]!;
+        JsonNode batchBody = _tools["rig_batch_restore"].InputSchema["properties"]!["request"]!;
+        JsonNode rigResult = _tools["rig_get_by_id"].OutputSchema["properties"]!["data"]!;
+
+        Assert.That(rigBody["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/Rig"));
+        Assert.That(categoryBody["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/RigFeatureCategory"));
+        Assert.That(batchBody["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/RigBatchRestoreRequest"));
+        Assert.That(rigResult["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/RigReadResponse"));
+        Assert.That(rigBody["anyOf"], Is.Null);
+        Assert.That(categoryBody["anyOf"], Is.Null);
+        Assert.That(batchBody["anyOf"], Is.Null);
+        Assert.That(rigResult["anyOf"], Is.Null);
+    }
+
+    [Test]
     public void Protocol_tools_publish_output_schemas_titles_and_behavior_annotations()
     {
         foreach (McpServerTool serverTool in _provider.GetServices<McpServerTool>())

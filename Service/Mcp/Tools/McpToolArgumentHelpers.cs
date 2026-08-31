@@ -172,7 +172,7 @@ internal static class McpToolArgumentHelpers
     public static JsonObject CreateRigSchema(bool includeId = false)
     {
         var definitions = new JsonObject();
-        JsonObject rigSchema = TypeSchema(typeof(Model.Rig), definitions, nullable: false);
+        JsonObject rigSchema = RequiredTypeSchema(typeof(Model.Rig), definitions);
         rigSchema["description"] = "Complete Rig master-data representation. JSON property names are case-sensitive and use PascalCase. Optional equipment may be null or omitted; specifications and limits use SI values. MeasurementCapabilities describe available instrumentation and never carry live telemetry.";
 
         var properties = new JsonObject { ["rig"] = rigSchema };
@@ -206,7 +206,7 @@ internal static class McpToolArgumentHelpers
     public static JsonObject CreateFeatureCategorySchema(bool includeUpdateFields = false)
     {
         var definitions = new JsonObject();
-        JsonObject categorySchema = TypeSchema(typeof(RigFeatureCategory), definitions, nullable: false);
+        JsonObject categorySchema = RequiredTypeSchema(typeof(RigFeatureCategory), definitions);
         categorySchema["description"] = "Rig feature category. The service generates UUIDs for custom categories and new options; built-in definitions are immutable.";
         var properties = new JsonObject { ["category"] = categorySchema };
         var required = new JsonArray("category");
@@ -241,7 +241,7 @@ internal static class McpToolArgumentHelpers
         JsonObject definitions = new();
         JsonObject dataSchema = collection
             ? new JsonObject { ["type"] = "array", ["items"] = TypeSchema(dataType, definitions, nullable: false) }
-            : TypeSchema(dataType, definitions, nullable: false);
+            : RequiredTypeSchema(dataType, definitions);
         return new JsonObject
         {
             ["type"] = "object",
@@ -254,10 +254,21 @@ internal static class McpToolArgumentHelpers
 
     private static JsonObject SuccessStatusSchema() => new() { ["type"] = "integer", ["minimum"] = 200, ["maximum"] = 299 };
 
+    private static JsonObject RequiredTypeSchema(Type type, JsonObject definitions)
+    {
+        JsonObject schema = TypeSchema(type, definitions, nullable: false);
+        if (schema["anyOf"] is JsonArray alternatives && alternatives.Count == 2 &&
+            alternatives[0] is JsonObject reference && alternatives[1]?["type"]?.GetValue<string>() == "null")
+        {
+            return (JsonObject)reference.DeepClone();
+        }
+        return schema;
+    }
+
     private static JsonObject CreateBodySchema(string propertyName, Type bodyType, string description)
     {
         JsonObject definitions = new();
-        JsonObject bodySchema = TypeSchema(bodyType, definitions, nullable: false);
+        JsonObject bodySchema = RequiredTypeSchema(bodyType, definitions);
         bodySchema["description"] = description;
         return new JsonObject
         {

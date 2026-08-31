@@ -341,7 +341,8 @@ namespace OSDC.Drilling.Rig.Service.Managers
             if (connection != null)
             {
                 var command = connection.CreateCommand();
-                command.CommandText = $"SELECT MetaInfo, Name, Description, CreationDate, LastModificationDate, IsFixedPlatform, ClusterID FROM {RigTableName}";
+                command.CommandText = $"SELECT MetaInfo, Name, Description, CreationDate, LastModificationDate, IsFixedPlatform, ClusterID, " +
+                    $"json_extract(data, '$.RigType'), json_extract(data, '$.OperatingEnvironment'), json_extract(data, '$.MobilityType') FROM {RigTableName}";
                 try
                 {
                     using var reader = command.ExecuteReader();
@@ -366,7 +367,10 @@ namespace OSDC.Drilling.Rig.Service.Managers
                                 creationDate,
                                 lastModificationDate,
                                 isFixedPlatform,
-                                clusterID
+                                clusterID,
+                                TryReadEnum<RigType>(reader, 7),
+                                TryReadEnum<RigEnvironment>(reader, 8),
+                                TryReadEnum<RigMobilityType>(reader, 9)
                                 ));
                     }
                     _logger.LogInformation("Returning the list of existing RigLight from RigTable");
@@ -480,73 +484,64 @@ namespace OSDC.Drilling.Rig.Service.Managers
         /// </summary>
         /// <param name="rig"></param>
         /// <returns>true if the given Rig has been updated successfully</returns>
-        public bool UpdateRigById(Guid guid, Model.Rig? rig)
+        public RigUpdateOutcome UpdateRigById(Guid guid, DateTimeOffset expectedModifiedUtc, Model.Rig? rig)
         {
-            bool success = true;
-            if (guid != Guid.Empty && rig != null && rig.MetaInfo != null && rig.MetaInfo.ID == guid)
+            if (guid == Guid.Empty || rig?.MetaInfo?.ID != guid || expectedModifiedUtc == default)
             {
-                //update RigTable
-                using var connection = _connectionManager.GetConnection();
-                if (connection != null)
-                {
-                    using SqliteTransaction transaction = connection.BeginTransaction();
-                    //update fields in RigTable
-                    try
-                    {
-                        string metaInfo = JsonSerializer.Serialize(rig.MetaInfo, JsonSettings.Options);
-                        string? cDate = FormatDateTimeOffset(rig.CreationDate);
-                        rig.LastModificationDate = DateTimeOffset.UtcNow;
-                        string? lDate = FormatDateTimeOffset(rig.LastModificationDate);
-                        string data = JsonSerializer.Serialize(rig, JsonSettings.Options);
-                        var command = connection.CreateCommand();
-                        command.Transaction = transaction;
-                        command.CommandText = $"UPDATE {RigTableName} SET " +
-                            "MetaInfo = $metaInfo, " +
-                            "Name = $name, " +
-                            "Description = $description, " +
-                            "CreationDate = $creationDate, " +
-                            "LastModificationDate = $lastModificationDate, " +
-                            "IsFixedPlatform = $isFixedPlatform, " +
-                            "ClusterID = $clusterId, " +
-                            "data = $data " +
-                            $"WHERE json_extract(MetaInfo, '{MetaInfoIdJsonPath}') = $id";
-                        AddRigParameters(command, rig, metaInfo, cDate, lDate, data);
-                        command.Parameters.AddWithValue("$id", guid.ToString());
-                        int count = command.ExecuteNonQuery();
-                        if (count != 1)
-                        {
-                            _logger.LogWarning("Impossible to update the Rig");
-                            success = false;
-                        }
-                    }
-                    catch (SqliteException ex)
-                    {
-                        _logger.LogError(ex, "Impossible to update the Rig");
-                        success = false;
-                    }
+                return RigUpdateOutcome.Invalid("The rig UUID, payload identity, and expected modification timestamp are required.");
+            }
 
-                    // Finalizing
-                    if (success)
-                    {
-                        transaction.Commit();
-                        _logger.LogInformation("Updated the given Rig successfully");
-                        return true;
-                    }
-                    else
-                    {
-                        transaction.Rollback();
-                    }
-                }
-                else
-                {
-                    _logger.LogWarning("Impossible to access the SQLite database");
-                }
-            }
-            else
+            using var connection = _connectionManager.GetConnection();
+            if (connection == null)
+                return RigUpdateOutcome.StorageFailure("The rig database is unavailable.");
+
+            using SqliteTransaction transaction = connection.BeginTransaction();
+            try
             {
-                _logger.LogWarning("The Rig ID or the ID of some of its attributes are null or empty");
+                DateTimeOffset? storedModified;
+                DateTimeOffset? storedCreated;
+                using (SqliteCommand read = connection.CreateCommand())
+                {
+                    read.Transaction = transaction;
+                    read.CommandText = $"SELECT CreationDate, LastModificationDate FROM {RigTableName} WHERE json_extract(MetaInfo, '{MetaInfoIdJsonPath}') = $id";
+                    read.Parameters.AddWithValue("$id", guid.ToString());
+                    using SqliteDataReader reader = read.ExecuteReader();
+                    if (!reader.Read()) return RigUpdateOutcome.NotFound();
+                    storedCreated = TryReadDateTimeOffset(reader, 0);
+                    storedModified = TryReadDateTimeOffset(reader, 1);
+                }
+
+                if (!storedModified.HasValue || storedModified.Value.UtcTicks != expectedModifiedUtc.UtcTicks)
+                {
+                    transaction.Rollback();
+                    return RigUpdateOutcome.Conflict(storedModified);
+                }
+
+                rig.CreationDate = storedCreated;
+                rig.LastModificationDate = DateTimeOffset.UtcNow;
+                string metaInfo = JsonSerializer.Serialize(rig.MetaInfo, JsonSettings.Options);
+                string data = JsonSerializer.Serialize(rig, JsonSettings.Options);
+                using SqliteCommand command = connection.CreateCommand();
+                command.Transaction = transaction;
+                command.CommandText = $"UPDATE {RigTableName} SET MetaInfo = $metaInfo, Name = $name, Description = $description, " +
+                    "CreationDate = $creationDate, LastModificationDate = $lastModificationDate, IsFixedPlatform = $isFixedPlatform, " +
+                    $"ClusterID = $clusterId, data = $data WHERE json_extract(MetaInfo, '{MetaInfoIdJsonPath}') = $id";
+                AddRigParameters(command, rig, metaInfo, FormatDateTimeOffset(rig.CreationDate), FormatDateTimeOffset(rig.LastModificationDate), data);
+                command.Parameters.AddWithValue("$id", guid.ToString());
+                if (command.ExecuteNonQuery() != 1)
+                {
+                    transaction.Rollback();
+                    return RigUpdateOutcome.StorageFailure("The rig could not be updated.");
+                }
+                transaction.Commit();
+                return RigUpdateOutcome.Success(rig);
             }
-            return false;
+            catch (SqliteException ex)
+            {
+                _logger.LogError(ex, "Impossible to update the Rig");
+                transaction.Rollback();
+                return RigUpdateOutcome.StorageFailure("The rig could not be updated.");
+            }
         }
 
         /// <summary>
@@ -653,6 +648,9 @@ namespace OSDC.Drilling.Rig.Service.Managers
             return DateTimeOffset.TryParse(value, out DateTimeOffset parsed) ? parsed : null;
         }
 
+        private static TEnum? TryReadEnum<TEnum>(SqliteDataReader reader, int ordinal) where TEnum : struct, Enum =>
+            !reader.IsDBNull(ordinal) && Enum.TryParse(reader.GetString(ordinal), true, out TEnum value) ? value : null;
+
         private static string? FormatDateTimeOffset(DateTimeOffset? value) =>
             value?.ToString(SqlConnectionManager.DATE_TIME_FORMAT);
 
@@ -667,5 +665,20 @@ namespace OSDC.Drilling.Rig.Service.Managers
             command.Parameters.AddWithValue("$clusterId", rig.ClusterID?.ToString() ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("$data", data);
         }
+    }
+
+    public enum RigUpdateFailureKind { None, InvalidRequest, NotFound, Conflict, StorageFailure }
+
+    public sealed record RigUpdateOutcome(Model.Rig? Rig, RigUpdateFailureKind FailureKind, RigMutationErrorEnvelope? Error)
+    {
+        public bool IsSuccess => FailureKind == RigUpdateFailureKind.None;
+        public static RigUpdateOutcome Success(Model.Rig rig) => new(rig, RigUpdateFailureKind.None, null);
+        public static RigUpdateOutcome Invalid(string message) => Failure(RigUpdateFailureKind.InvalidRequest, "invalid_request", "invalid", message);
+        public static RigUpdateOutcome NotFound() => Failure(RigUpdateFailureKind.NotFound, "rig_not_found", "not_found", "The rig does not exist.");
+        public static RigUpdateOutcome Conflict(DateTimeOffset? current) => Failure(RigUpdateFailureKind.Conflict, "concurrency_conflict", "stale_modified_utc",
+            $"The rig changed after it was read. Its current LastModificationDate is {current:O}.");
+        public static RigUpdateOutcome StorageFailure(string message) => Failure(RigUpdateFailureKind.StorageFailure, "storage_failure", "storage_failure", message);
+        private static RigUpdateOutcome Failure(RigUpdateFailureKind kind, string error, string code, string message) =>
+            new(null, kind, new RigMutationErrorEnvelope { Error = error, Message = message, Errors = [new RigMutationError { Property = "expectedModifiedUtc", Code = code, Message = message }] });
     }
 }

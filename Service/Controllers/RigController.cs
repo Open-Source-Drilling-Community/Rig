@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using OSDC.DotnetLibraries.General.DataManagement;
 using OSDC.Drilling.Rig.Service.Managers;
@@ -181,37 +182,45 @@ namespace OSDC.Drilling.Rig.Service.Controllers
         /// <param name="rig"></param>
         /// <returns>true if the given Rig has been updated successfully to the microservice database, at the endpoint Rig/api/Rig/id</returns>
         [HttpPut("{id}", Name = "PutRigById")]
-        public ActionResult PutRigById(Guid id, [FromBody] Model.Rig? data)
+        [ProducesResponseType<Model.Rig>(StatusCodes.Status200OK)]
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status409Conflict)]
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status500InternalServerError)]
+        public ActionResult<Model.Rig> PutRigById(Guid id,
+            [FromQuery, BindRequired] DateTimeOffset expectedModifiedUtc, [FromBody] Model.Rig? data)
         {
             UsageStatisticsRig.Instance.IncrementPutRigByIdPerDay();
             // Check if Rig is in the data base
-            if (data != null && data.MetaInfo != null && data.MetaInfo.ID.Equals(id))
+            if (data != null && data.MetaInfo != null && data.MetaInfo.ID.Equals(id) && expectedModifiedUtc != default)
             {
                 List<string> featureErrors = _featureManager.ValidateAssignments(data.FeatureAssignments);
                 featureErrors.AddRange(RigDefinitionValidator.Validate(data));
-                if (featureErrors.Count > 0) return BadRequest(new { error = "invalid_rig_definition", errors = featureErrors });
-                var existingData = _rigManager.GetRigById(id);
-                if (existingData != null)
+                if (featureErrors.Count > 0) return BadRequest(new RigMutationErrorEnvelope
                 {
-                    if (_rigManager.UpdateRigById(id, data))
-                    {
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError);
-                    }
-                }
-                else
+                    Error = "invalid_rig_definition", Message = "The rig definition is invalid.",
+                    Errors = featureErrors.Select(message => new RigMutationError
+                    { Property = "rig", Code = "invalid_value", Message = message }).ToList()
+                });
+                RigUpdateOutcome outcome = _rigManager.UpdateRigById(id, expectedModifiedUtc, data);
+                if (outcome.IsSuccess) return Ok(outcome.Rig);
+                return outcome.FailureKind switch
                 {
-                    _logger.LogWarning("The given Rig has not been found in the database");
-                    return NotFound();
-                }
+                    RigUpdateFailureKind.InvalidRequest => BadRequest(outcome.Error),
+                    RigUpdateFailureKind.NotFound => NotFound(outcome.Error),
+                    RigUpdateFailureKind.Conflict => Conflict(outcome.Error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, outcome.Error)
+                };
             }
             else
             {
                 _logger.LogWarning("The given Rig is null, badly formed, or its does not match the ID to update");
-                return BadRequest();
+                return BadRequest(new RigMutationErrorEnvelope
+                {
+                    Error = "invalid_request",
+                    Message = "The route UUID, rig.MetaInfo.ID, and expectedModifiedUtc are required and must agree.",
+                    Errors = [new RigMutationError { Property = "expectedModifiedUtc", Code = "required", Message = "Supply the LastModificationDate returned by the latest rig read." }]
+                });
             }
         }
 

@@ -75,6 +75,8 @@ public sealed class McpToolRegistrationTests
         Assert.That(domainTools.All(tool => tool.Description.Length >= 150), Is.True);
         Assert.That(domainTools.All(tool => tool.InputSchema is JsonObject), Is.True);
         Assert.That(domainTools.All(tool => tool.InputSchema?["type"]?.GetValue<string>() == "object"), Is.True);
+        Assert.That(domainTools.All(tool => tool.OutputSchema["type"]?.GetValue<string>() == "object"), Is.True);
+        Assert.That(domainTools.All(tool => !string.IsNullOrWhiteSpace(tool.Behavior.Title)), Is.True);
     }
 
     [Test]
@@ -119,6 +121,22 @@ public sealed class McpToolRegistrationTests
         Assert.That(createSchema, Does.Contain("radian per second"));
         Assert.That(createSchema, Does.Contain("do not send a display-unit value"));
         Assert.That(updateSchema, Does.Contain("must exactly equal rig.MetaInfo.ID"));
+        Assert.That(updateSchema, Does.Contain("expectedModifiedUtc"));
+        Assert.That(_tools["rig_update_by_id"].Description, Does.Contain("optimistic concurrency"));
+    }
+
+    [Test]
+    public void Protocol_tools_publish_output_schemas_titles_and_behavior_annotations()
+    {
+        foreach (McpServerTool serverTool in _provider.GetServices<McpServerTool>())
+        {
+            Assert.That(serverTool.ProtocolTool.Title, Is.Not.Empty);
+            Assert.That(serverTool.ProtocolTool.OutputSchema, Is.Not.Null);
+            Assert.That(serverTool.ProtocolTool.Annotations, Is.Not.Null);
+        }
+        Assert.That(_tools["rig_get_by_id"].Behavior.ReadOnlyHint, Is.True);
+        Assert.That(_tools["rig_delete_by_id"].Behavior.DestructiveHint, Is.True);
+        Assert.That(_tools["rig_batch_restore"].Behavior.OpenWorldHint, Is.True);
     }
 
     [Test]
@@ -135,7 +153,7 @@ public sealed class McpToolRegistrationTests
     {
         var response = await _tools[toolName].InvokeAsync(new JsonObject(), CancellationToken.None) as JsonObject;
         Assert.That(response?["status"]?.GetValue<int>(), Is.EqualTo(400));
-        Assert.That(response?["error"]?.GetValue<string>(), Does.Contain("id"));
+        Assert.That(response?["data"]?["errors"]?[0]?["message"]?.GetValue<string>(), Does.Contain("id"));
     }
 
     [Test]

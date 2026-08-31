@@ -91,7 +91,7 @@ internal static class McpToolArgumentHelpers
             ["Name"] = "Human-readable name of the rig, mast, component, or equipment item.",
             ["Description"] = "Human-readable description of the rig, component, capabilities, or intended use.",
             ["CreationDate"] = "Creation timestamp in ISO 8601 format. Use a UTC offset where possible.",
-            ["LastModificationDate"] = "Last-modification timestamp in ISO 8601 format. Update this when replacing the rig.",
+            ["LastModificationDate"] = "Server-assigned last-modification timestamp in ISO 8601 format. Use the latest returned value as expectedModifiedUtc when replacing a stored rig.",
             ["IsFixedPlatform"] = "Whether this is a fixed-platform rig. When true, ClusterID should identify its Cluster; when false, ClusterID should be null.",
             ["ClusterID"] = "UUID of the Cluster hosting a fixed-platform rig. This is an external reference to the Cluster microservice, not an embedded Cluster object; leave null for non-fixed rigs.",
             ["DrillFloorElevation"] = "Drill-floor elevation in metres (m). The Rig payload stores only the SI scalar and no vertical-datum identifier, so callers must apply the configured depth-reference convention consistently.",
@@ -185,6 +185,12 @@ internal static class McpToolArgumentHelpers
                 ["description"] = "UUID of the persisted rig. It must exactly equal rig.MetaInfo.ID."
             };
             required.Add("id");
+            properties["expectedModifiedUtc"] = new JsonObject
+            {
+                ["type"] = "string", ["format"] = "date-time",
+                ["description"] = "LastModificationDate returned by the latest rig read. The service rejects a stale value with conflict."
+            };
+            required.Add("expectedModifiedUtc");
         }
 
         return new JsonObject
@@ -221,6 +227,32 @@ internal static class McpToolArgumentHelpers
     public static JsonObject CreateBatchRestoreSchema() => CreateBodySchema(
         "request", typeof(RigBatchRestoreRequest),
         "Complete atomic restore request containing the versioned export document and explicit catalog and UUID-conflict policies.");
+
+    public static JsonObject CreateStatusOutputSchema() => new()
+    {
+        ["type"] = "object",
+        ["properties"] = new JsonObject { ["status"] = SuccessStatusSchema() },
+        ["required"] = new JsonArray("status"),
+        ["additionalProperties"] = false
+    };
+
+    public static JsonObject CreateResourceOutputSchema(Type dataType, bool collection = false)
+    {
+        JsonObject definitions = new();
+        JsonObject dataSchema = collection
+            ? new JsonObject { ["type"] = "array", ["items"] = TypeSchema(dataType, definitions, nullable: false) }
+            : TypeSchema(dataType, definitions, nullable: false);
+        return new JsonObject
+        {
+            ["type"] = "object",
+            ["properties"] = new JsonObject { ["status"] = SuccessStatusSchema(), ["data"] = dataSchema },
+            ["required"] = new JsonArray("status", "data"),
+            ["additionalProperties"] = false,
+            ["$defs"] = definitions
+        };
+    }
+
+    private static JsonObject SuccessStatusSchema() => new() { ["type"] = "integer", ["minimum"] = 200, ["maximum"] = 299 };
 
     private static JsonObject CreateBodySchema(string propertyName, Type bodyType, string description)
     {

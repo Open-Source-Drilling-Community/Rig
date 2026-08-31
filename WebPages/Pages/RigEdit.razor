@@ -192,10 +192,10 @@
                                     </MudItem>
                                     <MudItem xs="12" md="6">
                                         <MudTextField Value="@FormatDate(_currentRig.LastModificationDate)"
-                                                      ValueChanged="@(EventCallback.Factory.Create<string?>(this, SetLastModificationDate))"
                                                       Label="Last modification date"
                                                       Variant="Variant.Outlined"
-                                                      HelperText="UTC ISO-8601" />
+                                                      HelperText="Assigned by the service"
+                                                      Disabled="true" />
                                     </MudItem>
                                     <MudItem xs="12" md="4">
                                         <MudSelect T="OSDC.Drilling.Rig.ModelShared.RigType?" @bind-Value="_currentRig.RigType" Label="Rig type" Variant="Variant.Outlined">
@@ -979,7 +979,10 @@
         {
             _currentRig.CreationDate = DateTimeOffset.UtcNow;
         }
-        _currentRig.LastModificationDate = DateTimeOffset.UtcNow;
+        if (_isNewRig)
+        {
+            _currentRig.LastModificationDate = DateTimeOffset.UtcNow;
+        }
 
         try
         {

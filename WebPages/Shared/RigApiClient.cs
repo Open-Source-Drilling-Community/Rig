@@ -104,7 +104,13 @@ public sealed class RigApiClient
 
     public Task<HttpStatusCode> CreateRigAsync(RigModel.Rig rig) => SendAsync(HttpMethod.Post, "Rig", rig);
 
-    public Task<HttpStatusCode> UpdateRigAsync(RigModel.Rig rig) => SendAsync(HttpMethod.Put, $"Rig/{rig.MetaInfo?.ID}", rig);
+    public Task<HttpStatusCode> UpdateRigAsync(RigModel.Rig rig)
+    {
+        if (rig.MetaInfo?.ID is not Guid id || id == Guid.Empty || rig.LastModificationDate is not DateTimeOffset modified)
+            throw new InvalidOperationException("A stored rig UUID and LastModificationDate are required for update.");
+        string expected = Uri.EscapeDataString(modified.ToString("O"));
+        return SendAsync(HttpMethod.Put, $"Rig/{id}?expectedModifiedUtc={expected}", rig);
+    }
 
     public async Task<HttpStatusCode> DeleteRigAsync(Guid id)
     {

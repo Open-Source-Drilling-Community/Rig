@@ -160,6 +160,9 @@ namespace ServiceTest
             Assert.That(rigLight.LastModificationDate, Is.EqualTo(rig.LastModificationDate));
             Assert.That(rigLight.IsFixedPlatform, Is.EqualTo(rig.IsFixedPlatform));
             Assert.That(rigLight.ClusterID, Is.EqualTo(rig.ClusterID));
+            Assert.That(rigLight.RigType, Is.EqualTo(rig.RigType));
+            Assert.That(rigLight.OperatingEnvironment, Is.EqualTo(rig.OperatingEnvironment));
+            Assert.That(rigLight.MobilityType, Is.EqualTo(rig.MobilityType));
 
             List<RigReadResponse?> rigs = AssertOk<List<RigReadResponse?>>(_controller.GetAllRig().Result);
             Assert.That(rigs.Any(x => x?.MetaInfo?.ID == id && x.Name == rig.Name), Is.True);
@@ -168,9 +171,9 @@ namespace ServiceTest
         [Test]
         public void PutRigById_ReturnsBadRequest_WhenPayloadIsNull()
         {
-            ActionResult actionResult = _controller.PutRigById(Guid.NewGuid(), null);
+            ActionResult actionResult = _controller.PutRigById(Guid.NewGuid(), DateTimeOffset.UtcNow, null).Result!;
 
-            Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+            Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -178,9 +181,9 @@ namespace ServiceTest
         {
             Rig rig = CreateRig(Guid.NewGuid(), "mismatch-rig");
 
-            ActionResult actionResult = _controller.PutRigById(Guid.NewGuid(), rig);
+            ActionResult actionResult = _controller.PutRigById(Guid.NewGuid(), rig.LastModificationDate!.Value, rig).Result!;
 
-            Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+            Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -189,9 +192,9 @@ namespace ServiceTest
             Guid id = Guid.NewGuid();
             Rig rig = CreateRig(id, "missing-rig");
 
-            ActionResult actionResult = _controller.PutRigById(id, rig);
+            ActionResult actionResult = _controller.PutRigById(id, rig.LastModificationDate!.Value, rig).Result!;
 
-            Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
+            Assert.That(actionResult, Is.TypeOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -206,9 +209,10 @@ namespace ServiceTest
             rig.Description = "updated-description";
             rig.IsFixedPlatform = !rig.IsFixedPlatform;
 
-            ActionResult actionResult = _controller.PutRigById(id, rig);
+            ActionResult<Rig> actionResult = _controller.PutRigById(id, originalLastModification!.Value, rig);
 
-            Assert.That(actionResult, Is.TypeOf<OkResult>());
+            Rig response = AssertOk<Rig>(actionResult.Result);
+            Assert.That(response.LastModificationDate, Is.GreaterThanOrEqualTo(originalLastModification));
 
             RigReadResponse updatedRig = AssertOk<RigReadResponse>(_controller.GetRigById(id).Result);
             Assert.That(updatedRig.Name, Is.EqualTo("updated-rig"));
@@ -216,6 +220,24 @@ namespace ServiceTest
             Assert.That(updatedRig.IsFixedPlatform, Is.EqualTo(rig.IsFixedPlatform));
             Assert.That(updatedRig.LastModificationDate, Is.Not.Null);
             Assert.That(updatedRig.LastModificationDate, Is.GreaterThanOrEqualTo(originalLastModification));
+        }
+
+        [Test]
+        public void PutRigById_RejectsStaleModificationTimestampWithoutChangingRig()
+        {
+            Guid id = Guid.NewGuid();
+            Rig rig = CreateRig(id, "concurrent-rig");
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
+            DateTimeOffset expected = rig.LastModificationDate!.Value;
+
+            rig.Name = "first update";
+            Assert.That(_controller.PutRigById(id, expected, rig).Result, Is.TypeOf<OkObjectResult>());
+            rig.Name = "stale update";
+            ActionResult<Rig> stale = _controller.PutRigById(id, expected, rig);
+
+            Assert.That(stale.Result, Is.TypeOf<ConflictObjectResult>());
+            RigReadResponse stored = AssertOk<RigReadResponse>(_controller.GetRigById(id).Result);
+            Assert.That(stored.Name, Is.EqualTo("first update"));
         }
 
         [Test]
@@ -458,6 +480,9 @@ namespace ServiceTest
                 LastModificationDate = now,
                 IsFixedPlatform = true,
                 ClusterID = Guid.NewGuid(),
+                RigType = RigType.PlatformRig,
+                OperatingEnvironment = RigEnvironment.Offshore,
+                MobilityType = RigMobilityType.Fixed,
                 MainRigMast = new RigMast
                 {
                     Name = $"Mast for {name}"

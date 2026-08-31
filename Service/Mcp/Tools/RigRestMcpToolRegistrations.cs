@@ -26,8 +26,8 @@ public static class RigRestMcpToolRegistrations
             (sp, args, ct) => Invoke(ct, () => Controller(sp).GetAllRig(ReadIncludePhotos(args))));
         services.AddLegacyMcpTool("rig_create", "Persist a new complete rig master-data configuration. Generate a non-empty rig.MetaInfo.ID first; an existing UUID produces a conflict. For a fixed platform set IsFixedPlatform true and ClusterID to an existing Cluster UUID; otherwise leave ClusterID null. Send static equipment specifications and limits in SI units; describe available signals through MeasurementCapabilities and do not send live telemetry.", McpToolArgumentHelpers.CreateRigSchema(),
             (sp, args, ct) => InvokeWithBody<RigModel>(args, "rig", ct, data => Controller(sp).PostRig(data)));
-        services.AddLegacyMcpTool("rig_update_by_id", "Replace an existing rig master-data configuration. The path id must exactly match rig.MetaInfo.ID or the request is rejected. Send the complete desired representation because omitted equipment is removed, update LastModificationDate, preserve the fixed-platform/Cluster relationship, and use SI physical values. MeasurementCapabilities describe instrumentation only; live telemetry is not accepted by the schema.", McpToolArgumentHelpers.CreateRigSchema(includeId: true),
-            (sp, args, ct) => InvokeWithIdAndBody<RigModel>(args, "rig", ct, (id, data) => Controller(sp).PutRigById(id, data)));
+        services.AddLegacyMcpTool("rig_update_by_id", "Replace an existing rig master-data configuration using expectedModifiedUtc from the latest read for optimistic concurrency. The path id must exactly match rig.MetaInfo.ID or the request is rejected. Send the complete desired representation because omitted equipment is removed; the server assigns LastModificationDate. Preserve the fixed-platform/Cluster relationship and use SI physical values.", McpToolArgumentHelpers.CreateRigSchema(includeId: true),
+            (sp, args, ct) => InvokeRigUpdate(sp, args, ct));
         services.AddLegacyMcpTool("rig_delete_by_id", "Permanently delete the stored rig identified by UUID. Use a read operation first when the target is uncertain. The operation returns not found when the UUID is unknown; it accepts a Rig resource UUID, not a Cluster UUID or equipment identifier.", McpToolArgumentHelpers.CreateGuidSchema("id", "UUID of the rig to delete."),
             (sp, args, ct) => InvokeDelete(args, ct, id => Controller(sp).DeleteRigById(id)));
         services.AddLegacyMcpTool("rig_batch_export", "Create a read-only, versioned JSON backup of every rig or an explicitly ordered selection. The result contains complete rig records, only referenced Rig Feature definitions and options, a live-verified Cluster UUID/name manifest, and attached photographs with Base64 content and SHA-256 metadata. This explicit backup operation can return a very large payload; ordinary rig reads never include image bytes. One invalid dependency rejects the complete export.", McpToolArgumentHelpers.CreateBatchExportSchema(),
@@ -93,6 +93,16 @@ public static class RigRestMcpToolRegistrations
         return TryDeserialize(args, bodyName, out T? data, out var error)
             ? Task.FromResult<JsonNode?>(McpActionResultConverter.FromActionResult(action(id, data)))
             : Task.FromResult(error);
+    }
+
+    private static Task<JsonNode?> InvokeRigUpdate(IServiceProvider sp, JsonObject? args, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        if (!McpToolArgumentHelpers.TryParseGuid(args, "id", out Guid id, out JsonNode? idError)) return Task.FromResult(idError);
+        if (!TryDeserialize(args, "rig", out RigModel? rig, out JsonNode? rigError)) return Task.FromResult(rigError);
+        if (!DateTimeOffset.TryParse(args?["expectedModifiedUtc"]?.GetValue<string>(), out DateTimeOffset expected))
+            return Task.FromResult<JsonNode?>(McpToolResponses.CreateValidationError("Argument 'expectedModifiedUtc' must be an ISO 8601 timestamp."));
+        return Task.FromResult<JsonNode?>(McpActionResultConverter.FromActionResult(Controller(sp).PutRigById(id, expected, rig)));
     }
 
     private static async Task<JsonNode?> InvokeWithBodyResultAsync<TBody, TResult>(JsonObject? args, string bodyName,

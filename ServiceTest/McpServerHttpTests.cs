@@ -56,4 +56,16 @@ public sealed class McpServerHttpTests
         var result = await _client.CallToolAsync("ping", new Dictionary<string, object?>(), cancellationToken: CancellationToken.None);
         Assert.That(((JsonObject)result.StructuredContent!)["message"]?.GetValue<string>(), Is.EqualTo("pong"));
     }
+
+    [Test]
+    public async Task Validation_failure_is_json_text_error_without_success_structured_content()
+    {
+        CallToolResult result = await _client.CallToolAsync("rig_get_by_id", new Dictionary<string, object?>(), cancellationToken: CancellationToken.None);
+        Assert.That(result.IsError, Is.True);
+        Assert.That(result.StructuredContent, Is.Null);
+        TextContentBlock text = (TextContentBlock)result.Content.Single();
+        JsonObject envelope = (JsonObject)JsonNode.Parse(text.Text)!;
+        Assert.That(envelope["error"]?.GetValue<string>(), Is.EqualTo("validation_failed"));
+        Assert.That(envelope["errors"], Is.TypeOf<JsonArray>());
+    }
 }

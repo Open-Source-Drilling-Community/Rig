@@ -46,6 +46,9 @@
             <HeaderContent>
                 <MudTh>Name</MudTh>
                 <MudTh>Description</MudTh>
+                <MudTh>Rig Type</MudTh>
+                <MudTh>Environment</MudTh>
+                <MudTh>Mobility</MudTh>
                 <MudTh>Fixed Platform</MudTh>
                 <MudTh>Cluster</MudTh>
                 <MudTh>Last Modified</MudTh>
@@ -54,6 +57,9 @@
             <RowTemplate>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="Rig Type">@Display(context.RigType)</MudTd>
+                <MudTd DataLabel="Environment">@Display(context.OperatingEnvironment)</MudTd>
+                <MudTd DataLabel="Mobility">@Display(context.MobilityType)</MudTd>
                 <MudTd DataLabel="Fixed Platform">@(context.IsFixedPlatform ? "Yes" : "No")</MudTd>
                 <MudTd DataLabel="Cluster">@GetClusterName(context.ClusterID)</MudTd>
                 <MudTd DataLabel="Last Modified">@context.LastModificationDate?.ToString("u")</MudTd>
@@ -70,7 +76,10 @@
 </MudStack>;
 
 private IEnumerable<RigLight> FilteredRigs => _rigs.Where(r => string.IsNullOrWhiteSpace(_searchText)
-    || ($"{r.Name} {r.Description} {r.MetaInfo?.ID}".Contains(_searchText, StringComparison.OrdinalIgnoreCase)));
+    || ($"{r.Name} {r.Description} {r.MetaInfo?.ID} {r.RigType} {r.OperatingEnvironment} {r.MobilityType}".Contains(_searchText, StringComparison.OrdinalIgnoreCase)));
+
+private static string Display<T>(T? value) where T : struct, Enum =>
+    value.HasValue ? DataUtils.GetDisplayName(value.Value.ToString()) : string.Empty;
 
 protected override async Task OnInitializedAsync()
 {

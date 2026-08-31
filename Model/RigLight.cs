@@ -44,6 +44,15 @@ namespace OSDC.Drilling.Rig.Model
         /// </summary>
         public Guid? ClusterID { get; set; }
 
+        /// <summary>Primary structural classification of the rig.</summary>
+        public RigType? RigType { get; set; }
+
+        /// <summary>Environment in which the rig operates.</summary>
+        public RigEnvironment? OperatingEnvironment { get; set; }
+
+        /// <summary>Mobility classification of the rig.</summary>
+        public RigMobilityType? MobilityType { get; set; }
+
         /// <summary>
         /// default constructor required for parsing the data model as a json file
         /// </summary>
@@ -54,7 +63,9 @@ namespace OSDC.Drilling.Rig.Model
         /// <summary>
         /// base constructor
         /// </summary>
-        public RigLight(MetaInfo? metaInfo, string? name, string? descr, DateTimeOffset? creationDate, DateTimeOffset? modifDate, bool isFixedPlatform, Guid? clusterID)
+        public RigLight(MetaInfo? metaInfo, string? name, string? descr, DateTimeOffset? creationDate, DateTimeOffset? modifDate,
+            bool isFixedPlatform, Guid? clusterID, RigType? rigType = null, RigEnvironment? operatingEnvironment = null,
+            RigMobilityType? mobilityType = null)
         {
             MetaInfo = metaInfo;
             Name = name;
@@ -63,6 +74,9 @@ namespace OSDC.Drilling.Rig.Model
             LastModificationDate = modifDate;
             IsFixedPlatform = isFixedPlatform;
             ClusterID = clusterID;
+            RigType = rigType;
+            OperatingEnvironment = operatingEnvironment;
+            MobilityType = mobilityType;
         }
     }
 }

@@ -792,6 +792,15 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "expectedModifiedUtc",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
           }
         ],
         "requestBody": {
@@ -827,7 +836,54 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigMutationErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigMutationErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigMutationErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigMutationErrorEnvelope"
+                }
+              }
+            }
           }
         }
       },
@@ -7913,6 +7969,30 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "RigType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigType"
+              }
+            ],
+            "nullable": true
+          },
+          "OperatingEnvironment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigEnvironment"
+              }
+            ],
+            "nullable": true
+          },
+          "MobilityType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigMobilityType"
+              }
+            ],
+            "nullable": true
           }
         }
       },
@@ -8105,6 +8185,43 @@
           },
           "Description": {
             "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RigMutationError": {
+        "type": "object",
+        "properties": {
+          "Property": {
+            "type": "string",
+            "nullable": true
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RigMutationErrorEnvelope": {
+        "type": "object",
+        "properties": {
+          "Error": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigMutationError"
+            },
             "nullable": true
           }
         }

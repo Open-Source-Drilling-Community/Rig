@@ -115,8 +115,8 @@ Primary routes:
   Returns all full `Rig` payloads. Photo metadata is opt-in.
 - `POST /Rig/api/Rig`
   Adds a new `Rig`
-- `PUT /Rig/api/Rig/{id}`
-  Updates an existing `Rig`
+- `PUT /Rig/api/Rig/{id}?expectedModifiedUtc=...`
+  Replaces an existing `Rig` only when the supplied timestamp matches the latest `LastModificationDate`. The service preserves `CreationDate`, assigns a new modification timestamp, and returns HTTP 409 for a stale write.
 - `DELETE /Rig/api/Rig/{id}`
   Deletes a `Rig`
 - `POST /Rig/api/Rig/BatchExport`
@@ -255,11 +255,13 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
 
 ## MCP server
 
-The service publishes the eight non-statistics Rig REST operations as MCP tools and deliberately omits access-statistics endpoints.
+The service publishes all non-statistics Rig and Rig Feature Category operations as 18 underscore-only MCP tools, including `ping`, and deliberately omits access-statistics endpoints.
 
 Descriptions distinguish compact discovery (`rig_get_all_ids`, `rig_get_all_meta_info`, and `rig_get_all_light`) from complete retrieval. The create and update tools expose an explicit schema generated from the service's Rig model, including every nested mast/equipment object, collection, enum value, rating, limit, and instrumentation capability. Live telemetry is outside the Rig master-data contract. This keeps the MCP contract synchronized as the Rig model evolves.
 
-The schema documents caller-owned `MetaInfo.ID` values, the update path/body ID match, and the fixed-platform relationship: set `ClusterID` to an existing Cluster UUID when `IsFixedPlatform` is true and leave it null otherwise. Equipment objects are embedded full definitions, not separate resource references. Physical numbers use SI values (for example metres, pascals, kelvin, newtons, newton metres, watts, cubic metres per second, and radians). `DrillFloorElevation` is stored as a scalar in metres; because the payload has no vertical-datum field, callers must consistently apply their configured depth-reference convention.
+The schema documents caller-owned `MetaInfo.ID` values, the update path/body ID match, the required `expectedModifiedUtc` concurrency token, and the fixed-platform relationship: set `ClusterID` to an existing Cluster UUID when `IsFixedPlatform` is true and leave it null otherwise. Equipment objects are embedded full definitions, not separate resource references. Physical numbers use SI values (for example metres, pascals, kelvin, newtons, newton metres, watts, cubic metres per second, and radians). `DrillFloorElevation` is stored as a scalar in metres; because the payload has no vertical-datum field, callers must consistently apply their configured depth-reference convention.
+
+Every MCP tool publishes a human-readable title, exact input and success-output JSON Schemas, and read-only/destructive/idempotent/open-world annotations. Successes return schema-conforming structured content plus a JSON text fallback. Failures set `isError=true`, return a stable `{error,message,errors}` JSON text envelope, and omit structured content so it cannot conflict with the success schema.
 
 - Streamable HTTP: `/rig/api/mcp`
 - WebSocket: `/rig/api/mcp/ws`

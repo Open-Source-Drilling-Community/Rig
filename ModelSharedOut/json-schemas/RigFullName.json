@@ -146,6 +146,15 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "expectedModifiedUtc",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
           }
         ],
         "requestBody": {
@@ -181,7 +190,54 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMutationErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMutationErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMutationErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMutationErrorEnvelope"
+                }
+              }
+            }
           }
         }
       },
@@ -6484,6 +6540,30 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "RigType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigType"
+              }
+            ],
+            "nullable": true
+          },
+          "OperatingEnvironment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigEnvironment"
+              }
+            ],
+            "nullable": true
+          },
+          "MobilityType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMobilityType"
+              }
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6678,6 +6758,45 @@
           },
           "Description": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigMutationError": {
+        "type": "object",
+        "properties": {
+          "Property": {
+            "type": "string",
+            "nullable": true
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigMutationErrorEnvelope": {
+        "type": "object",
+        "properties": {
+          "Error": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMutationError"
+            },
             "nullable": true
           }
         },

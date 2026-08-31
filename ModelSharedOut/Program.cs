@@ -193,7 +193,9 @@ class Program
                             },
                             GenerateClientClasses = true,
                             GenerateDtoTypes = true,
-                            GenerateOptionalParameters = true
+                            GenerateOptionalParameters = true,
+                            // Concurrency tokens must round-trip without losing fractional seconds or UTC offsets.
+                            ParameterDateTimeFormat = "O"
                         };
                         var generator = new CSharpClientGenerator(nswDocument, settings);
                         var code = generator.GenerateFile();

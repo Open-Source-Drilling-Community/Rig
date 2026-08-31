@@ -81,6 +81,8 @@ Behavior to expect:
 3. Review the regenerated [`RigMergedModel.cs`](C:\OSDC\Rig\ModelSharedOut\RigMergedModel.cs) and merged JSON bundle.
 4. Rebuild the solution and run any relevant tests or client applications that consume the shared model.
 
+Generated query-string date/time parameters use the ISO-8601 round-trip (`O`) format. This is required for `expectedModifiedUtc` concurrency tokens because fractional seconds and UTC offsets must survive a read-update round trip unchanged.
+
 ## Maintaining Input Schemas
 
 The current default workflow is local and explicit:

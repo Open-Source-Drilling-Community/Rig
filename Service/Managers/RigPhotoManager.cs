@@ -37,9 +37,25 @@ public sealed class RigPhotoManager
         return reader.Read() ? (JsonSerializer.Deserialize<RigPhotoMetadata>(reader.GetString(0), JsonSettings.Options)!, (byte[])reader[1]) : null;
     }
 
+    public List<RigBatchPhoto> GetForBatch(Guid rigId)
+    {
+        using SqliteConnection connection = _connections.GetConnection()!;
+        using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = $"SELECT data,Content FROM {Table} WHERE RigID=$rig ORDER BY IsPrimary DESC,DisplayOrder,CreationDate";
+        command.Parameters.AddWithValue("$rig", rigId.ToString());
+        using SqliteDataReader reader = command.ExecuteReader();
+        List<RigBatchPhoto> values = [];
+        while (reader.Read()) values.Add(new RigBatchPhoto
+        {
+            Metadata = JsonSerializer.Deserialize<RigPhotoMetadata>(reader.GetString(0), JsonSettings.Options)!,
+            ContentBase64 = Convert.ToBase64String((byte[])reader[1])
+        });
+        return values;
+    }
+
     public RigPhotoMetadata? Create(Guid rigId, string fileName, string contentType, byte[] content, RigPhotoMetadata input, out string? error)
     {
-        error = Validate(contentType, content);
+        error = ValidateContent(contentType, content);
         if (error != null) return null;
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RigPhotoMetadata value = new()
@@ -76,7 +92,7 @@ public sealed class RigPhotoManager
 
     public void DeleteAll(Guid rigId) { using SqliteConnection c=_connections.GetConnection()!; using SqliteCommand q=c.CreateCommand(); q.CommandText=$"DELETE FROM {Table} WHERE RigID=$rig"; q.Parameters.AddWithValue("$rig",rigId.ToString()); q.ExecuteNonQuery(); }
 
-    private static string? Validate(string type, byte[] content)
+    internal static string? ValidateContent(string type, byte[] content)
     {
         if (!AllowedTypes.Contains(type)) return "unsupported_content_type";
         if (content.Length == 0 || content.LongLength > MaximumBytes) return "invalid_file_size";

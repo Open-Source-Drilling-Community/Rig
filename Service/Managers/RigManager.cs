@@ -6,6 +6,7 @@ using Microsoft.Data.Sqlite;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Data;
+using OSDC.Drilling.Rig.Model;
 
 namespace OSDC.Drilling.Rig.Service.Managers
 {
@@ -592,6 +593,40 @@ namespace OSDC.Drilling.Rig.Service.Managers
                 _logger.LogWarning("The Rig ID is null or empty");
             }
             return false;
+        }
+
+        public RigBatchExportOutcome ExportBatch(RigBatchExportRequest? request,
+            IEnumerable<RigFeatureCategory> categories, Func<Guid, IEnumerable<RigBatchPhoto>> photos)
+        {
+            try
+            {
+                List<Model.Rig?>? rigs = GetAllRig();
+                return rigs is null
+                    ? RigBatchExporter.StorageFailure("The rig database is unavailable.")
+                    : RigBatchExporter.Create(request, rigs, categories, photos, DateTimeOffset.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to create rig batch export");
+                return RigBatchExporter.StorageFailure("The rig export snapshot could not be produced.");
+            }
+        }
+
+        public RigBatchRestoreOutcome RestoreBatch(RigBatchRestoreRequest? request,
+            IReadOnlyList<RigBatchExternalReferenceMapping> externalMappings)
+        {
+            try
+            {
+                using SqliteConnection? connection = _connectionManager.GetConnection();
+                return connection is null
+                    ? RigBatchRestorer.StorageFailure("The rig database is unavailable.")
+                    : RigBatchRestorer.Restore(connection, request, DateTimeOffset.UtcNow, externalMappings);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to open the rig database for batch restore");
+                return RigBatchRestorer.StorageFailure("The rig database is unavailable.");
+            }
         }
 
         private static MetaInfo? DeserializeMetaInfo(string json) =>

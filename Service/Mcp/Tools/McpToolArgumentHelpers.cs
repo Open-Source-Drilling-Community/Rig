@@ -214,6 +214,29 @@ internal static class McpToolArgumentHelpers
         return new JsonObject { ["type"] = "object", ["properties"] = properties, ["required"] = required, ["additionalProperties"] = false, ["$defs"] = definitions };
     }
 
+    public static JsonObject CreateBatchExportSchema() => CreateBodySchema(
+        "request", typeof(RigBatchExportRequest),
+        "Select All for every rig in stable UUID order, or Selected with an explicitly ordered, non-empty RigIDs array.");
+
+    public static JsonObject CreateBatchRestoreSchema() => CreateBodySchema(
+        "request", typeof(RigBatchRestoreRequest),
+        "Complete atomic restore request containing the versioned export document and explicit catalog and UUID-conflict policies.");
+
+    private static JsonObject CreateBodySchema(string propertyName, Type bodyType, string description)
+    {
+        JsonObject definitions = new();
+        JsonObject bodySchema = TypeSchema(bodyType, definitions, nullable: false);
+        bodySchema["description"] = description;
+        return new JsonObject
+        {
+            ["type"] = "object",
+            ["properties"] = new JsonObject { [propertyName] = bodySchema },
+            ["required"] = new JsonArray(propertyName),
+            ["additionalProperties"] = false,
+            ["$defs"] = definitions
+        };
+    }
+
     private static JsonObject TypeSchema(Type declaredType, JsonObject definitions, bool nullable)
     {
         Type? underlying = Nullable.GetUnderlyingType(declaredType);

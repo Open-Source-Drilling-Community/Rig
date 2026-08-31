@@ -37,6 +37,8 @@ builder.Services.AddSwaggerGen(config =>
 
 builder.Services.Configure<McpHubOptions>(builder.Configuration.GetSection(McpHubOptions.SectionName));
 builder.Services.AddHttpClient(nameof(McpHubRegistrationService));
+builder.Services.AddHttpClient(nameof(RigExternalReferenceResolver));
+builder.Services.AddSingleton<IRigExternalReferenceResolver, RigExternalReferenceResolver>();
 builder.Services.AddHostedService<McpHubRegistrationService>();
 
 var serverVersion = typeof(SqlConnectionManager).Assembly.GetName().Version?.ToString() ?? "1.0.0";

@@ -500,6 +500,8 @@ namespace OSDC.Drilling.Rig.ModelTest
             usageStatistics.PostRigPerDay = null!;
             usageStatistics.PutRigByIdPerDay = null!;
             usageStatistics.DeleteRigByIdPerDay = null!;
+            usageStatistics.BatchExportRigsPerDay = null!;
+            usageStatistics.BatchRestoreRigsPerDay = null!;
 
             usageStatistics.IncrementGetAllRigIdPerDay();
             usageStatistics.IncrementGetAllRigMetaInfoPerDay();
@@ -509,6 +511,8 @@ namespace OSDC.Drilling.Rig.ModelTest
             usageStatistics.IncrementPostRigPerDay();
             usageStatistics.IncrementPutRigByIdPerDay();
             usageStatistics.IncrementDeleteRigByIdPerDay();
+            usageStatistics.IncrementBatchExportRigsPerDay();
+            usageStatistics.IncrementBatchRestoreRigsPerDay();
 
             History[] histories =
             {
@@ -519,7 +523,9 @@ namespace OSDC.Drilling.Rig.ModelTest
                 usageStatistics.GetAllRigPerDay,
                 usageStatistics.PostRigPerDay,
                 usageStatistics.PutRigByIdPerDay,
-                usageStatistics.DeleteRigByIdPerDay
+                usageStatistics.DeleteRigByIdPerDay,
+                usageStatistics.BatchExportRigsPerDay,
+                usageStatistics.BatchRestoreRigsPerDay
             };
 
             foreach (History history in histories)

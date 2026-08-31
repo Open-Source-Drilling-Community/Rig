@@ -21,6 +21,8 @@ public sealed class McpToolRegistrationTests
         ["PostRig"] = "rig_create",
         ["PutRigById"] = "rig_update_by_id",
         ["DeleteRigById"] = "rig_delete_by_id",
+        ["BatchExportRigs"] = "rig_batch_export",
+        ["BatchRestoreRigs"] = "rig_batch_restore",
         ["GetAllIds"] = "rig_feature_category_get_all_ids",
         ["GetAllMetaInfo"] = "rig_feature_category_get_all_meta_info",
         ["GetAll"] = "rig_feature_category_get_all",

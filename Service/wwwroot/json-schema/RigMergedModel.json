@@ -910,6 +910,178 @@
         }
       }
     },
+    "/Rig/BatchExport": {
+      "post": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "BatchExportRigs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RigBatchExportRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RigBatchExportRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RigBatchExportRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchExportDocument"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Rig/BatchRestore": {
+      "post": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "BatchRestoreRigs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RigBatchRestoreRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RigBatchRestoreRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RigBatchRestoreRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchRestoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigBatchErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/RigFeatureCategory": {
       "get": {
         "tags": [
@@ -7163,6 +7335,317 @@
           }
         }
       },
+      "RigBatchCatalogDependencies": {
+        "type": "object",
+        "properties": {
+          "FeatureCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigFeatureCategory"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchCatalogMapping": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "LocalID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Resolution": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchCatalogRestorePolicy": {
+        "enum": [
+          "Unspecified",
+          "MapExisting",
+          "MapOrCreateMissing"
+        ],
+        "type": "string"
+      },
+      "RigBatchError": {
+        "type": "object",
+        "properties": {
+          "PositionIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Property": {
+            "type": "string",
+            "nullable": true
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchErrorEnvelope": {
+        "type": "object",
+        "properties": {
+          "Error": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigBatchError"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchExportDocument": {
+        "type": "object",
+        "properties": {
+          "FormatIdentifier": {
+            "type": "string",
+            "nullable": true
+          },
+          "SchemaVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ExportedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CatalogDependencies": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigBatchCatalogDependencies"
+              }
+            ],
+            "nullable": true
+          },
+          "ExternalReferences": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigBatchExternalReferences"
+              }
+            ],
+            "nullable": true
+          },
+          "Rigs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rig"
+            },
+            "nullable": true
+          },
+          "Photos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigBatchPhoto"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchExportRequest": {
+        "type": "object",
+        "properties": {
+          "Scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigBatchExportScope"
+              }
+            ]
+          },
+          "RigIDs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchExportScope": {
+        "enum": [
+          "Unspecified",
+          "All",
+          "Selected"
+        ],
+        "type": "string"
+      },
+      "RigBatchExternalReference": {
+        "type": "object",
+        "properties": {
+          "SourceID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchExternalReferenceMapping": {
+        "type": "object",
+        "properties": {
+          "Resource": {
+            "type": "string",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "LocalID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Resolution": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchExternalReferences": {
+        "type": "object",
+        "properties": {
+          "Clusters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigBatchExternalReference"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchPhoto": {
+        "type": "object",
+        "properties": {
+          "Metadata": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigPhotoMetadata"
+              }
+            ],
+            "nullable": true
+          },
+          "ContentBase64": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchRestoreConflictPolicy": {
+        "enum": [
+          "Unspecified",
+          "FailIfExists",
+          "ReplaceExisting"
+        ],
+        "type": "string"
+      },
+      "RigBatchRestoreRequest": {
+        "type": "object",
+        "properties": {
+          "ConflictPolicy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigBatchRestoreConflictPolicy"
+              }
+            ]
+          },
+          "CatalogPolicy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigBatchCatalogRestorePolicy"
+              }
+            ]
+          },
+          "Document": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RigBatchExportDocument"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "RigBatchRestoreResponse": {
+        "type": "object",
+        "properties": {
+          "RestoredAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CreatedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ReplacedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RestoredPhotoCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CreatedCatalogDefinitionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CreatedCatalogOptionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CatalogMappings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigBatchCatalogMapping"
+            },
+            "nullable": true
+          },
+          "ExternalReferenceMappings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigBatchExternalReferenceMapping"
+            },
+            "nullable": true
+          },
+          "RigIDs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          }
+        }
+      },
       "RigChoke": {
         "type": "object",
         "properties": {
@@ -9570,6 +10053,22 @@
             "nullable": true
           },
           "DeleteRigByIdPerDay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/History"
+              }
+            ],
+            "nullable": true
+          },
+          "BatchExportRigsPerDay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/History"
+              }
+            ],
+            "nullable": true
+          },
+          "BatchRestoreRigsPerDay": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/History"

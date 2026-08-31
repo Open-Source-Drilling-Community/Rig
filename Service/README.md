@@ -38,6 +38,8 @@ The service is built around:
 - `RigUsageStatisticsController`: usage-statistics API
 - `SqlConnectionManager`: SQLite database initialization and schema management
 - `RigManager`: persistence and retrieval logic for rig data
+- `RigBatchExporter` / `RigBatchRestorer`: portable, dependency-aware, atomic batch transfer
+- `RigExternalReferenceResolver`: live validation and UUID/name reconnection of Cluster references
 
 ## Database Model
 
@@ -117,6 +119,12 @@ Primary routes:
   Updates an existing `Rig`
 - `DELETE /Rig/api/Rig/{id}`
   Deletes a `Rig`
+- `POST /Rig/api/Rig/BatchExport`
+  Exports all rigs or an explicitly ordered selection, the referenced feature definitions, Cluster UUID/name manifest, and attached photographs
+- `POST /Rig/api/Rig/BatchRestore`
+  Validates and atomically restores a versioned backup with selectable catalog-mapping and UUID-conflict policies
+
+Batch restore is all-or-nothing. Local Rig Feature categories/options are resolved by exact UUID or compatible normalized code/name; the optional `MapOrCreateMissing` policy creates absent custom definitions with local server-generated UUIDs. Cluster records are never created by Rig restore: each reference must retain its UUID or resolve to exactly one destination Cluster with the same normalized name. Photograph bytes are Base64 encoded in the backup, checksum-verified, signature-validated, and restored in the same transaction as their parent rigs.
 
 ### Rig photo controller
 
@@ -131,7 +139,7 @@ Primary routes:
 - `DELETE /Rig/api/Rig/{rigId}/Photos/{photoId}`
   Deletes one photograph
 
-Normal REST and MCP rig reads do not include photo metadata unless explicitly requested. MCP exposes optional metadata through `includePhotos`, but never returns binary image content; the media endpoints remain REST-only.
+Normal REST and MCP rig reads do not include photo metadata unless explicitly requested. MCP exposes optional metadata through `includePhotos`, but not binary image content; the media endpoints remain REST-only. The explicit batch-export contract is the exception: it embeds Base64 image bytes because the returned document is intended to be a complete, restorable backup.
 
 ### Rig feature category controller
 
@@ -175,6 +183,7 @@ updates the relevant counters for:
 - create operations
 - update operations
 - delete operations
+- batch export and restore operations
 
 ## Database Lifecycle
 
@@ -202,6 +211,8 @@ The service is container-oriented and includes:
 
 - `Dockerfile`
 - Helm chart files under `charts/osdcdrillingrigservice`
+
+`ClusterHostURL` must point to the Cluster microservice. Batch transfer uses it for live source-reference verification and destination-reference reconnection; ordinary service networking remains unchanged.
 
 The historical project README referenced Docker Hub and hosted environments.
 Those deployment references may still be valid operationally, but this README

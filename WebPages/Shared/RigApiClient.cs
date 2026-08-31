@@ -96,6 +96,12 @@ public sealed class RigApiClient
 
     public Task<RigModel.UsageStatisticsRig?> GetUsageStatisticsAsync() => GetAsync<RigModel.UsageStatisticsRig>("RigUsageStatistics");
 
+    public Task<RigModel.RigBatchExportDocument> BatchExportAsync(RigModel.RigBatchExportRequest request) =>
+        PostBatchAsync<RigModel.RigBatchExportRequest, RigModel.RigBatchExportDocument>("Rig/BatchExport", request);
+
+    public Task<RigModel.RigBatchRestoreResponse> BatchRestoreAsync(RigModel.RigBatchRestoreRequest request) =>
+        PostBatchAsync<RigModel.RigBatchRestoreRequest, RigModel.RigBatchRestoreResponse>("Rig/BatchRestore", request);
+
     public Task<HttpStatusCode> CreateRigAsync(RigModel.Rig rig) => SendAsync(HttpMethod.Post, "Rig", rig);
 
     public Task<HttpStatusCode> UpdateRigAsync(RigModel.Rig rig) => SendAsync(HttpMethod.Put, $"Rig/{rig.MetaInfo?.ID}", rig);
@@ -127,4 +133,25 @@ public sealed class RigApiClient
         using HttpResponseMessage response = await _httpClient.SendAsync(request);
         return response.StatusCode;
     }
+
+    private async Task<TResponse> PostBatchAsync<TRequest, TResponse>(string relativeUrl, TRequest request)
+    {
+        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync(relativeUrl, request, JsonOptions);
+        if (!response.IsSuccessStatusCode)
+        {
+            RigModel.RigBatchErrorEnvelope? error = null;
+            try { error = await response.Content.ReadFromJsonAsync<RigModel.RigBatchErrorEnvelope>(JsonOptions); } catch { }
+            throw new RigBatchApiException(response.StatusCode, error);
+        }
+        return (await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions))!;
+    }
+}
+
+public sealed class RigBatchApiException : Exception
+{
+    public HttpStatusCode StatusCode { get; }
+    public RigModel.RigBatchErrorEnvelope? Error { get; }
+    public RigBatchApiException(HttpStatusCode statusCode, RigModel.RigBatchErrorEnvelope? error)
+        : base(error?.Message ?? $"Rig batch request failed with HTTP {(int)statusCode}.")
+    { StatusCode = statusCode; Error = error; }
 }

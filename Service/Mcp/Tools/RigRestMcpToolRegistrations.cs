@@ -30,6 +30,12 @@ public static class RigRestMcpToolRegistrations
             (sp, args, ct) => InvokeWithIdAndBody<RigModel>(args, "rig", ct, (id, data) => Controller(sp).PutRigById(id, data)));
         services.AddLegacyMcpTool("rig_delete_by_id", "Permanently delete the stored rig identified by UUID. Use a read operation first when the target is uncertain. The operation returns not found when the UUID is unknown; it accepts a Rig resource UUID, not a Cluster UUID or equipment identifier.", McpToolArgumentHelpers.CreateGuidSchema("id", "UUID of the rig to delete."),
             (sp, args, ct) => InvokeDelete(args, ct, id => Controller(sp).DeleteRigById(id)));
+        services.AddLegacyMcpTool("rig_batch_export", "Create a read-only, versioned JSON backup of every rig or an explicitly ordered selection. The result contains complete rig records, only referenced Rig Feature definitions and options, a live-verified Cluster UUID/name manifest, and attached photographs with Base64 content and SHA-256 metadata. This explicit backup operation can return a very large payload; ordinary rig reads never include image bytes. One invalid dependency rejects the complete export.", McpToolArgumentHelpers.CreateBatchExportSchema(),
+            (sp, args, ct) => InvokeWithBodyResultAsync<RigBatchExportRequest, RigBatchExportDocument>(args, "request", ct,
+                (request, token) => Controller(sp).BatchExportRigs(request, token)));
+        services.AddLegacyMcpTool("rig_batch_restore", "Validate and atomically restore a versioned Rig backup. Feature definitions are mapped locally or created according to CatalogPolicy; Cluster references retain an existing UUID or map only through one unique normalized-name match. Rigs, catalog changes, and checksum-verified photographs commit together, while any ambiguity, collision, invalid image, or storage error commits nothing.", McpToolArgumentHelpers.CreateBatchRestoreSchema(),
+            (sp, args, ct) => InvokeWithBodyResultAsync<RigBatchRestoreRequest, RigBatchRestoreResponse>(args, "request", ct,
+                (request, token) => Controller(sp).BatchRestoreRigs(request, token)));
         services.AddLegacyMcpTool("rig_feature_category_get_all_ids", "List the UUIDs of all built-in and custom rig feature categories without returning their option catalogs. Use this compact discovery call when identifiers alone are sufficient, then retrieve a selected definition with rig_feature_category_get_by_id.", McpToolArgumentHelpers.CreateEmptySchema(),
             (sp, _, ct) => Invoke(ct, () => FeatureController(sp).GetAllIds()));
         services.AddLegacyMcpTool("rig_feature_category_get_all_meta_info", "List the MetaInfo envelopes of all built-in and custom rig feature categories without returning option catalogs. Each result supplies the stable persistent UUID used by assignments and by rig_feature_category_get_by_id.", McpToolArgumentHelpers.CreateEmptySchema(),
@@ -89,6 +95,14 @@ public static class RigRestMcpToolRegistrations
             : Task.FromResult(error);
     }
 
+    private static async Task<JsonNode?> InvokeWithBodyResultAsync<TBody, TResult>(JsonObject? args, string bodyName,
+        CancellationToken ct, Func<TBody?, CancellationToken, Task<ActionResult<TResult>>> action)
+    {
+        ct.ThrowIfCancellationRequested();
+        if (!TryDeserialize(args, bodyName, out TBody? data, out JsonNode? error)) return error;
+        return McpActionResultConverter.FromActionResult(await action(data, ct));
+    }
+
     private static bool TryDeserialize<T>(JsonObject? args, string bodyName, out T? data, out JsonNode? error)
     {
         data = default;
@@ -130,7 +144,8 @@ public static class RigRestMcpToolRegistrations
 
     private static RigController Controller(IServiceProvider sp) => new(
         sp.GetRequiredService<ILogger<RigManager>>(),
-        sp.GetRequiredService<SqlConnectionManager>());
+        sp.GetRequiredService<SqlConnectionManager>(),
+        sp.GetRequiredService<IRigExternalReferenceResolver>());
 
     private static RigFeatureCategoryController FeatureController(IServiceProvider sp) => new(
         sp.GetRequiredService<ILogger<RigFeatureCategoryManager>>(),

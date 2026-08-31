@@ -1,0 +1,13 @@
+@if (Values.Count != 0)
+{
+    <MudAlert Severity="Severity.Error" Dense="true" Class="mt-3">
+        @foreach (string value in Values)
+        {
+            <MudText Typo="Typo.body2">- @value</MudText>
+        }
+    </MudAlert>
+}
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<string> Values { get; set; } = [];
+}

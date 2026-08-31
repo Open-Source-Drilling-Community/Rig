@@ -1,0 +1,218 @@
+@page "/Rig/BackupRestore"
+@implements IAsyncDisposable
+@inject ILogger<RigBackupRestore> Logger
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IJSRuntime JSRuntime
+@inject RigApiClient RigApiClient
+
+<MudText Typo="Typo.h4" Class="mt-4 mb-4">Rig backup and restore</MudText>
+@if (_busy) { <MudProgressLinear Indeterminate="true" Class="mb-3" /> }
+
+<MudExpansionPanels MultiExpansion="true">
+    <MudExpansionPanel Text="Backup rigs" Expanded="true">
+        <MudText Typo="Typo.body2" Class="mb-3">
+            Export complete rig definitions, referenced Rig Feature categories and options, Cluster names, and associated photographs.
+        </MudText>
+        @if (_rigs == null)
+        { <MudProgressLinear Indeterminate="true" /> }
+        else
+        {
+            <MudDataGrid T="RigLight" @key="_gridKey" Items="@_rigs" MultiSelection="true"
+                         SelectedItems="@_selected" SelectedItemsChanged="SelectedChanged"
+                         QuickFilter="@RigFilter" Hover="true" SortMode="SortMode.Multiple"
+                         Filterable="false" ReadOnly="true" Elevation="0">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Available rigs</MudText><MudSpacer />
+                    <MudTextField @bind-Value="_search" Placeholder="Search" Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mt-0" />
+                </ToolBarContent>
+                <Columns>
+                    <SelectColumn T="RigLight" />
+                    <PropertyColumn Property="value => value.Name" Title="Name" Sortable="true" />
+                    <PropertyColumn Property="value => value.Description" Title="Description" Sortable="true" />
+                </Columns>
+                <PagerContent><MudDataGridPager T="RigLight" /></PagerContent>
+            </MudDataGrid>
+            <MudStack Row="true" Class="mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download"
+                           Disabled="@(_busy || _rigs.Count == 0)" OnClick="ExportAllAsync">Backup all (@_rigs.Count)</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download"
+                           Disabled="@(_busy || _selected.Count == 0)" OnClick="ExportSelectedAsync">Backup selected (@_selected.Count)</MudButton>
+            </MudStack>
+            <ErrorList Values="_backupErrors" />
+        }
+    </MudExpansionPanel>
+
+    <MudExpansionPanel Text="Restore rigs">
+        <MudAlert Severity="Severity.Info" Dense="true" Class="mb-3">
+            The complete document is validated before any database change. Cluster references are checked live;
+            local Rig Feature references are mapped or created according to the selected policy. The restore is atomic.
+        </MudAlert>
+        <label class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium">
+            Choose backup file
+            <InputFile OnChange="LoadFileAsync" accept=".json,application/json" style="display:none" />
+        </label>
+        @if (!string.IsNullOrWhiteSpace(_fileName))
+        { <MudText Typo="Typo.body2" Class="mt-2">Selected file: @_fileName</MudText> }
+
+        @if (_document != null)
+        {
+            <MudGrid Class="mt-3">
+                <MudItem xs="12" md="3"><MudText Typo="Typo.subtitle2">Format</MudText><MudText Typo="Typo.body2">@_document.FormatIdentifier</MudText></MudItem>
+                <MudItem xs="12" md="2"><MudText Typo="Typo.subtitle2">Schema</MudText><MudText Typo="Typo.body2">@_document.SchemaVersion</MudText></MudItem>
+                <MudItem xs="12" md="3"><MudText Typo="Typo.subtitle2">Exported UTC</MudText><MudText Typo="Typo.body2">@_document.ExportedAtUtc.ToString("u")</MudText></MudItem>
+                <MudItem xs="6" md="2"><MudText Typo="Typo.subtitle2">Rigs</MudText><MudText Typo="Typo.body2">@(_document.Rigs?.Count ?? 0)</MudText></MudItem>
+                <MudItem xs="6" md="2"><MudText Typo="Typo.subtitle2">Photos</MudText><MudText Typo="Typo.body2">@(_document.Photos?.Count ?? 0)</MudText></MudItem>
+            </MudGrid>
+            <ErrorList Values="_validationErrors" />
+            @if (_validationErrors.Count == 0)
+            {
+                <MudDataGrid T="OSDC.Drilling.Rig.ModelShared.Rig" Items="@_document.Rigs" QuickFilter="@RestoreFilter"
+                             Hover="true" ReadOnly="true" Elevation="0" Class="mt-3">
+                    <ToolBarContent><MudText Typo="Typo.h6">Backup contents</MudText><MudSpacer />
+                        <MudTextField @bind-Value="_restoreSearch" Placeholder="Search" Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" /></ToolBarContent>
+                    <Columns>
+                        <PropertyColumn Property="value => value.Name" Title="Name" Sortable="true" />
+                        <PropertyColumn Property="value => value.Description" Title="Description" Sortable="true" />
+                    </Columns>
+                    <PagerContent><MudDataGridPager T="OSDC.Drilling.Rig.ModelShared.Rig" /></PagerContent>
+                </MudDataGrid>
+
+                <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">Local Rig Feature definitions</MudText>
+                <MudRadioGroup T="RigBatchCatalogRestorePolicy" @bind-Value="_catalogPolicy">
+                    <MudRadio T="RigBatchCatalogRestorePolicy" Value="RigBatchCatalogRestorePolicy.MapExisting" Color="Color.Primary">Map compatible definitions already present</MudRadio>
+                    <MudRadio T="RigBatchCatalogRestorePolicy" Value="RigBatchCatalogRestorePolicy.MapOrCreateMissing" Color="Color.Primary">Map compatible definitions and create missing definitions/options</MudRadio>
+                </MudRadioGroup>
+                <MudAlert Severity="Severity.Info" Dense="true" Class="mt-2">
+                    Missing Clusters are never created. They must retain their UUID or have one unique normalized-name match on the destination server.
+                </MudAlert>
+
+                <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1">If a rig UUID already exists</MudText>
+                <MudRadioGroup T="RigBatchRestoreConflictPolicy" @bind-Value="_conflictPolicy">
+                    <MudRadio T="RigBatchRestoreConflictPolicy" Value="RigBatchRestoreConflictPolicy.FailIfExists" Color="Color.Primary">Stop without changing anything</MudRadio>
+                    <MudRadio T="RigBatchRestoreConflictPolicy" Value="RigBatchRestoreConflictPolicy.ReplaceExisting" Color="Color.Error">Replace existing rigs and their photos</MudRadio>
+                </MudRadioGroup>
+                @if (_conflictPolicy == RigBatchRestoreConflictPolicy.ReplaceExisting)
+                { <MudAlert Severity="Severity.Warning" Dense="true" Class="mt-2">Existing rigs, including their stored photographs, will be replaced.</MudAlert> }
+                <MudButton Variant="Variant.Filled" Color="@(_conflictPolicy == RigBatchRestoreConflictPolicy.ReplaceExisting ? Color.Error : Color.Primary)"
+                           StartIcon="@Icons.Material.Filled.Restore" Disabled="@(_busy || !CanRestore)"
+                           OnClick="RestoreAsync" Class="mt-3">Restore @(_document.Rigs?.Count ?? 0) rig(s)</MudButton>
+            }
+        }
+        <ErrorList Values="_serverErrors" />
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+@code {
+    private const long MaximumFileBytes = 512L * 1024L * 1024L;
+    private const string ExpectedFormat = "OSDC.Drilling.Rig.BatchExport";
+    private const int ExpectedSchema = 1;
+    private List<RigLight>? _rigs;
+    private HashSet<RigLight> _selected = [];
+    private string? _search, _restoreSearch, _fileName;
+    private int _gridKey;
+    private bool _busy;
+    private RigBatchExportDocument? _document;
+    private RigBatchRestoreConflictPolicy _conflictPolicy = RigBatchRestoreConflictPolicy.FailIfExists;
+    private RigBatchCatalogRestorePolicy _catalogPolicy = RigBatchCatalogRestorePolicy.MapExisting;
+    private readonly List<string> _backupErrors = [], _validationErrors = [], _serverErrors = [];
+    private IJSObjectReference? _downloadModule;
+    private bool CanRestore => _document?.Rigs is { Count: > 0 } && _validationErrors.Count == 0;
+
+    protected override Task OnInitializedAsync() => LoadRigsAsync();
+    private async Task LoadRigsAsync()
+    {
+        try { _rigs = (await RigApiClient.GetRigLightsAsync()).Where(value => value.MetaInfo?.ID != Guid.Empty).OrderBy(value => value.Name, StringComparer.OrdinalIgnoreCase).ToList(); _selected = []; _gridKey++; }
+        catch (Exception ex) { Logger.LogError(ex, "Unable to load rigs for backup"); _rigs = []; Snackbar.Add("Unable to load rigs for backup.", Severity.Error); }
+    }
+    private void SelectedChanged(HashSet<RigLight> values) => _selected = values;
+    private Task ExportAllAsync() => ExportAsync(RigBatchExportScope.All, null);
+    private Task ExportSelectedAsync() => ExportAsync(RigBatchExportScope.Selected, _selected.Where(value => value.MetaInfo?.ID != Guid.Empty)
+        .OrderBy(value => value.Name, StringComparer.OrdinalIgnoreCase).ThenBy(value => value.MetaInfo!.ID).Select(value => value.MetaInfo!.ID).ToList());
+
+    private async Task ExportAsync(RigBatchExportScope scope, List<Guid>? ids)
+    {
+        try
+        {
+            _busy = true; _backupErrors.Clear();
+            RigBatchExportDocument document = await RigApiClient.BatchExportAsync(new RigBatchExportRequest { Scope = scope, RigIDs = ids });
+            string json = System.Text.Json.JsonSerializer.Serialize(document, JsonOptions(true));
+            _downloadModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/OSDC.Drilling.Rig.WebPages/rigBatchBackup.js?v=20260831");
+            await _downloadModule.InvokeVoidAsync("downloadJson", $"rig-backup-{DateTime.UtcNow:yyyyMMddTHHmmssZ}.json", json);
+            Snackbar.Add($"Backed up {document.Rigs?.Count ?? 0} rig(s) and {document.Photos?.Count ?? 0} photo(s).", Severity.Success);
+        }
+        catch (RigBatchApiException ex) { ShowErrors(ex.Error, "Rig backup was rejected.", _backupErrors); }
+        catch (Exception ex) { Logger.LogError(ex, "Unable to back up rigs"); _backupErrors.Add("Unable to back up rigs or resolve Cluster references."); }
+        finally { _busy = false; }
+    }
+
+    private async Task LoadFileAsync(InputFileChangeEventArgs args)
+    {
+        _document = null; _validationErrors.Clear(); _serverErrors.Clear(); _fileName = args.File.Name;
+        try
+        {
+            await using System.IO.Stream stream = args.File.OpenReadStream(MaximumFileBytes);
+            _document = await System.Text.Json.JsonSerializer.DeserializeAsync<RigBatchExportDocument>(stream, JsonOptions(false));
+            ValidateDocument();
+            if (_validationErrors.Count == 0) Snackbar.Add($"Loaded {_document!.Rigs.Count} rig(s).", Severity.Success);
+        }
+        catch (Exception ex) when (ex is System.Text.Json.JsonException or IOException or InvalidOperationException)
+        { Logger.LogWarning(ex, "Unable to read rig backup {File}", args.File.Name); _document = null; _validationErrors.Add("The file is not a readable Rig batch-backup document."); }
+    }
+
+    private void ValidateDocument()
+    {
+        _validationErrors.Clear();
+        if (_document == null) { _validationErrors.Add("The document is empty."); return; }
+        if (_document.FormatIdentifier != ExpectedFormat) _validationErrors.Add($"FormatIdentifier must be '{ExpectedFormat}'.");
+        if (_document.SchemaVersion != ExpectedSchema) _validationErrors.Add($"SchemaVersion must be {ExpectedSchema}.");
+        if (_document.ExportedAtUtc == default || _document.ExportedAtUtc.Offset != TimeSpan.Zero) _validationErrors.Add("ExportedAtUtc must be UTC.");
+        if (_document.CatalogDependencies == null) _validationErrors.Add("CatalogDependencies is required.");
+        if (_document.ExternalReferences == null) _validationErrors.Add("ExternalReferences is required.");
+        if (_document.CatalogDependencies?.FeatureCategories == null) _validationErrors.Add("CatalogDependencies.FeatureCategories is required.");
+        if (_document.ExternalReferences?.Clusters == null) _validationErrors.Add("ExternalReferences.Clusters is required.");
+        if (_document.Photos == null) _validationErrors.Add("Photos is required; use an empty array when no photographs are present.");
+        if (_document.Rigs == null || _document.Rigs.Count == 0) { _validationErrors.Add("At least one rig is required."); return; }
+        HashSet<Guid> ids = [];
+        int index = 0;
+        foreach (OSDC.Drilling.Rig.ModelShared.Rig rig in _document.Rigs)
+        { Guid? id = rig?.MetaInfo?.ID; if (id is null || id == Guid.Empty) _validationErrors.Add($"Rig at position {index} has no UUID."); else if (!ids.Add(id.Value)) _validationErrors.Add($"Rig UUID {id} occurs more than once."); index++; }
+    }
+
+    private async Task RestoreAsync()
+    {
+        if (!CanRestore || _document == null) return;
+        bool? confirmed = await DialogService.ShowMessageBox("Restore rigs",
+            _conflictPolicy == RigBatchRestoreConflictPolicy.ReplaceExisting
+                ? $"Restore {_document.Rigs.Count} rig(s) and replace UUID collisions and photographs?"
+                : $"Restore {_document.Rigs.Count} rig(s)? Any UUID collision stops the operation.",
+            yesText: _conflictPolicy == RigBatchRestoreConflictPolicy.ReplaceExisting ? "Restore and replace" : "Restore",
+            cancelText: "Cancel");
+        if (confirmed != true) return;
+        try
+        {
+            _busy = true; _serverErrors.Clear();
+            RigBatchRestoreResponse response = await RigApiClient.BatchRestoreAsync(new RigBatchRestoreRequest
+            { ConflictPolicy = _conflictPolicy, CatalogPolicy = _catalogPolicy, Document = _document });
+            Snackbar.Add($"Restore completed: {response.CreatedCount} created, {response.ReplacedCount} replaced, {response.RestoredPhotoCount} photos restored.", Severity.Success);
+            await LoadRigsAsync();
+        }
+        catch (RigBatchApiException ex) { ShowErrors(ex.Error, "Rig restore was rejected.", _serverErrors); }
+        catch (Exception ex) { Logger.LogError(ex, "Unable to restore rigs"); _serverErrors.Add("Unable to restore rigs or resolve Cluster references."); Snackbar.Add("Unable to restore rigs.", Severity.Error); }
+        finally { _busy = false; }
+    }
+
+    private void ShowErrors(RigBatchErrorEnvelope? envelope, string fallback, List<string> target)
+    {
+        target.Clear(); target.AddRange(envelope?.Errors?.Select(error => error.PositionIndex == null
+            ? $"{error.Property}: {error.Message}" : $"Position {error.PositionIndex}: {error.Property}: {error.Message}") ?? []);
+        if (target.Count == 0) target.Add(envelope?.Message ?? fallback); Snackbar.Add(envelope?.Message ?? fallback, Severity.Error);
+    }
+    private static System.Text.Json.JsonSerializerOptions JsonOptions(bool indented)
+    { var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = indented, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping }; options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()); return options; }
+    private Func<RigLight, bool> RigFilter => value => string.IsNullOrWhiteSpace(_search) || $"{value.Name} {value.Description} {value.MetaInfo?.ID}".Contains(_search, StringComparison.OrdinalIgnoreCase);
+    private Func<OSDC.Drilling.Rig.ModelShared.Rig, bool> RestoreFilter => value => string.IsNullOrWhiteSpace(_restoreSearch) || $"{value.Name} {value.Description} {value.MetaInfo?.ID}".Contains(_restoreSearch, StringComparison.OrdinalIgnoreCase);
+    public async ValueTask DisposeAsync() { if (_downloadModule != null) try { await _downloadModule.DisposeAsync(); } catch (JSDisconnectedException) { } }
+}

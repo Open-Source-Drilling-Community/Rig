@@ -18,13 +18,19 @@ namespace OSDC.Drilling.Rig.Service.Controllers
         private readonly RigManager _rigManager;
         private readonly RigFeatureCategoryManager _featureManager;
         private readonly RigPhotoManager _photoManager;
+        private readonly IRigExternalReferenceResolver _externalReferenceResolver;
 
         public RigController(ILogger<RigManager> logger, SqlConnectionManager connectionManager)
+            : this(logger, connectionManager, new UnavailableExternalReferenceResolver()) { }
+
+        public RigController(ILogger<RigManager> logger, SqlConnectionManager connectionManager,
+            IRigExternalReferenceResolver externalReferenceResolver)
         {
             _logger = logger;
             _rigManager = RigManager.GetInstance(_logger, connectionManager);
             _featureManager = new RigFeatureCategoryManager(_logger, connectionManager);
             _photoManager = new RigPhotoManager(connectionManager);
+            _externalReferenceResolver = externalReferenceResolver;
         }
 
         /// <summary>
@@ -238,6 +244,85 @@ namespace OSDC.Drilling.Rig.Service.Controllers
                 _logger.LogWarning("The Rig of given ID does not exist");
                 return NotFound();
             }
+        }
+
+        [HttpPost("BatchExport", Name = "BatchExportRigs")]
+        [ProducesResponseType<RigBatchExportDocument>(StatusCodes.Status200OK)]
+        [ProducesResponseType<RigBatchErrorEnvelope>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<RigBatchErrorEnvelope>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<RigBatchErrorEnvelope>(StatusCodes.Status409Conflict)]
+        [ProducesResponseType<RigBatchErrorEnvelope>(StatusCodes.Status502BadGateway)]
+        public async Task<ActionResult<RigBatchExportDocument>> BatchExportRigs(
+            [FromBody] RigBatchExportRequest? request, CancellationToken cancellationToken)
+        {
+            UsageStatisticsRig.Instance.IncrementBatchExportRigsPerDay();
+            RigBatchExportOutcome outcome = _rigManager.ExportBatch(request, _featureManager.GetAll(), _photoManager.GetForBatch);
+            if (!outcome.IsSuccess)
+                return outcome.FailureKind switch
+                {
+                    RigBatchExportFailureKind.InvalidRequest => BadRequest(outcome.Error),
+                    RigBatchExportFailureKind.RigNotFound => NotFound(outcome.Error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, outcome.Error)
+                };
+            try
+            {
+                List<RigBatchError> errors = await _externalReferenceResolver.PopulateExportManifestAsync(outcome.Document!, cancellationToken);
+                return errors.Count == 0 ? Ok(outcome.Document) : Conflict(new RigBatchErrorEnvelope
+                { Error = "external_reference_invalid", Message = "One or more Cluster references could not be represented in the portable backup.", Errors = errors });
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Unable to resolve Cluster names during rig export");
+                return StatusCode(StatusCodes.Status502BadGateway, ExternalServiceError(ex.Message));
+            }
+        }
+
+        [HttpPost("BatchRestore", Name = "BatchRestoreRigs")]
+        [ProducesResponseType<RigBatchRestoreResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<RigBatchErrorEnvelope>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<RigBatchErrorEnvelope>(StatusCodes.Status409Conflict)]
+        [ProducesResponseType<RigBatchErrorEnvelope>(StatusCodes.Status502BadGateway)]
+        [RequestSizeLimit(512L * 1024L * 1024L)]
+        public async Task<ActionResult<RigBatchRestoreResponse>> BatchRestoreRigs(
+            [FromBody] RigBatchRestoreRequest? request, CancellationToken cancellationToken)
+        {
+            UsageStatisticsRig.Instance.IncrementBatchRestoreRigsPerDay();
+            List<RigBatchError> requestErrors = RigBatchRestorer.ValidateRequest(request);
+            if (requestErrors.Count != 0) return BadRequest(new RigBatchErrorEnvelope
+            { Error = "invalid_batch_restore_request", Message = "The rig batch-restore request is invalid. No changes were made.", Errors = requestErrors });
+            RigExternalReferenceResolutionOutcome external;
+            try { external = await _externalReferenceResolver.ResolveRestoreManifestAsync(request!.Document!, cancellationToken); }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Unable to resolve destination Cluster references during rig restore");
+                return StatusCode(StatusCodes.Status502BadGateway, ExternalServiceError(ex.Message));
+            }
+            if (!external.IsSuccess) return Conflict(new RigBatchErrorEnvelope
+            { Error = "external_reference_mapping_failed", Message = "Cluster references could not be resolved uniquely. No changes were made.", Errors = external.Errors });
+            _featureManager.GetAll(); // Seed immutable built-ins before transactional catalog mapping starts.
+            RigBatchRestoreOutcome outcome = _rigManager.RestoreBatch(request, external.Mappings);
+            if (outcome.IsSuccess) return Ok(outcome.Response);
+            return outcome.FailureKind switch
+            {
+                RigBatchRestoreFailureKind.InvalidRequest => BadRequest(outcome.Error),
+                RigBatchRestoreFailureKind.Conflict => Conflict(outcome.Error),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, outcome.Error)
+            };
+        }
+
+        private static RigBatchErrorEnvelope ExternalServiceError(string message) => new()
+        {
+            Error = "external_reference_service_unavailable",
+            Message = "Cluster reference validation could not be completed. No changes were made.",
+            Errors = [new RigBatchError { Property = "ExternalReferences", Code = "dependency_unavailable", Message = message }]
+        };
+
+        private sealed class UnavailableExternalReferenceResolver : IRigExternalReferenceResolver
+        {
+            public Task<List<RigBatchError>> PopulateExportManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken) =>
+                throw new HttpRequestException("Cluster reference resolution is not configured for this controller instance.");
+            public Task<RigExternalReferenceResolutionOutcome> ResolveRestoreManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken) =>
+                throw new HttpRequestException("Cluster reference resolution is not configured for this controller instance.");
         }
 
         private RigReadResponse ToReadResponse(Model.Rig value, bool includePhotos)

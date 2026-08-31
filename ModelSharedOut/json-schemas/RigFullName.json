@@ -264,6 +264,178 @@
         }
       }
     },
+    "/Rig/BatchExport": {
+      "post": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "BatchExportRigs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExportRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExportRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExportRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExportDocument"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Rig/BatchRestore": {
+      "post": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "BatchRestoreRigs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchRestoreRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchRestoreRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchRestoreRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchRestoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/RigFeatureCategory": {
       "get": {
         "tags": [
@@ -5716,6 +5888,329 @@
         },
         "additionalProperties": false
       },
+      "OSDC.Drilling.Rig.Model.RigBatchCatalogDependencies": {
+        "type": "object",
+        "properties": {
+          "FeatureCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchCatalogMapping": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "LocalID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Resolution": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchCatalogRestorePolicy": {
+        "enum": [
+          "Unspecified",
+          "MapExisting",
+          "MapOrCreateMissing"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchError": {
+        "type": "object",
+        "properties": {
+          "PositionIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Property": {
+            "type": "string",
+            "nullable": true
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchErrorEnvelope": {
+        "type": "object",
+        "properties": {
+          "Error": {
+            "type": "string",
+            "nullable": true
+          },
+          "Message": {
+            "type": "string",
+            "nullable": true
+          },
+          "Errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchError"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchExportDocument": {
+        "type": "object",
+        "properties": {
+          "FormatIdentifier": {
+            "type": "string",
+            "nullable": true
+          },
+          "SchemaVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ExportedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CatalogDependencies": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchCatalogDependencies"
+              }
+            ],
+            "nullable": true
+          },
+          "ExternalReferences": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExternalReferences"
+              }
+            ],
+            "nullable": true
+          },
+          "Rigs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+            },
+            "nullable": true
+          },
+          "Photos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchPhoto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchExportRequest": {
+        "type": "object",
+        "properties": {
+          "Scope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExportScope"
+              }
+            ]
+          },
+          "RigIDs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchExportScope": {
+        "enum": [
+          "Unspecified",
+          "All",
+          "Selected"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchExternalReference": {
+        "type": "object",
+        "properties": {
+          "SourceID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchExternalReferenceMapping": {
+        "type": "object",
+        "properties": {
+          "Resource": {
+            "type": "string",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "LocalID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Resolution": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchExternalReferences": {
+        "type": "object",
+        "properties": {
+          "Clusters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExternalReference"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchPhoto": {
+        "type": "object",
+        "properties": {
+          "Metadata": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+              }
+            ],
+            "nullable": true
+          },
+          "ContentBase64": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchRestoreConflictPolicy": {
+        "enum": [
+          "Unspecified",
+          "FailIfExists",
+          "ReplaceExisting"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchRestoreRequest": {
+        "type": "object",
+        "properties": {
+          "ConflictPolicy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchRestoreConflictPolicy"
+              }
+            ]
+          },
+          "CatalogPolicy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchCatalogRestorePolicy"
+              }
+            ]
+          },
+          "Document": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExportDocument"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigBatchRestoreResponse": {
+        "type": "object",
+        "properties": {
+          "RestoredAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "CreatedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ReplacedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "RestoredPhotoCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CreatedCatalogDefinitionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CreatedCatalogOptionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "CatalogMappings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchCatalogMapping"
+            },
+            "nullable": true
+          },
+          "ExternalReferenceMappings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigBatchExternalReferenceMapping"
+            },
+            "nullable": true
+          },
+          "RigIDs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.RigChoke": {
         "type": "object",
         "properties": {
@@ -8150,6 +8645,22 @@
             "nullable": true
           },
           "DeleteRigByIdPerDay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
+          },
+          "BatchExportRigsPerDay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
+          },
+          "BatchRestoreRigsPerDay": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"

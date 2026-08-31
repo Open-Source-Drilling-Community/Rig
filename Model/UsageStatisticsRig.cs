@@ -73,6 +73,8 @@ namespace OSDC.Drilling.Rig.Model
         public History PostRigPerDay { get; set; } = new History();
         public History PutRigByIdPerDay { get; set; } = new History();
         public History DeleteRigByIdPerDay { get; set; } = new History();
+        public History BatchExportRigsPerDay { get; set; } = new History();
+        public History BatchRestoreRigsPerDay { get; set; } = new History();
 
         private static object lock_ = new object();
 
@@ -208,6 +210,26 @@ namespace OSDC.Drilling.Rig.Model
                     DeleteRigByIdPerDay = new History();
                 }
                 DeleteRigByIdPerDay.Increment();
+                ManageBackup();
+            }
+        }
+
+        public void IncrementBatchExportRigsPerDay()
+        {
+            lock (lock_)
+            {
+                BatchExportRigsPerDay ??= new History();
+                BatchExportRigsPerDay.Increment();
+                ManageBackup();
+            }
+        }
+
+        public void IncrementBatchRestoreRigsPerDay()
+        {
+            lock (lock_)
+            {
+                BatchRestoreRigsPerDay ??= new History();
+                BatchRestoreRigsPerDay.Increment();
                 ManageBackup();
             }
         }

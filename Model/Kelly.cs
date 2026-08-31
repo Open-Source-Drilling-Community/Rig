@@ -9,10 +9,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitIbopPressure { get; set; }
         public double? MaxLimitRotationSpeed { get; set; }
         public double? MaxLimitTorque { get; set; }
-        public double? SurfaceRotation { get; set; }
-        public double? SurfaceTorque { get; set; }
-        public double? KellyHeight { get; set; }
-
         public Kelly() { }
     }
 }

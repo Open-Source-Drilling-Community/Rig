@@ -14,7 +14,14 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitOperatingTorque { get; set; }
         public double? MaxLimitMakeupTorque { get; set; }
         public double? MaxLimitBreakoutTorque { get; set; }
-        public double? TopDriveHeight { get; set; }
+        public double? RatedPower { get; set; }
+        public double? RatedHoistingCapacity { get; set; }
+        public double? RatedContinuousTorque { get; set; }
+        public double? RatedIntermittentTorque { get; set; }
+        public int? MotorCount { get; set; }
+        public string? MotorType { get; set; }
+        public string? IbopConfiguration { get; set; }
+        public string? AutomationSystemCompatibility { get; set; }
         public double? ProportionalGain { get; set; } = null;
         public double? IntegralGain { get; set; } = null;
         public double? TuningFrequency { get; set; } = null;

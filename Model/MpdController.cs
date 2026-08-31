@@ -7,12 +7,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? SecondaryChokeTrim { get; set; }
         public double? MaxLimitPressure { get; set; }
         public double? MinLimitMudPumpFlowrate { get; set; }
-        public double? ManipulatedMpdChoke { get; set; }
-        public double? ManipulatedLiftPumpRate { get; set; }
-        public double? ControlledDownholePressure { get; set; }
-        public double? BackpressureFlowrate { get; set; }
-        public double? AnnulusRefillFlowrate { get; set; }
-
         public MpdController() { }
     }
 }

@@ -49,7 +49,7 @@ else
                 {
                     <QuantityField Value="@(propertyValue as double?)"
                                    ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => SetValue(property, value)))"
-                                   Quantity="@DataUtils.InferQuantity(property.Name)"
+                                   Quantity="@DataUtils.InferQuantity(ModelType, property.Name)"
                                    Label="@DataUtils.GetDisplayName(property.Name)" />
                 }
                 else if (coreType == typeof(Guid))
@@ -93,6 +93,7 @@ else
     private IEnumerable<PropertyInfo> EditableProperties => ModelType
         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
         .Where(p => p.CanRead && p.CanWrite && p.GetIndexParameters().Length == 0)
+        .Where(p => GetCoreType(p.PropertyType) != typeof(Guid))
         .Where(p => IsDirectEditableType(p.PropertyType))
         .Where(p => !IsHiddenProperty(ModelType, p.Name))
         .Where(p => ExcludedProperties == null || !ExcludedProperties.Contains(p.Name))
@@ -197,7 +198,6 @@ else
                 "SerialNumber" => 5,
                 "TopDriveClass" => 6,
                 "Weight" => 7,
-                "TopDriveHeight" => 8,
                 "MaxLimitRotationSpeed" => 9,
                 "MaxLimitMakeupTorque" => 10,
                 "MaxLimitBreakoutTorque" => 11,

@@ -32,7 +32,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
         private readonly string _connectionString;
         public static readonly string HOME_DIRECTORY = ".." + Path.DirectorySeparatorChar + "home" + Path.DirectorySeparatorChar;
         public static readonly string DATABASE_FILENAME = "Rig.db";
-        public static readonly string DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        public static readonly string DATE_TIME_FORMAT = "O";
 
         // dictionary describing tables format
         // Light weight data fields are enumerated explicitly in the data table implementing the light weight data concept
@@ -54,6 +54,22 @@ namespace OSDC.Drilling.Rig.Service.Managers
                     "ClusterID text",
                     // end of list of fields used only when light weight concept is implemented
                     "data text" }
+                },
+                { "RigFeatureCategoryTable", new string[] {
+                    "MetaInfo text",
+                    "Code text",
+                    "Name text",
+                    "IsExclusive bool",
+                    "HasValidityPeriod bool",
+                    "IsBuiltIn bool",
+                    "CreationDate text",
+                    "LastModificationDate text",
+                    "data text" }
+                },
+                { "RigPhotoTable", new string[] {
+                    "MetaInfo text", "RigID text", "DisplayOrder integer", "IsPrimary bool",
+                    "ContentType text", "FileName text", "ByteLength integer", "Sha256 text",
+                    "CreationDate text", "LastModificationDate text", "data text", "Content blob" }
                 }
             };
 
@@ -131,114 +147,53 @@ namespace OSDC.Drilling.Rig.Service.Managers
         }
 
         /// <summary>
-        /// This function parses the existing database and check that its structure matches the expected one.
-        /// If not, the existing database is backed-up and the actual database is recreated from scratch
+        /// Ensures that every managed table exists with the expected shape. Missing tables are added
+        /// without touching existing data. An incompatible managed table is backed up and rebuilt in
+        /// isolation; unrelated tables are preserved.
         /// </summary>
         private void ManageDataBase()
         {
-            var connection = GetConnection();
-            if (connection != null)
-            {
-                bool parseOk = true;
-                bool createDb = false;
-                List<string> tableNameList = new();
-                string query = "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%';";
-
-                using (var command = new SqliteCommand(query, connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            tableNameList.Add(reader.GetString(0));
-                        }
-                    }
-                }
-
-                if (tableNameList.Count != _tableStructureDict.Count) // unexpected number of tables
-                {
-                    parseOk = false;
-                }
-                else
-                {
-                    foreach (var tableStruct in _tableStructureDict)
-                    {
-                        bool tmpSuccess = false;
-                        foreach (string tableName in tableNameList)
-                        {
-                            if (tableName == tableStruct.Key) // unexpected table names
-                            {
-                                tmpSuccess = true;
-                                break;
-                            }
-                        }
-                        if (!tmpSuccess ||
-                            !CheckDatabaseStructure(tableStruct)) // badly formatted table
-                        {
-                            parseOk = false;
-                            break;
-                        }
-                    }
-                }
-                if (!parseOk)
-                {
-                    createDb = true;
-                    if (tableNameList.Count > 0)
-                    {
-                        _logger.LogWarning("Unexpected structure of the existing database. A timestamped backup copy will be generated");
-                        // backup existing database
-                        string backupFileName = HOME_DIRECTORY + Path.DirectorySeparatorChar + DATABASE_FILENAME;
-                        string timeStamp = DateTime.UtcNow.ToString(DATE_TIME_FORMAT);
-                        backupFileName = backupFileName.Insert(backupFileName.Length - 3, "-" + timeStamp);
-                        try
-                        {
-                            File.Copy(HOME_DIRECTORY + Path.DirectorySeparatorChar + DATABASE_FILENAME, backupFileName);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError(ex, "Problem while generating a timestamped backup copy of the existing database");
-                        }
-                        // drop existing tables
-                        _logger.LogWarning("Dropping tables from existing database");
-                        foreach (string tableName in tableNameList)
-                        {
-                            if (!DropTable(tableName))
-                            {
-                                createDb = false;
-                                _logger.LogError("Impossible to drop {tableName}. Database may be corrupted, consider deleting it", tableName);
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (createDb)
-                {
-                    _logger.LogInformation("Creating database tables");
-                    bool success = true;
-                    foreach (var tableStruct in _tableStructureDict)
-                    {
-                        string tableName = tableStruct.Key;
-                        if (CreateTable(tableStruct))
-                        {
-                            if (!IndexTable(tableName))
-                                success = false;
-                        }
-                        else
-                        {
-                            success = false;
-                        }
-                        if (!success)
-                        {
-                            if (!DropTable(tableName))
-                                _logger.LogError("Impossible to drop {key}. Database may be corrupted, consider deleting it", tableName);
-                        }
-
-                    }
-                }
-            }
-            else
+            using var connection = GetConnection();
+            if (connection == null)
             {
                 _logger.LogError("Problem opening a new connection while managing database");
+                return;
+            }
+
+            List<string> tableNames = [];
+            using (var command = new SqliteCommand("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%';", connection))
+            {
+                using var reader = command.ExecuteReader();
+                while (reader.Read()) tableNames.Add(reader.GetString(0));
+            }
+
+            bool backupCreated = false;
+            foreach (var tableStructure in _tableStructureDict)
+            {
+                string tableName = tableStructure.Key;
+                if (!tableNames.Contains(tableName, StringComparer.Ordinal))
+                {
+                    _logger.LogInformation("Adding missing database table {tableName}", tableName);
+                    if (!CreateTable(tableStructure) || !IndexTable(tableName))
+                        throw new InvalidOperationException($"Unable to create required database table {tableName}.");
+                    continue;
+                }
+
+                if (CheckDatabaseStructure(tableStructure)) continue;
+
+                if (!backupCreated)
+                {
+                    string source = Path.Combine(HOME_DIRECTORY, DATABASE_FILENAME);
+                    string stamp = DateTime.UtcNow.ToString("yyyyMMddTHHmmssfffZ");
+                    string backup = Path.Combine(HOME_DIRECTORY, Path.GetFileNameWithoutExtension(DATABASE_FILENAME) + $".schema-{stamp}.db");
+                    File.Copy(source, backup, overwrite: false);
+                    backupCreated = true;
+                    _logger.LogWarning("Created database backup {backup} before rebuilding an incompatible managed table", backup);
+                }
+
+                _logger.LogWarning("Rebuilding incompatible managed table {tableName}; other tables are preserved", tableName);
+                if (!DropTable(tableName) || !CreateTable(tableStructure) || !IndexTable(tableName))
+                    throw new InvalidOperationException($"Unable to rebuild incompatible database table {tableName}.");
             }
         }
 
@@ -249,7 +204,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
         /// <returns>true if the expected fields exactly match fields of the stored database</returns>
         private bool CheckDatabaseStructure(KeyValuePair<string, string[]> tableStructure)
         {
-            var connection = GetConnection();
+            using var connection = GetConnection();
             if (connection != null)
             {
                 var command = connection.CreateCommand();
@@ -296,7 +251,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
 
         private bool CreateTable(KeyValuePair<string, string[]> tabStruct)
         {
-            var connection = GetConnection();
+            using var connection = GetConnection();
             if (connection != null)
             {
                 var command = connection.CreateCommand();
@@ -331,7 +286,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
 
         private bool IndexTable(string dbName)
         {
-            var connection = GetConnection();
+            using var connection = GetConnection();
             if (connection != null)
             {
                 var command = connection.CreateCommand();
@@ -357,7 +312,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
 
         private bool DropTable(string dbName)
         {
-            var connection = GetConnection();
+            using var connection = GetConnection();
             if (connection != null)
             {
                 var command = connection.CreateCommand();

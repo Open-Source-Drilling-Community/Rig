@@ -8,8 +8,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitDesignLoad { get; set; }
         public double? MaxLimitOperatingLoad { get; set; }
         public double? MaxLimitCompensatorStroke { get; set; }
-        public double? Hookload { get; set; }
-
         public CrownBlock() { }
     }
 }

@@ -15,16 +15,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitPressure { get; set; }
         public double? MaxLimitTemperature { get; set; }
         public double? MinLimitTemperature { get; set; }
-        public double? SurfaceTorque { get; set; }
-        public double? Hookload { get; set; }
-        public int? SurfaceTurnCount { get; set; }
-        public double? SurfaceAcceleration { get; set; }
-        public double? SurfaceRotationRate { get; set; }
-        public double? SurfaceBorePressure { get; set; }
-        public double? SurfaceAxialVibration { get; set; }
-        public double? SurfaceTorsionalVibration { get; set; }
-        public double? SurfaceLateralVibration { get; set; }
-
         public TorqueTurnSub() { }
     }
 }

@@ -12,9 +12,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitFlowrate { get; set; }
         public double? MaxLimitOperatingTemperature { get; set; }
         public double? MinLimitOperatingTemperature { get; set; }
-        public double? PressureSeparator { get; set; }
-        public double? TemperatureSeparator { get; set; }
-
         public MultiPhaseSeparator() { }
     }
 }

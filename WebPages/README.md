@@ -2,21 +2,25 @@
 
 Reusable Razor class library for the Rig web UI.
 
-It contains the `RigMain`, `RigEdit`, and `StatisticsMain` pages together with the rig editor/viewer components, API clients, and helper utilities they depend on.
+It contains the `RigMain`, `RigEdit`, `RigFeatures`, and `StatisticsMain` pages together with the editor components, API clients, and helper utilities they depend on.
 
 ## Package contents
 
-- Rig catalog page
-- Rig editor page
+- Rig catalog page whose rows open directly in the editor
+- Single create/edit workflow for the complete rig model, including identification, operating envelope, marine/jack-up/station-keeping profiles, storage and equipment
+- Unit-aware fields for engineering quantities
+- Named feature-assignment editor and feature-category catalog page
+- Automatically displayed rig photo gallery with JPEG, PNG, and WebP upload, descriptive metadata, primary-photo selection, and a manual refresh/retry option
+- Unit-aware mud-pump liner performance table for adding and removing the supported liner sizes and their associated flow and pressure ratings
 - Usage statistics page
-- Rig tree/editor/viewer components
+- Rig tree and editor components
 - Host-configurable API access through injected configuration
 
 ## Dependencies
 
 - `OSDC.DotnetLibraries.Drilling.WebAppUtils`
 - `MudBlazor`
-- `OSDC.UnitConversion.DrillingRazorMudComponents`
+- `OSDC.UnitConversion.DrillingRazorMudComponents` 3.4.1 or later; the rig equipment model uses `PowerRateOfChangeDrilling` and `ChokeOpeningRateDrilling`
 - `Plotly.Blazor`
 - `ModelSharedOut`
 

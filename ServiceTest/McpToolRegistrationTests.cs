@@ -20,7 +20,14 @@ public sealed class McpToolRegistrationTests
         ["GetAllRig"] = "rig_get_all",
         ["PostRig"] = "rig_create",
         ["PutRigById"] = "rig_update_by_id",
-        ["DeleteRigById"] = "rig_delete_by_id"
+        ["DeleteRigById"] = "rig_delete_by_id",
+        ["GetAllIds"] = "rig_feature_category_get_all_ids",
+        ["GetAllMetaInfo"] = "rig_feature_category_get_all_meta_info",
+        ["GetAll"] = "rig_feature_category_get_all",
+        ["GetById"] = "rig_feature_category_get_by_id",
+        ["Create"] = "rig_feature_category_create",
+        ["Update"] = "rig_feature_category_update_by_id",
+        ["Delete"] = "rig_feature_category_delete_by_id"
     };
 
     private ServiceProvider _provider = null!;
@@ -43,7 +50,8 @@ public sealed class McpToolRegistrationTests
     [Test]
     public void Every_non_statistics_controller_endpoint_has_a_registered_tool()
     {
-        var endpointMethods = typeof(RigController).GetMethods()
+        var endpointMethods = new[] { typeof(RigController), typeof(RigFeatureCategoryController) }
+            .SelectMany(type => type.GetMethods())
             .Where(method => method.GetCustomAttributes(typeof(HttpMethodAttribute), true).Length > 0)
             .Select(method => method.Name);
         Assert.That(endpointMethods, Is.EquivalentTo(EndpointToolMap.Keys));
@@ -76,9 +84,21 @@ public sealed class McpToolRegistrationTests
         Assert.That(json, Does.Contain("external reference to the Cluster microservice"));
         Assert.That(json, Does.Contain("MainRigMast"));
         Assert.That(json, Does.Contain("MudPumpList"));
+        Assert.That(json, Does.Contain("LinerConfigurations"));
+        Assert.That(json, Does.Contain("LinerInnerDiameter"));
+        Assert.That(json, Does.Contain("MaximumVolumetricFlowRate"));
+        Assert.That(json, Does.Contain("MaximumDischargePressure"));
+        Assert.That(json, Does.Not.Contain("LinerId"));
         Assert.That(json, Does.Contain("BopStack"));
         Assert.That(json, Does.Contain("TopDriveControllerType"));
         Assert.That(json, Does.Contain("StiffPIController"));
+        Assert.That(json, Does.Contain("MeasurementCapabilities"));
+        Assert.That(json, Does.Contain("MeasurementCode"));
+        Assert.That(json, Does.Contain("PhysicalQuantity"));
+        Assert.That(json, Does.Contain("never contain live measurement values"));
+        Assert.That(json, Does.Not.Contain("EnginePower"));
+        Assert.That(json, Does.Not.Contain("PressureBeforeChoke"));
+        Assert.That(json, Does.Not.Contain("MudPumpStrokeRate"));
     }
 
     [Test]
@@ -117,5 +137,17 @@ public sealed class McpToolRegistrationTests
     {
         var response = await _tools["rig_create"].InvokeAsync(new JsonObject(), CancellationToken.None) as JsonObject;
         Assert.That(response?["status"]?.GetValue<int>(), Is.EqualTo(400));
+    }
+
+    [Test]
+    public void Rig_reads_make_photo_metadata_explicit_and_opt_in()
+    {
+        foreach (string toolName in new[] { "rig_get_by_id", "rig_get_all" })
+        {
+            string schema = _tools[toolName].InputSchema!.ToJsonString();
+            Assert.That(schema, Does.Contain("includePhotos"));
+            Assert.That(schema, Does.Contain("Image bytes are never returned by MCP"));
+            Assert.That(_tools[toolName].Description, Does.Contain("image bytes are never"));
+        }
     }
 }

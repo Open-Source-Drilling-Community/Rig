@@ -1,0 +1,76 @@
+@namespace OSDC.Drilling.Rig.WebPages.Components.RigEditors
+
+<MudPaper Class="pa-3" Outlined="true">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+        <div>
+            <MudText Typo="Typo.subtitle2">Liner performance table</MudText>
+            <MudText Typo="Typo.caption">Each row describes the maximum hydraulic performance for one installable liner size.</MudText>
+        </div>
+        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="AddRow">Add liner</MudButton>
+    </MudStack>
+
+    @if (Configurations == null || Configurations.Count == 0)
+    {
+        <MudText Typo="Typo.body2">No liner configurations have been defined.</MudText>
+    }
+    else
+    {
+        <MudTable Items="Configurations" Dense="true" Hover="true" HorizontalScrollbar="true">
+            <HeaderContent>
+                <MudTh>
+                    <MudText>Liner inner diameter</MudText>
+                    <MudSpanUnitLabel QuantityName="DiameterPipeDrilling" VariantType="Variant.Text" />
+                </MudTh>
+                <MudTh>
+                    <MudText>Displacement per stroke</MudText>
+                    <MudSpanUnitLabel QuantityName="VolumeDrilling" VariantType="Variant.Text" />
+                </MudTh>
+                <MudTh>
+                    <MudText>Maximum volumetric flow rate</MudText>
+                    <MudSpanUnitLabel QuantityName="VolumetricFlowrateDrilling" VariantType="Variant.Text" />
+                </MudTh>
+                <MudTh>
+                    <MudText>Maximum discharge pressure</MudText>
+                    <MudSpanUnitLabel QuantityName="PressureDrilling" VariantType="Variant.Text" />
+                </MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Liner inner diameter">
+                    <QuantityField @bind-Value="context.LinerInnerDiameter" Quantity="DiameterPipeDrilling" Label="Liner inner diameter" />
+                </MudTd>
+                <MudTd DataLabel="Displacement per stroke">
+                    <QuantityField @bind-Value="context.DisplacementPerStroke" Quantity="VolumeDrilling" Label="Displacement per stroke" />
+                </MudTd>
+                <MudTd DataLabel="Maximum volumetric flow rate">
+                    <QuantityField @bind-Value="context.MaximumVolumetricFlowRate" Quantity="VolumetricFlowrateDrilling" Label="Maximum flow rate" />
+                </MudTd>
+                <MudTd DataLabel="Maximum discharge pressure">
+                    <QuantityField @bind-Value="context.MaximumDischargePressure" Quantity="PressureDrilling" Label="Maximum pressure" />
+                </MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => RemoveRow(context))" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public ICollection<MudPumpLinerConfiguration>? Configurations { get; set; }
+    [Parameter] public EventCallback<ICollection<MudPumpLinerConfiguration>?> ConfigurationsChanged { get; set; }
+
+    private async Task AddRow()
+    {
+        Configurations ??= new List<MudPumpLinerConfiguration>();
+        Configurations.Add(new MudPumpLinerConfiguration());
+        await ConfigurationsChanged.InvokeAsync(Configurations);
+    }
+
+    private async Task RemoveRow(MudPumpLinerConfiguration row)
+    {
+        if (Configurations == null) return;
+        Configurations.Remove(row);
+        await ConfigurationsChanged.InvokeAsync(Configurations);
+    }
+}

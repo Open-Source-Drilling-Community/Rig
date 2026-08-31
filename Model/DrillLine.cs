@@ -7,8 +7,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? LinearWeight { get; set; }
         public double? MaxLimitDesignBreakingLoad { get; set; }
         public double? MaxLimitOperatingBreakingLoad { get; set; }
-        public double? Hookload { get; set; }
-
         public DrillLine() { }
     }
 }

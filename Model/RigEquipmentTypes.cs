@@ -189,10 +189,12 @@ namespace OSDC.Drilling.Rig.Model
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum CompensatorStatus
+    public enum MeasurementSourceKind
     {
-        Active,
-        Inactive
+        Sensor,
+        Calculated,
+        Manual,
+        Other
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -474,12 +476,6 @@ namespace OSDC.Drilling.Rig.Model
     {
         public double? Pressure { get; set; }
         public double? Flow { get; set; }
-    }
-
-    public class RheometerAfmMeasurement
-    {
-        public double? AfmViscShearRate { get; set; }
-        public double? AfmViscShearStress { get; set; }
     }
 
     public class BopStackComponentDefinition

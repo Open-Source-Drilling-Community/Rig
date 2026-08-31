@@ -1,0 +1,149 @@
+@page "/Rig/Features"
+@inject ILogger<RigFeatures> Logger
+@inject ISnackbar Snackbar
+@inject RigApiClient RigApiClient
+
+<MudStack Spacing="3">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <div>
+            <MudText Typo="Typo.h4">Rig Features</MudText>
+            <MudText Typo="Typo.body2">Built-in capability catalogs are shared by every deployment. Custom catalogs can be added for local classifications.</MudText>
+        </div>
+        <MudStack Row="true" Spacing="2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCategory">Create</MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="LoadAsync">Refresh</MudButton>
+        </MudStack>
+    </MudStack>
+
+    @if (_loading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else
+    {
+        @foreach (RigFeatureCategory category in _categories)
+        {
+            <MudExpansionPanel @key="category.MetaInfo?.ID" Text="@CategoryTitle(category)" Expanded="@(!category.IsBuiltIn)">
+                @if (category.IsBuiltIn)
+                {
+                    <MudText Typo="Typo.body2" Class="mb-2">@category.Description</MudText>
+                    <MudStack Row="true" Spacing="1" Class="flex-wrap">
+                        @foreach (RigFeatureOption option in category.Options ?? [])
+                        {
+                            <MudChip T="string" Size="Size.Small" Color="@(option.IsDeprecated ? Color.Default : Color.Primary)" Variant="Variant.Outlined">@option.Name</MudChip>
+                        }
+                    </MudStack>
+                }
+                else
+                {
+                    <MudGrid>
+                        <MudItem xs="12" md="6"><MudTextField @bind-Value="category.Name" Label="Name" Required="true" Variant="Variant.Outlined" /></MudItem>
+                        <MudItem xs="12" md="6"><MudTextField @bind-Value="category.Code" Label="Stable code" Variant="Variant.Outlined" HelperText="Leave empty to derive it from the name" /></MudItem>
+                        <MudItem xs="12"><MudTextField @bind-Value="category.Description" Label="Description" Variant="Variant.Outlined" Lines="2" /></MudItem>
+                        <MudItem xs="12" md="4"><MudSwitch T="bool" @bind-Value="category.IsExclusive" Label="Exclusive options" Color="Color.Primary" /></MudItem>
+                        <MudItem xs="12" md="4"><MudSwitch T="bool" @bind-Value="category.HasValidityPeriod" Label="Assignments can be dated" Color="Color.Primary" /></MudItem>
+                        <MudItem xs="12" md="4"><MudSwitch T="bool" @bind-Value="category.IsDeprecated" Label="Deprecated" Color="Color.Warning" /></MudItem>
+                    </MudGrid>
+                    <MudDivider Class="my-3" />
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+                        <MudText Typo="Typo.h6">Options</MudText>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddOption(category))">Add option</MudButton>
+                    </MudStack>
+                    @foreach (RigFeatureOption option in category.Options ?? [])
+                    {
+                        <MudGrid @key="option.ID" Class="mb-2">
+                            <MudItem xs="12" md="4"><MudTextField @bind-Value="option.Name" Label="Name" Required="true" Variant="Variant.Outlined" /></MudItem>
+                            <MudItem xs="12" md="3"><MudTextField @bind-Value="option.Code" Label="Code" Variant="Variant.Outlined" /></MudItem>
+                            <MudItem xs="12" md="3"><MudTextField @bind-Value="option.Description" Label="Description" Variant="Variant.Outlined" /></MudItem>
+                            <MudItem xs="8" md="1"><MudSwitch T="bool" @bind-Value="option.IsDeprecated" Label="Deprecated" /></MudItem>
+                            <MudItem xs="4" md="1"><MudIconButton Icon="@Icons.Material.Filled.DeleteOutline" Color="Color.Error" OnClick="@(() => RemoveOption(category, option))" /></MudItem>
+                        </MudGrid>
+                    }
+                    <MudStack Row="true" Spacing="2" Class="mt-3">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SaveCategoryAsync(category))">Save</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="@(() => DeleteCategoryAsync(category))">Delete</MudButton>
+                    </MudStack>
+                }
+            </MudExpansionPanel>
+        }
+    }
+</MudStack>
+
+@code {
+    private List<RigFeatureCategory> _categories = [];
+    private bool _loading = true;
+
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        try
+        {
+            _loading = true;
+            _categories = (await RigApiClient.GetRigFeatureCategoriesAsync())
+                .OrderByDescending(value => value.IsBuiltIn)
+                .ThenBy(value => value.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load rig feature categories");
+            Snackbar.Add("Failed to load rig feature categories.", Severity.Error);
+        }
+        finally { _loading = false; }
+    }
+
+    private void AddCategory() => _categories.Add(new RigFeatureCategory
+    {
+        MetaInfo = new OSDC.Drilling.Rig.ModelShared.MetaInfo(), Name = "New rig feature category", Options = new List<RigFeatureOption> { new() { Name = "New option" } }
+    });
+
+    private static void AddOption(RigFeatureCategory category)
+    {
+        category.Options ??= new List<RigFeatureOption>();
+        category.Options.Add(new RigFeatureOption { Name = "New option" });
+    }
+
+    private static void RemoveOption(RigFeatureCategory category, RigFeatureOption option) => category.Options?.Remove(option);
+
+    private async Task SaveCategoryAsync(RigFeatureCategory category)
+    {
+        if (string.IsNullOrWhiteSpace(category.Name) || category.Options == null || category.Options.Count == 0 || category.Options.Any(value => string.IsNullOrWhiteSpace(value.Name)))
+        {
+            Snackbar.Add("A category needs a name and at least one named option.", Severity.Warning);
+            return;
+        }
+        try
+        {
+            RigFeatureCategory saved = category.MetaInfo?.ID == Guid.Empty
+                ? await RigApiClient.CreateRigFeatureCategoryAsync(category)
+                : await RigApiClient.UpdateRigFeatureCategoryAsync(category);
+            int index = _categories.IndexOf(category);
+            _categories[index] = saved;
+            Snackbar.Add("Rig feature category saved.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to save rig feature category");
+            Snackbar.Add("The category could not be saved. Reload if another user may have changed it.", Severity.Error);
+        }
+    }
+
+    private async Task DeleteCategoryAsync(RigFeatureCategory category)
+    {
+        if (category.MetaInfo?.ID == Guid.Empty) { _categories.Remove(category); return; }
+        try
+        {
+            HttpStatusCode status = await RigApiClient.DeleteRigFeatureCategoryAsync(category.MetaInfo!.ID);
+            if (status == HttpStatusCode.OK) { _categories.Remove(category); Snackbar.Add("Rig feature category deleted.", Severity.Success); }
+            else Snackbar.Add("The category is built-in or still assigned to a rig and cannot be deleted.", Severity.Warning);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to delete rig feature category");
+            Snackbar.Add("The category could not be deleted.", Severity.Error);
+        }
+    }
+
+    private static string CategoryTitle(RigFeatureCategory category) => category.IsBuiltIn ? $"{category.Name} (built-in)" : category.Name ?? "Custom category";
+}

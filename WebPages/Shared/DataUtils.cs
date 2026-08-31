@@ -8,6 +8,83 @@ public static class DataUtils
     public const string DefaultRigName = "New rig";
     public const string DefaultRigDescription = "Rig description";
 
+    private static readonly IReadOnlyDictionary<string, string> PropertyQuantities =
+        new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["AutoDriller.MaxLimitRop"] = "RateOfPenetrationDrilling",
+            ["AutoDriller.MinLimitRop"] = "RateOfPenetrationDrilling",
+            ["AutoDriller.MaxLimitWob"] = "WeightOnBitDrilling",
+            ["AutoDriller.MinLimitWob"] = "WeightOnBitDrilling",
+            ["AutoDriller.MaxLimitTrq"] = "TorqueDrilling",
+            ["AutoDriller.MinLimitTrq"] = "TorqueDrilling",
+            ["BopLineDefinition.LineId"] = "DiameterPipeDrilling",
+            ["BopLineDefinition.LineOd"] = "DiameterPipeDrilling",
+            ["CasingDriveSystem.HoistingCapacity"] = "HookLoadDrilling",
+            ["CasingDriveSystem.MaxLimitPushDown"] = "ForceDrilling",
+            ["CoilDriveSystem.ReelPayloadCapacity"] = "ForceDrilling",
+            ["CoilDriveSystem.ReelPayloadLength"] = "LengthStandard",
+            ["CoilDriveSystem.InjectorHeadMinTubingOd"] = "DiameterPipeDrilling",
+            ["CoilDriveSystem.InjHeadDesignPullCapacity"] = "ForceDrilling",
+            ["CoilDriveSystem.InjHeadDesignSnubCapacity"] = "ForceDrilling",
+            ["CoilDriveSystem.InjHeadPullCapacity"] = "ForceDrilling",
+            ["CoilDriveSystem.InjHeadSnubCapacity"] = "ForceDrilling",
+            ["CoilDriveSystem.InjHeadMaxSpeed"] = "AxialVelocityDrilling",
+            ["ContinuousCirculationDevice.MaxLimitMudWeight"] = "MassDensityDrilling",
+            ["ContinuousCirculationDevice.MaxLimitRotationRate"] = "AngularVelocityDrilling",
+            ["CrownBlock.GrooveDiameter"] = "CableDiameterDrilling",
+            ["CrownBlock.MaxLimitCompensatorStroke"] = "LengthStandard",
+            ["Derrick.MaxLimitWindSpeed"] = "Velocity",
+            ["DrillingChokeManifold.MaxLimitOpeningSpeed"] = "ChokeOpeningRateDrilling",
+            ["DrillingChokeManifold.TrimSize"] = "DiameterPipeDrilling",
+            ["DrillingChokeManifold.FlowMeterSize"] = "DiameterPipeDrilling",
+            ["DrillingMarineRiser.JointWeight"] = "MassGradientPerLengthDrilling",
+            ["DrillLine.Diameter"] = "CableDiameterDrilling",
+            ["DrillLine.LinearWeight"] = "MassGradientPerLengthDrilling",
+            ["DrillstringHeaveCompensator.MaxLimitCompensatorStroke"] = "LengthStandard",
+            ["FlowRoutingManifold.FlangeSize"] = "DiameterPipeDrilling",
+            ["FlowRoutingManifold.PressureReliefValveTrim"] = "DiameterPipeDrilling",
+            ["Generator.PowerFactor"] = "ProportionStandard",
+            ["Generator.StartupTimeCold"] = "DurationDrilling",
+            ["Generator.StartupTimeWarm"] = "DurationDrilling",
+            ["Generator.Voltage"] = "ElectricTension",
+            ["Generator.MaxLimitVoltage"] = "ElectricTension",
+            ["Generator.MinLimitVoltage"] = "ElectricTension",
+            ["Generator.MaxLimitPowerIncrease"] = "PowerRateOfChangeDrilling",
+            ["Generator.MaxLimitSpeedIncrease"] = "RotationalFrequencyRateOfChangeDrilling",
+            ["Generator.MaxLimitFrequency"] = "Frequency",
+            ["Generator.MinLimitFrequency"] = "Frequency",
+            ["MarineMpdEquipment.Weight"] = "MassDrilling",
+            ["MarineUnitProfile.MaximumTransitSpeed"] = "Velocity",
+            ["MeasurementAfm.UpdateRate"] = "Frequency",
+            ["MpdControlDevice.NominalSize"] = "DiameterPipeDrilling",
+            ["MpdController.PrimaryChokeTrim"] = "DiameterPipeDrilling",
+            ["MpdController.SecondaryChokeTrim"] = "DiameterPipeDrilling",
+            ["MudPump.MaxLimitOperatingSpeed"] = "StrokeFrequency",
+            ["CementPumpDisplacementPoint.StrokeRate"] = "StrokeFrequency",
+            ["Rig.DrillFloorElevation"] = "HeightDrilling",
+            ["RigOperatingEnvelope.MaximumDrillingDepth"] = "DepthDrilling",
+            ["RigOperatingEnvelope.MaximumWaterDepth"] = "DepthDrilling",
+            ["RigOperatingEnvelope.MaximumOperatingWindSpeed"] = "Velocity",
+            ["RigOperatingEnvelope.MaximumSurvivalWindSpeed"] = "Velocity",
+            ["RiserHeaveCompensator.MaxLimitCompensatorStroke"] = "LengthStandard",
+            ["ShaleShaker.MaxLimitOperatingCapacity"] = "VolumetricFlowrateDrilling",
+            ["SurfaceMpdEquipment.MinimumBoreholeSize"] = "DiameterPipeDrilling",
+            ["SurfaceMpdEquipment.MaximumBoreholeSize"] = "DiameterPipeDrilling",
+            ["SurfaceMpdEquipment.MaxLimitMudWeight"] = "MassDensityDrilling",
+            ["TopDrive.Weight"] = "MassDrilling",
+            ["TopDrive.TorqueHighPassFilterTimeConstant"] = "DurationDrilling",
+            ["TopDrive.TorqueLowPassFilterTimeConstant"] = "DurationDrilling",
+            ["TopDrive.VFDFilterTimeConstant"] = "DurationDrilling",
+            ["TopDrive.EncoderTimeConstant"] = "DurationDrilling",
+            ["TopDrive.AccelerationFilterTimeConstant"] = "DurationDrilling",
+            ["TorqueTurnSub.Weight"] = "MassDrilling",
+            ["TorqueTurnSub.BatteryLife"] = "DurationDrilling",
+            ["TravellingBlock.GrooveDiameter"] = "CableDiameterDrilling",
+            ["TravellingBlock.MaxLimitBlockTravel"] = "LengthStandard",
+            ["EquipmentMeasurementCapability.RelativeAccuracy"] = "ProportionStandard",
+            ["EquipmentMeasurementCapability.UpdateFrequency"] = "Frequency"
+        };
+
     public static class UnitAndReferenceParameters
     {
         public static string? UnitSystemName { get; set; } = "Metric";
@@ -139,13 +216,23 @@ public static class DataUtils
         return new string(chars.ToArray());
     }
 
-    public static string InferQuantity(string propertyName)
+    public static string InferQuantity(Type declaringType, string propertyName)
     {
+        if (PropertyQuantities.TryGetValue($"{declaringType.Name}.{propertyName}", out string? quantity))
+        {
+            return quantity;
+        }
+
         string key = propertyName.ToLowerInvariant();
         if (key == "pressuremeasurementelevation" || key == "mudhosehangingpointelevation") return "LengthStandard";
         if (key == "tableopeningdiameter" || key == "bushingsize") return "DiameterPipeDrilling";
         if (key == "height") return "LengthStandard";
         if (key == "mass") return "MassDrilling";
+        if (key == "operatingdisplacement" || key == "maximummass") return "MassDrilling";
+        if (key == "ratedhoistingcapacity" || key == "ratedhookload" || key == "maximumsetbackload" || key == "maximumrotaryload" || key == "maximumpreload" || key == "maximummooringlinetension") return "HookLoadDrilling";
+        if (key == "ratedcontinuoustorque" || key == "ratedintermittenttorque") return "TorqueDrilling";
+        if (key == "maximumvolume") return "VolumeDrilling";
+        if (key == "hulllength" || key == "hullwidth" || key == "hulldepth" || key == "operatingdraft" || key == "transitdraft" || key == "leglength" || key == "longitudinallegspacing" || key == "transverselegspacing" || key == "maximumcantileverskidout" || key == "maximumcantilevertransversereach" || key == "substructuretravel") return "LengthStandard";
         if (key == "maxlimitoperatingtorque" || key == "maxlimitdesigntorque") return "TorqueDrilling";
         if (key == "maxlimitoperatingspeed" || key == "maxlimitdesignspeed") return "AngularVelocityDrilling";
         if (key == "maxlimitoperatingstringweight" || key == "maxlimitdesignstringweight") return "HookLoadDrilling";
@@ -154,8 +241,8 @@ public static class DataUtils
         if (key == "maxlimitcontinuousdrumpower") return "PowerDrilling";
         if (key == "maxlimittemperature") return "TemperatureDrilling";
         if (key == "maxlimitpower") return "PowerDrilling";
-        if (key == "linerid") return "DiameterPipeDrilling";
-        if (key == "pumpdisplacement") return "VolumeDrilling";
+        if (key == "linerinnerdiameter") return "DiameterPipeDrilling";
+        if (key == "displacementperstroke") return "VolumeDrilling";
         if (key == "stroke") return "LengthStandard";
         if (key.Contains("efficiency")) return "ProportionStandard";
         if (key.Contains("pressure")) return "PressureDrilling";
@@ -163,13 +250,13 @@ public static class DataUtils
         if (key.Contains("volume") || key.Contains("capacity")) return "VolumeDrilling";
         if (key.Contains("speed") || key.Contains("strokera")) return "AngularVelocityDrilling";
         if (key.Contains("power")) return "PowerDrilling";
-        if (key.Contains("torque")) return "Torque";
-        if (key.Contains("density")) return "MassDensity";
+        if (key.Contains("torque") || key.EndsWith("trq")) return "TorqueDrilling";
+        if (key.Contains("density")) return "MassDensityDrilling";
         if (key.Contains("flow") || key.Contains("rate")) return "VolumetricFlowrateDrilling";
         if (key.Contains("frequency")) return "AngularVelocityDrilling";
         if (key.Contains("force") || key.Contains("load") || key.Contains("hook") || key.Contains("tension") || key.Contains("weight")) return "Force";
         if (key.Contains("angle") || key.Contains("orientation") || key.Contains("azimuth")) return "PlaneAngle";
-        if (key.Contains("time")) return "Time";
+        if (key.Contains("time")) return "DurationDrilling";
         if (key.Contains("temperature")) return "TemperatureDrilling";
         if (key.Contains("diameter")) return "DiameterPipeDrilling";
         if (key.Contains("radius") || key.Contains("height") || key.Contains("length") || key.Contains("depth") || key.Contains("elevation") || key.Contains("position") || key.Contains("clearance")) return "Length";

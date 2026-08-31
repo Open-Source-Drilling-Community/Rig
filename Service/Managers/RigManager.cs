@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using OSDC.DotnetLibraries.General.DataManagement;
 using Microsoft.Data.Sqlite;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Data;
 
 namespace OSDC.Drilling.Rig.Service.Managers
@@ -218,7 +219,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
                         if (reader.Read() && !reader.IsDBNull(0))
                         {
                             string data = reader.GetString(0);
-                            rig = JsonSerializer.Deserialize<Model.Rig>(data, JsonSettings.Options);
+                            rig = DeserializeRig(data);
                             if (rig != null && rig.MetaInfo != null && !rig.MetaInfo.ID.Equals(guid))
                                 throw new SqliteException("SQLite database corrupted: returned Rig is null or has been jsonified with the wrong ID.", 1);
                         }
@@ -266,7 +267,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
                     while (reader.Read() && !reader.IsDBNull(0))
                     {
                         string data = reader.GetString(0);
-                        Model.Rig? rig = JsonSerializer.Deserialize<Model.Rig>(data, JsonSettings.Options);
+                        Model.Rig? rig = DeserializeRig(data);
                         vals.Add(rig);
                     }
                     _logger.LogInformation("Returning the list of existing Rig from RigTable");
@@ -282,6 +283,39 @@ namespace OSDC.Drilling.Rig.Service.Managers
                 _logger.LogWarning("Impossible to access the SQLite database");
             }
             return null;
+        }
+
+        private static Model.Rig? DeserializeRig(string data)
+        {
+            JsonObject? root = JsonNode.Parse(data) as JsonObject;
+            if (root?["MudPumpList"] is JsonArray pumps)
+            {
+                foreach (JsonObject pump in pumps.OfType<JsonObject>())
+                {
+                    if (pump["LinerConfigurations"] is null)
+                    {
+                        JsonObject row = new();
+                        CopyIfDefined(pump, "LinerId", row, "LinerInnerDiameter");
+                        CopyIfDefined(pump, "PumpDisplacement", row, "DisplacementPerStroke");
+                        CopyIfDefined(pump, "MaxLimitOperatingFlowRate", row, "MaximumVolumetricFlowRate");
+                        CopyIfDefined(pump, "MaxLimitOperatingPressure", row, "MaximumDischargePressure");
+                        if (row.Count > 0) pump["LinerConfigurations"] = new JsonArray(row);
+                    }
+
+                    pump.Remove("LinerId");
+                    pump.Remove("PumpDisplacement");
+                    pump.Remove("MaxLimitOperatingFlowRate");
+                    pump.Remove("MaxLimitOperatingPressure");
+                }
+            }
+
+            return root?.Deserialize<Model.Rig>(JsonSettings.Options);
+        }
+
+        private static void CopyIfDefined(JsonObject source, string sourceName, JsonObject target, string targetName)
+        {
+            if (source[sourceName] is JsonNode value)
+                target[targetName] = value.DeepClone();
         }
 
         /// <summary>

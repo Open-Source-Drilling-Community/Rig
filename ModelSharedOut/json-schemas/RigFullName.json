@@ -37,17 +37,29 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                  }
+                ]
               }
             }
           }
@@ -97,6 +109,14 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "includePhotos",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -105,7 +125,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigReadResponse"
                 }
               }
             }
@@ -132,17 +152,29 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                  }
+                ]
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                  }
+                ]
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                  }
+                ]
               }
             }
           }
@@ -205,6 +237,16 @@
           "Rig"
         ],
         "operationId": "GetAllRig",
+        "parameters": [
+          {
+            "name": "includePhotos",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -213,11 +255,559 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Rig"
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigReadResponse"
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/RigFeatureCategory": {
+      "get": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "GetAllRigFeatureCategoryId",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "PostRigFeatureCategory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/RigFeatureCategory/MetaInfo": {
+      "get": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "GetAllRigFeatureCategoryMetaInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/RigFeatureCategory/HeavyData": {
+      "get": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "GetAllRigFeatureCategory",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/RigFeatureCategory/{id}": {
+      "get": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "GetRigFeatureCategoryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "PutRigFeatureCategoryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "expectedModifiedUtc",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "DeleteRigFeatureCategoryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rig/{rigId}/Photos": {
+      "get": {
+        "tags": [
+          "RigPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "rigId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "RigPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "rigId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "caption": {
+                    "type": "string"
+                  },
+                  "alternativeText": {
+                    "type": "string"
+                  },
+                  "displayOrder": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 0
+                  },
+                  "isPrimary": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "attribution": {
+                    "type": "string"
+                  },
+                  "license": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                },
+                "title": {
+                  "style": "form"
+                },
+                "caption": {
+                  "style": "form"
+                },
+                "alternativeText": {
+                  "style": "form"
+                },
+                "displayOrder": {
+                  "style": "form"
+                },
+                "isPrimary": {
+                  "style": "form"
+                },
+                "source": {
+                  "style": "form"
+                },
+                "attribution": {
+                  "style": "form"
+                },
+                "license": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Rig/{rigId}/Photos/{photoId}/Content": {
+      "get": {
+        "tags": [
+          "RigPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "rigId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "photoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rig/{rigId}/Photos/{photoId}": {
+      "put": {
+        "tags": [
+          "RigPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "rigId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "photoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "expectedModifiedUtc",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "RigPhoto"
+        ],
+        "parameters": [
+          {
+            "name": "rigId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "photoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -245,9 +835,36 @@
   },
   "components": {
     "schemas": {
+      "OSDC.DotnetLibraries.General.DataManagement.MetaInfo": {
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "HttpHostName": {
+            "type": "string",
+            "nullable": true
+          },
+          "HttpHostBasePath": {
+            "type": "string",
+            "nullable": true
+          },
+          "HttpEndPoint": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.Accumulator": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -272,8 +889,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "AccumulatorClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AccumulatorClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AccumulatorClass"
+              }
+            ],
+            "nullable": true
           },
           "Capacity": {
             "type": "number",
@@ -306,6 +964,11 @@
       "OSDC.Drilling.Rig.Model.AutoDriller": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -330,8 +993,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "ControlMode": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AutodrillerControlMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AutodrillerControlMode"
+              }
+            ],
+            "nullable": true
           },
           "MaxLimitRop": {
             "type": "number",
@@ -372,26 +1076,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "SetpointWob": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SetpointRop": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SetpointDiffp": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SetpointTrq": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -409,6 +1093,11 @@
       "OSDC.Drilling.Rig.Model.AuxSolidsControl": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -433,23 +1122,48 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "SolidsControlClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SolidsControlClass"
-          },
-          "DesanderOn": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "DesilterOn": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "DegasserOn": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "CentrifugeOn": {
-            "type": "boolean",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SolidsControlClass"
+              }
+            ],
             "nullable": true
           }
         },
@@ -482,7 +1196,12 @@
         "type": "object",
         "properties": {
           "BopLinesClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopLineClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopLineClass"
+              }
+            ],
+            "nullable": true
           },
           "LineOd": {
             "type": "number",
@@ -505,6 +1224,11 @@
       "OSDC.Drilling.Rig.Model.BopStack": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -529,15 +1253,64 @@
             "type": "string",
             "nullable": true
           },
-          "BopStackClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStackClass"
-          },
-          "UnitReferenceList": {
+          "AssetTag": {
             "type": "string",
             "nullable": true
           },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
+          "BopStackClass": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStackClass"
+              }
+            ],
+            "nullable": true
+          },
+          "UnitReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
           "BopControlType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControllerType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControllerType"
+              }
+            ],
+            "nullable": true
           },
           "BoreDiameter": {
             "type": "number",
@@ -592,26 +1365,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "CasingPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "KillLinePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ChokeLinePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ShutInDrillpipePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -629,7 +1382,12 @@
         "type": "object",
         "properties": {
           "BopStackComponentClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopComponentClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopComponentClass"
+              }
+            ],
+            "nullable": true
           },
           "BoreDiameter": {
             "type": "number",
@@ -655,6 +1413,11 @@
       "OSDC.Drilling.Rig.Model.CasingDriveSystem": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -679,8 +1442,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "CsgDrvClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingDriveClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingDriveClass"
+              }
+            ],
+            "nullable": true
           },
           "HoistingCapacity": {
             "type": "number",
@@ -733,6 +1537,11 @@
       "OSDC.Drilling.Rig.Model.CasingRunningTool": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -747,6 +1556,11 @@
       "OSDC.Drilling.Rig.Model.CasingTongs": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -761,6 +1575,11 @@
       "OSDC.Drilling.Rig.Model.CatWalk": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -775,6 +1594,11 @@
       "OSDC.Drilling.Rig.Model.CementPump": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -799,8 +1623,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "PumpClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PumpClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PumpClass"
+              }
+            ],
+            "nullable": true
           },
           "PlungerDiameter": {
             "type": "number",
@@ -856,6 +1721,11 @@
       "OSDC.Drilling.Rig.Model.CementUnit": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -880,11 +1750,55 @@
             "type": "string",
             "nullable": true
           },
-          "Mounting": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MountingType"
-          },
-          "Features": {
+          "AssetTag": {
             "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
+          "Mounting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MountingType"
+              }
+            ],
+            "nullable": true
+          },
+          "Capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "NumberOfPumps": {
@@ -898,6 +1812,11 @@
       "OSDC.Drilling.Rig.Model.Centrifuge": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -935,6 +1854,11 @@
       "OSDC.Drilling.Rig.Model.ChokeManifold": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -959,8 +1883,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "ChokeControlClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControlClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControlClass"
+              }
+            ],
+            "nullable": true
           },
           "MaxLimitDesignPressure": {
             "type": "number",
@@ -1006,6 +1971,11 @@
       "OSDC.Drilling.Rig.Model.CoilDriveSystem": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1030,8 +2000,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "CoilDrvClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MountingType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MountingType"
+              }
+            ],
+            "nullable": true
           },
           "ReelPayloadCapacity": {
             "type": "number",
@@ -1039,11 +2050,6 @@
             "nullable": true
           },
           "ReelPayloadLength": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ReelRemainingLength": {
             "type": "number",
             "format": "double",
             "nullable": true
@@ -1082,65 +2088,18 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "CtLoad": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtWeightOnBit": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtCoilSpeed": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtCircPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtWellheadPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtEngineSpeed": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtInjHeadDrivePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtInjTubingReelDrivePress": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CtChainTension": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "OSDC.Drilling.Rig.Model.CompensatorStatus": {
-        "enum": [
-          "Active",
-          "Inactive"
-        ],
-        "type": "string"
-      },
       "OSDC.Drilling.Rig.Model.ContinuousCirculationDevice": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1165,8 +2124,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "CcdControlClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControlClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControlClass"
+              }
+            ],
+            "nullable": true
           },
           "WorkingPumpPressure": {
             "type": "number",
@@ -1251,6 +2251,11 @@
       "OSDC.Drilling.Rig.Model.CrownBlock": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1273,6 +2278,42 @@
           },
           "SerialNumber": {
             "type": "string",
+            "nullable": true
+          },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
             "nullable": true
           },
           "SheaveDiameter": {
@@ -1304,11 +2345,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "Hookload": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1316,6 +2352,11 @@
       "OSDC.Drilling.Rig.Model.CuttingsDryer": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1330,6 +2371,11 @@
       "OSDC.Drilling.Rig.Model.CuttingsTransportSystem": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1344,6 +2390,11 @@
       "OSDC.Drilling.Rig.Model.Degasser": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1358,6 +2409,11 @@
       "OSDC.Drilling.Rig.Model.Derrick": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1382,8 +2438,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "DerrickClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DerrickClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DerrickClass"
+              }
+            ],
+            "nullable": true
           },
           "Height": {
             "type": "number",
@@ -1424,6 +2521,11 @@
       "OSDC.Drilling.Rig.Model.Desander": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1438,6 +2540,11 @@
       "OSDC.Drilling.Rig.Model.Desilter": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1452,6 +2559,11 @@
       "OSDC.Drilling.Rig.Model.Drawworks": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1476,8 +2588,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "DrawworksClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrawworksClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrawworksClass"
+              }
+            ],
+            "nullable": true
           },
           "MaxLimitDesignLoad": {
             "type": "number",
@@ -1516,6 +2669,11 @@
       "OSDC.Drilling.Rig.Model.DrillLine": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1538,6 +2696,42 @@
           },
           "SerialNumber": {
             "type": "string",
+            "nullable": true
+          },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
             "nullable": true
           },
           "Number": {
@@ -1564,11 +2758,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "Hookload": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1576,6 +2765,11 @@
       "OSDC.Drilling.Rig.Model.DrillingChokeManifold": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1600,8 +2794,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "ManifoldType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldClass"
+              }
+            ],
+            "nullable": true
           },
           "TrimSize": {
             "type": "number",
@@ -1627,22 +2862,35 @@
             "nullable": true
           },
           "ChokeCount": {
-            "type": "string",
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "FlowMeterCount": {
-            "type": "string",
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "PressureSensorVotingNumber": {
-            "type": "string",
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "ChokeNumber": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeNumber"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeNumber"
+              }
+            ],
+            "nullable": true
           },
           "ChokeFunction": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeFunction"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeFunction"
+              }
+            ],
+            "nullable": true
           },
           "ChokeCvCurves": {
             "type": "array",
@@ -1689,81 +2937,6 @@
           "MaxLimitFlowrate": {
             "type": "number",
             "format": "double",
-            "nullable": true
-          },
-          "PressureBeforeChoke": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "PressureAfterChoke": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CvValue": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CloggingOccuring": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TemperatureBeforeChoke": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TemperatureAfterChoke": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "FlowThroughChoke": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "MudDensityOut": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "MudDensityIn": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ReliefValvePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "PressureBeforeFlowMeter": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "PressureAfterFlowMeter": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "InletPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "OutletPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "VotingSensorsFailed": {
-            "type": "integer",
-            "format": "int32",
             "nullable": true
           }
         },
@@ -1825,6 +2998,11 @@
       "OSDC.Drilling.Rig.Model.DrillingFluidTypeDescriptor": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1834,10 +3012,20 @@
             "nullable": true
           },
           "DrillingFluidClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidClass"
+              }
+            ],
+            "nullable": true
           },
           "DrillingFluidType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidType"
+              }
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1845,6 +3033,11 @@
       "OSDC.Drilling.Rig.Model.DrillingMarineRiser": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1869,8 +3062,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "RiserClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserClass"
+              }
+            ],
+            "nullable": true
           },
           "JointWeight": {
             "type": "number",
@@ -1948,6 +3182,11 @@
       "OSDC.Drilling.Rig.Model.DrillstringHeaveCompensator": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -1972,16 +3211,54 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "HeaveCompClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HeaveCompensatorClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HeaveCompensatorClass"
+              }
+            ],
+            "nullable": true
           },
           "CompensatorCapacity": {
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "CompensatorStatus": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CompensatorStatus"
           },
           "MaxLimitCompensatorStroke": {
             "type": "number",
@@ -1994,6 +3271,11 @@
       "OSDC.Drilling.Rig.Model.DriveMode": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2018,8 +3300,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "DriveModeClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DriveModeClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DriveModeClass"
+              }
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2034,6 +3357,15 @@
         ],
         "type": "string"
       },
+      "OSDC.Drilling.Rig.Model.DynamicPositioningClass": {
+        "enum": [
+          "None",
+          "DP1",
+          "DP2",
+          "DP3"
+        ],
+        "type": "string"
+      },
       "OSDC.Drilling.Rig.Model.EngineModelType": {
         "enum": [
           "Reciprocating",
@@ -2041,9 +3373,111 @@
         ],
         "type": "string"
       },
+      "OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus": {
+        "enum": [
+          "Unknown",
+          "Planned",
+          "Installed",
+          "InService",
+          "Suspended",
+          "UnderMaintenance",
+          "Retired"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability": {
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "MeasurementCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "PhysicalQuantity": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceKind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MeasurementSourceKind"
+              }
+            ],
+            "nullable": true
+          },
+          "SourceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceComponentID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "Manufacturer": {
+            "type": "string",
+            "nullable": true
+          },
+          "Model": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SerialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "MinimumValue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumValue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AbsoluteAccuracy": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RelativeAccuracy": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "UpdateFrequency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.FloatValve": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2068,8 +3502,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "FloatValveClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FloatValveClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FloatValveClass"
+              }
+            ],
+            "nullable": true
           },
           "Diameter": {
             "type": "number",
@@ -2106,6 +3581,11 @@
       "OSDC.Drilling.Rig.Model.FlowRoutingManifold": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2130,8 +3610,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "ManifoldType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldClass"
+              }
+            ],
+            "nullable": true
           },
           "FlangeSize": {
             "type": "number",
@@ -2154,7 +3675,12 @@
             "nullable": true
           },
           "ManifoldFlowPath": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldFlowPath"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ManifoldFlowPath"
+              }
+            ],
+            "nullable": true
           },
           "ManifoldFlowcurves": {
             "type": "array",
@@ -2187,36 +3713,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "InletPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "OutletPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ReliefValvePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "CloggingOccuring": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TemperatureInlet": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TemperatureOutlet": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2224,6 +3720,11 @@
       "OSDC.Drilling.Rig.Model.FlowSensor": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2248,21 +3749,52 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "FlowTransducer": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowSensorType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowSensorType"
+              }
+            ],
+            "nullable": true
           },
           "FlowOutOfBorehole": {
             "type": "boolean",
-            "nullable": true
-          },
-          "MudFlowrateOut": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "MudFlowrateIn": {
-            "type": "number",
-            "format": "double",
             "nullable": true
           }
         },
@@ -2279,6 +3811,11 @@
       "OSDC.Drilling.Rig.Model.Generator": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2303,8 +3840,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "GeneratorClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorClass"
+              }
+            ],
+            "nullable": true
           },
           "Speed": {
             "type": "number",
@@ -2327,10 +3905,20 @@
             "nullable": true
           },
           "SpeedMode": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SpeedMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SpeedMode"
+              }
+            ],
+            "nullable": true
           },
           "EngineModel": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EngineModelType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EngineModelType"
+              }
+            ],
+            "nullable": true
           },
           "PowerplantGeneratorNumber": {
             "type": "integer",
@@ -2353,10 +3941,20 @@
             "nullable": true
           },
           "CoolingMedium": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorCooling"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorCooling"
+              }
+            ],
+            "nullable": true
           },
           "Phases": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorPhases"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.GeneratorPhases"
+              }
+            ],
+            "nullable": true
           },
           "MaxLimitPower": {
             "type": "number",
@@ -2394,61 +3992,6 @@
             "nullable": true
           },
           "MinLimitFrequency": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "EnginePower": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "GeneratorPower": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "EngineFuelConsumption": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "EngineSpecificFuelConsumption": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "RunningHours": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "EngineSpeed": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "GeneratorVoltage": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "GridVoltage": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "GridFrequency": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "GeneratorFrequency": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "EngineTemperature": {
             "type": "number",
             "format": "double",
             "nullable": true
@@ -2513,6 +4056,11 @@
       "OSDC.Drilling.Rig.Model.HoistingSystem": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2522,19 +4070,44 @@
             "nullable": true
           },
           "HoistingSystemType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HoistingSystemType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HoistingSystemType"
+              }
+            ],
+            "nullable": true
           },
           "Drawworks": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Drawworks"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Drawworks"
+              }
+            ],
+            "nullable": true
           },
           "CrownBlock": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CrownBlock"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CrownBlock"
+              }
+            ],
+            "nullable": true
           },
           "TravellingBlock": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TravellingBlock"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TravellingBlock"
+              }
+            ],
+            "nullable": true
           },
           "DrillLine": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillLine"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillLine"
+              }
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2550,6 +4123,11 @@
       "OSDC.Drilling.Rig.Model.IronRoughneck": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2561,9 +4139,55 @@
         },
         "additionalProperties": false
       },
+      "OSDC.Drilling.Rig.Model.JackUpProfile": {
+        "type": "object",
+        "properties": {
+          "LegLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "LongitudinalLegSpacing": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TransverseLegSpacing": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumCantileverSkidOut": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumCantileverTransverseReach": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "SubstructureTravel": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumPreload": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.Kelly": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2588,8 +4212,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "KellyClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.KellyClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.KellyClass"
+              }
+            ],
+            "nullable": true
           },
           "KellyJointLength": {
             "type": "number",
@@ -2617,21 +4282,6 @@
             "nullable": true
           },
           "MaxLimitTorque": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceRotation": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceTorque": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "KellyHeight": {
             "type": "number",
             "format": "double",
             "nullable": true
@@ -2673,6 +4323,11 @@
       "OSDC.Drilling.Rig.Model.MarineMpdEquipment": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2697,8 +4352,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "MarineMpdClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineMpdClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineMpdClass"
+              }
+            ],
+            "nullable": true
           },
           "Length": {
             "type": "number",
@@ -2716,7 +4412,12 @@
             "nullable": true
           },
           "ControlMeans": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControllerType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ControllerType"
+              }
+            ],
+            "nullable": true
           },
           "ContainsFlowSpool": {
             "type": "boolean",
@@ -2748,9 +4449,74 @@
         },
         "additionalProperties": false
       },
+      "OSDC.Drilling.Rig.Model.MarineUnitProfile": {
+        "type": "object",
+        "properties": {
+          "HullLength": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "HullWidth": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "HullDepth": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "OperatingDraft": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "TransitDraft": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "OperatingDisplacement": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "VariableDeckLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumTransitSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "AccommodationCapacity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "HelideckCapability": {
+            "type": "string",
+            "nullable": true
+          },
+          "CraneCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.MeasurementAfm": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2775,54 +4541,58 @@
             "type": "string",
             "nullable": true
           },
-          "UpdateRate": {
-            "type": "number",
-            "format": "double",
+          "AssetTag": {
+            "type": "string",
             "nullable": true
           },
-          "Active": {
-            "type": "boolean",
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
-          "AfmMudDensity": {
-            "type": "number",
-            "format": "double",
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
-          "AfmMudTemperature": {
-            "type": "number",
-            "format": "double",
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
             "nullable": true
           },
-          "AfmPv": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "AfmYp": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "AfmRheometerMeasurements": {
+          "CertificationReferences": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RheometerAfmMeasurement"
+              "type": "string"
             },
             "nullable": true
           },
-          "RtViscConsistencyIndex": {
-            "type": "number",
-            "format": "double",
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
             "nullable": true
           },
-          "RtViscFlowBehaviorIndex": {
+          "UpdateRate": {
             "type": "number",
             "format": "double",
             "nullable": true
           }
         },
         "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.MeasurementSourceKind": {
+        "enum": [
+          "Sensor",
+          "Calculated",
+          "Manual",
+          "Other"
+        ],
+        "type": "string"
       },
       "OSDC.Drilling.Rig.Model.MountingType": {
         "enum": [
@@ -2837,6 +4607,11 @@
       "OSDC.Drilling.Rig.Model.MpdControlDevice": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2861,8 +4636,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "MpdControlDeviceClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdControlDeviceClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdControlDeviceClass"
+              }
+            ],
+            "nullable": true
           },
           "NominalSize": {
             "type": "number",
@@ -2916,6 +4732,11 @@
       "OSDC.Drilling.Rig.Model.MpdController": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -2940,8 +4761,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "MpdGradientMode": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdGradientMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdGradientMode"
+              }
+            ],
+            "nullable": true
           },
           "PrimaryChokeTrim": {
             "type": "number",
@@ -2962,31 +4824,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "ManipulatedMpdChoke": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ManipulatedLiftPumpRate": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "ControlledDownholePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "BackpressureFlowrate": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "AnnulusRefillFlowrate": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3003,6 +4840,11 @@
       "OSDC.Drilling.Rig.Model.MudGasSeparator": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3017,6 +4859,11 @@
       "OSDC.Drilling.Rig.Model.MudPump": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3041,11 +4888,56 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "Type": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudPumpType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudPumpType"
+              }
+            ]
           },
           "PumpClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PumpClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PumpClass"
+              }
+            ],
+            "nullable": true
           },
           "PumpAction": {
             "type": "integer",
@@ -3057,19 +4949,16 @@
             "format": "double",
             "nullable": true
           },
-          "PumpDisplacement": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "LinerId": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
           "Stroke": {
             "type": "number",
             "format": "double",
+            "nullable": true
+          },
+          "LinerConfigurations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudPumpLinerConfiguration"
+            },
             "nullable": true
           },
           "PulsationDamperPressure": {
@@ -3087,17 +4976,7 @@
             "format": "double",
             "nullable": true
           },
-          "MaxLimitOperatingPressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
           "MaxLimitOperatingPower": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "MaxLimitOperatingFlowRate": {
             "type": "number",
             "format": "double",
             "nullable": true
@@ -3106,13 +4985,29 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "MudPumpStrokeRate": {
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.MudPumpLinerConfiguration": {
+        "type": "object",
+        "properties": {
+          "LinerInnerDiameter": {
             "type": "number",
             "format": "double",
             "nullable": true
           },
-          "MudPumpFlowRate": {
+          "DisplacementPerStroke": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumVolumetricFlowRate": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumDischargePressure": {
             "type": "number",
             "format": "double",
             "nullable": true
@@ -3130,6 +5025,11 @@
       "OSDC.Drilling.Rig.Model.MudTank": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3154,11 +5054,57 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "TankClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TankClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TankClass"
+              }
+            ],
+            "nullable": true
           },
           "TankFluidType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TankFluidType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TankFluidType"
+              }
+            ],
+            "nullable": true
           },
           "MaxLimitOperatingVolume": {
             "type": "number",
@@ -3171,6 +5117,11 @@
       "OSDC.Drilling.Rig.Model.MultiPhaseSeparator": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3195,8 +5146,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "SeparatorClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SeparatorPhaseClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SeparatorPhaseClass"
+              }
+            ],
+            "nullable": true
           },
           "MaximumOperatingPressure": {
             "type": "number",
@@ -3214,7 +5206,12 @@
             "nullable": true
           },
           "SeparatorMedium": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SeparatorMedium"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SeparatorMedium"
+              }
+            ],
+            "nullable": true
           },
           "MaxLimitDesignPressure": {
             "type": "number",
@@ -3240,16 +5237,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "PressureSeparator": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "TemperatureSeparator": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3257,6 +5244,11 @@
       "OSDC.Drilling.Rig.Model.PipeDeck": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3271,6 +5263,11 @@
       "OSDC.Drilling.Rig.Model.PipeRack": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3295,6 +5292,11 @@
       "OSDC.Drilling.Rig.Model.ReturnFlowLine": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3306,27 +5308,16 @@
         },
         "additionalProperties": false
       },
-      "OSDC.Drilling.Rig.Model.RheometerAfmMeasurement": {
-        "type": "object",
-        "properties": {
-          "AfmViscShearRate": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "AfmViscShearStress": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "OSDC.Drilling.Rig.Model.Rig": {
         "type": "object",
         "properties": {
           "MetaInfo": {
-            "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+              }
+            ],
+            "nullable": true
           },
           "Name": {
             "type": "string",
@@ -3346,6 +5337,84 @@
             "format": "date-time",
             "nullable": true
           },
+          "Identification": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigIdentification"
+              }
+            ],
+            "nullable": true
+          },
+          "RigType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigType"
+              }
+            ],
+            "nullable": true
+          },
+          "OperatingEnvironment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigEnvironment"
+              }
+            ],
+            "nullable": true
+          },
+          "MobilityType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMobilityType"
+              }
+            ],
+            "nullable": true
+          },
+          "OperatingEnvelope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigOperatingEnvelope"
+              }
+            ],
+            "nullable": true
+          },
+          "MarineUnitProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineUnitProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "JackUpProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.JackUpProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "StationKeepingSystem": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StationKeepingSystem"
+              }
+            ],
+            "nullable": true
+          },
+          "StorageCapacities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigStorageCapacity"
+            },
+            "nullable": true
+          },
+          "FeatureAssignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureAssignment"
+            },
+            "nullable": true
+          },
           "MudPumpList": {
             "type": "array",
             "items": {
@@ -3361,16 +5430,36 @@
             "nullable": true
           },
           "CementUnit": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CementUnit"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CementUnit"
+              }
+            ],
+            "nullable": true
           },
           "DriveMode": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DriveMode"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DriveMode"
+              }
+            ],
+            "nullable": true
           },
           "MainRigMast": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
+              }
+            ],
+            "nullable": true
           },
           "AuxiliaryRigMast": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
+              }
+            ],
+            "nullable": true
           },
           "MudTankList": {
             "type": "array",
@@ -3394,19 +5483,44 @@
             "nullable": true
           },
           "AuxSolidsControl": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AuxSolidsControl"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AuxSolidsControl"
+              }
+            ],
+            "nullable": true
           },
           "DrillingFluidType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidTypeDescriptor"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidTypeDescriptor"
+              }
+            ],
+            "nullable": true
           },
           "FlowSensor": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowSensor"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowSensor"
+              }
+            ],
+            "nullable": true
           },
           "MeasurementAfm": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MeasurementAfm"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MeasurementAfm"
+              }
+            ],
+            "nullable": true
           },
           "ReturnFlowLine": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ReturnFlowLine"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ReturnFlowLine"
+              }
+            ],
+            "nullable": true
           },
           "MudGasSeparatorList": {
             "type": "array",
@@ -3444,7 +5558,12 @@
             "nullable": true
           },
           "CuttingsTransportSystem": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CuttingsTransportSystem"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CuttingsTransportSystem"
+              }
+            ],
+            "nullable": true
           },
           "CuttingsDryerList": {
             "type": "array",
@@ -3454,52 +5573,132 @@
             "nullable": true
           },
           "PipeDeck": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PipeDeck"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PipeDeck"
+              }
+            ],
+            "nullable": true
           },
           "Accumulator": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Accumulator"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Accumulator"
+              }
+            ],
+            "nullable": true
           },
           "BopStack": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStack"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStack"
+              }
+            ],
+            "nullable": true
           },
           "FloatValve": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FloatValve"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FloatValve"
+              }
+            ],
+            "nullable": true
           },
           "AutoDriller": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AutoDriller"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AutoDriller"
+              }
+            ],
+            "nullable": true
           },
           "MpdController": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdController"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdController"
+              }
+            ],
+            "nullable": true
           },
           "MpdControlDevice": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdControlDevice"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdControlDevice"
+              }
+            ],
+            "nullable": true
           },
           "ContinuousCirculationDevice": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ContinuousCirculationDevice"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ContinuousCirculationDevice"
+              }
+            ],
+            "nullable": true
           },
           "DrillingChokeManifold": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingChokeManifold"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingChokeManifold"
+              }
+            ],
+            "nullable": true
           },
           "SurfaceMpdEquipment": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SurfaceMpdEquipment"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SurfaceMpdEquipment"
+              }
+            ],
+            "nullable": true
           },
           "MarineMpdEquipment": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineMpdEquipment"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineMpdEquipment"
+              }
+            ],
+            "nullable": true
           },
           "MultiPhaseSeparator": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MultiPhaseSeparator"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MultiPhaseSeparator"
+              }
+            ],
+            "nullable": true
           },
           "FlowRoutingManifold": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowRoutingManifold"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowRoutingManifold"
+              }
+            ],
+            "nullable": true
           },
           "DrillstringHeaveCompensator": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillstringHeaveCompensator"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillstringHeaveCompensator"
+              }
+            ],
+            "nullable": true
           },
           "DrillingMarineRiser": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingMarineRiser"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingMarineRiser"
+              }
+            ],
+            "nullable": true
           },
           "RiserHeaveCompensator": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserHeaveCompensator"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserHeaveCompensator"
+              }
+            ],
+            "nullable": true
           },
           "DrillFloorElevation": {
             "type": "number",
@@ -3520,6 +5719,11 @@
       "OSDC.Drilling.Rig.Model.RigChoke": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3531,11 +5735,234 @@
         },
         "additionalProperties": false
       },
+      "OSDC.Drilling.Rig.Model.RigEnvironment": {
+        "enum": [
+          "Unknown",
+          "Onshore",
+          "Offshore",
+          "InlandWater"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.RigExternalIdentifier": {
+        "type": "object",
+        "properties": {
+          "Authority": {
+            "type": "string",
+            "nullable": true
+          },
+          "Identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigFeatureAssignment": {
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FeatureCategoryID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FeatureOptionID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FromDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ToDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "EvidenceReference": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigFeatureCategory": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsExclusive": {
+            "type": "boolean"
+          },
+          "HasValidityPeriod": {
+            "type": "boolean"
+          },
+          "IsBuiltIn": {
+            "type": "boolean"
+          },
+          "IsDeprecated": {
+            "type": "boolean"
+          },
+          "Options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureOption"
+            },
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigFeatureOption": {
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsBuiltIn": {
+            "type": "boolean"
+          },
+          "IsDeprecated": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigIdentification": {
+        "type": "object",
+        "properties": {
+          "Owner": {
+            "type": "string",
+            "nullable": true
+          },
+          "Operator": {
+            "type": "string",
+            "nullable": true
+          },
+          "ManufacturerOrShipyard": {
+            "type": "string",
+            "nullable": true
+          },
+          "DesignName": {
+            "type": "string",
+            "nullable": true
+          },
+          "YearBuilt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "YearEnteredService": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "Registration": {
+            "type": "string",
+            "nullable": true
+          },
+          "Flag": {
+            "type": "string",
+            "nullable": true
+          },
+          "ClassificationSociety": {
+            "type": "string",
+            "nullable": true
+          },
+          "ClassNotation": {
+            "type": "string",
+            "nullable": true
+          },
+          "ApprovalsAndCertifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "FormerNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "ExternalIdentifiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigExternalIdentifier"
+            },
+            "nullable": true
+          },
+          "MajorModifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigModification"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.RigLight": {
         "type": "object",
         "properties": {
           "MetaInfo": {
-            "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+              }
+            ],
+            "nullable": true
           },
           "Name": {
             "type": "string",
@@ -3569,6 +5996,11 @@
       "OSDC.Drilling.Rig.Model.RigMast": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3578,55 +6010,140 @@
             "nullable": true
           },
           "HoistingSystem": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HoistingSystem"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.HoistingSystem"
+              }
+            ],
+            "nullable": true
           },
           "CatWalk": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CatWalk"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CatWalk"
+              }
+            ],
+            "nullable": true
           },
           "PipeRack": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PipeRack"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PipeRack"
+              }
+            ],
+            "nullable": true
           },
           "CasingDriveSystem": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingDriveSystem"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingDriveSystem"
+              }
+            ],
+            "nullable": true
           },
           "CoilDriveSystem": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CoilDriveSystem"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CoilDriveSystem"
+              }
+            ],
+            "nullable": true
           },
           "Derrick": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Derrick"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Derrick"
+              }
+            ],
+            "nullable": true
           },
           "TorqueTurnSub": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TorqueTurnSub"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TorqueTurnSub"
+              }
+            ],
+            "nullable": true
           },
           "RotaryTable": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTable"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTable"
+              }
+            ],
+            "nullable": true
           },
           "TopDrive": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDrive"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDrive"
+              }
+            ],
+            "nullable": true
           },
           "Kelly": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Kelly"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Kelly"
+              }
+            ],
+            "nullable": true
           },
           "IronRoughneck": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.IronRoughneck"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.IronRoughneck"
+              }
+            ],
+            "nullable": true
           },
           "CasingTongs": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingTongs"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingTongs"
+              }
+            ],
+            "nullable": true
           },
           "CasingRunningTool": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingRunningTool"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CasingRunningTool"
+              }
+            ],
+            "nullable": true
           },
           "StandPipe": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandPipe"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandPipe"
+              }
+            ],
+            "nullable": true
           },
           "StandPipeManifold": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandPipeManifold"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandPipeManifold"
+              }
+            ],
+            "nullable": true
           },
           "RotaryHose": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryHose"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryHose"
+              }
+            ],
+            "nullable": true
           },
           "ChokeManifold": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeManifold"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ChokeManifold"
+              }
+            ],
+            "nullable": true
           },
           "RigChokeList": {
             "type": "array",
@@ -3636,10 +6153,644 @@
             "nullable": true
           },
           "Slips": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Slips"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Slips"
+              }
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigMobilityType": {
+        "enum": [
+          "Unknown",
+          "Fixed",
+          "Mobile",
+          "SelfPropelled",
+          "NonSelfPropelled"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.RigModification": {
+        "type": "object",
+        "properties": {
+          "Date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigOperatingEnvelope": {
+        "type": "object",
+        "properties": {
+          "MaximumDrillingDepth": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumWaterDepth": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RatedHookLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumSetbackLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumRotaryLoad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumMudSystemPressure": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MinimumAmbientTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumAmbientTemperature": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumOperatingWindSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumSurvivalWindSpeed": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigPhotoMetadata": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "RigID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "FileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "Title": {
+            "type": "string",
+            "nullable": true
+          },
+          "Caption": {
+            "type": "string",
+            "nullable": true
+          },
+          "AlternativeText": {
+            "type": "string",
+            "nullable": true
+          },
+          "ContentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "ByteLength": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "Sha256": {
+            "type": "string",
+            "nullable": true
+          },
+          "DisplayOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "IsPrimary": {
+            "type": "boolean"
+          },
+          "Source": {
+            "type": "string",
+            "nullable": true
+          },
+          "Attribution": {
+            "type": "string",
+            "nullable": true
+          },
+          "License": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigReadResponse": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Identification": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigIdentification"
+              }
+            ],
+            "nullable": true
+          },
+          "RigType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigType"
+              }
+            ],
+            "nullable": true
+          },
+          "OperatingEnvironment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigEnvironment"
+              }
+            ],
+            "nullable": true
+          },
+          "MobilityType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMobilityType"
+              }
+            ],
+            "nullable": true
+          },
+          "OperatingEnvelope": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigOperatingEnvelope"
+              }
+            ],
+            "nullable": true
+          },
+          "MarineUnitProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineUnitProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "JackUpProfile": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.JackUpProfile"
+              }
+            ],
+            "nullable": true
+          },
+          "StationKeepingSystem": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StationKeepingSystem"
+              }
+            ],
+            "nullable": true
+          },
+          "StorageCapacities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigStorageCapacity"
+            },
+            "nullable": true
+          },
+          "FeatureAssignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureAssignment"
+            },
+            "nullable": true
+          },
+          "MudPumpList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudPump"
+            },
+            "nullable": true
+          },
+          "CementPumpList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CementPump"
+            },
+            "nullable": true
+          },
+          "CementUnit": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CementUnit"
+              }
+            ],
+            "nullable": true
+          },
+          "DriveMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DriveMode"
+              }
+            ],
+            "nullable": true
+          },
+          "MainRigMast": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
+              }
+            ],
+            "nullable": true
+          },
+          "AuxiliaryRigMast": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigMast"
+              }
+            ],
+            "nullable": true
+          },
+          "MudTankList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudTank"
+            },
+            "nullable": true
+          },
+          "GeneratorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Generator"
+            },
+            "nullable": true
+          },
+          "ShaleShakerList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ShaleShaker"
+            },
+            "nullable": true
+          },
+          "AuxSolidsControl": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AuxSolidsControl"
+              }
+            ],
+            "nullable": true
+          },
+          "DrillingFluidType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingFluidTypeDescriptor"
+              }
+            ],
+            "nullable": true
+          },
+          "FlowSensor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowSensor"
+              }
+            ],
+            "nullable": true
+          },
+          "MeasurementAfm": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MeasurementAfm"
+              }
+            ],
+            "nullable": true
+          },
+          "ReturnFlowLine": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ReturnFlowLine"
+              }
+            ],
+            "nullable": true
+          },
+          "MudGasSeparatorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MudGasSeparator"
+            },
+            "nullable": true
+          },
+          "DesanderList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Desander"
+            },
+            "nullable": true
+          },
+          "DesilterList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Desilter"
+            },
+            "nullable": true
+          },
+          "CentrifugeList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Centrifuge"
+            },
+            "nullable": true
+          },
+          "DegasserList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Degasser"
+            },
+            "nullable": true
+          },
+          "CuttingsTransportSystem": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CuttingsTransportSystem"
+              }
+            ],
+            "nullable": true
+          },
+          "CuttingsDryerList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CuttingsDryer"
+            },
+            "nullable": true
+          },
+          "PipeDeck": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.PipeDeck"
+              }
+            ],
+            "nullable": true
+          },
+          "Accumulator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.Accumulator"
+              }
+            ],
+            "nullable": true
+          },
+          "BopStack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.BopStack"
+              }
+            ],
+            "nullable": true
+          },
+          "FloatValve": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FloatValve"
+              }
+            ],
+            "nullable": true
+          },
+          "AutoDriller": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.AutoDriller"
+              }
+            ],
+            "nullable": true
+          },
+          "MpdController": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdController"
+              }
+            ],
+            "nullable": true
+          },
+          "MpdControlDevice": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MpdControlDevice"
+              }
+            ],
+            "nullable": true
+          },
+          "ContinuousCirculationDevice": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ContinuousCirculationDevice"
+              }
+            ],
+            "nullable": true
+          },
+          "DrillingChokeManifold": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingChokeManifold"
+              }
+            ],
+            "nullable": true
+          },
+          "SurfaceMpdEquipment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SurfaceMpdEquipment"
+              }
+            ],
+            "nullable": true
+          },
+          "MarineMpdEquipment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MarineMpdEquipment"
+              }
+            ],
+            "nullable": true
+          },
+          "MultiPhaseSeparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.MultiPhaseSeparator"
+              }
+            ],
+            "nullable": true
+          },
+          "FlowRoutingManifold": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FlowRoutingManifold"
+              }
+            ],
+            "nullable": true
+          },
+          "DrillstringHeaveCompensator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillstringHeaveCompensator"
+              }
+            ],
+            "nullable": true
+          },
+          "DrillingMarineRiser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DrillingMarineRiser"
+              }
+            ],
+            "nullable": true
+          },
+          "RiserHeaveCompensator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserHeaveCompensator"
+              }
+            ],
+            "nullable": true
+          },
+          "DrillFloorElevation": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "IsFixedPlatform": {
+            "type": "boolean"
+          },
+          "ClusterID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "Photos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigPhotoMetadata"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigStorageCapacity": {
+        "type": "object",
+        "properties": {
+          "StorageType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigStorageType"
+              }
+            ]
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "MaximumVolume": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MaximumMass": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigStorageType": {
+        "enum": [
+          "Other",
+          "DieselFuel",
+          "DrillWater",
+          "PotableWater",
+          "ActiveDrillingFluid",
+          "ReserveDrillingFluid",
+          "BaseOil",
+          "Brine",
+          "BulkCement",
+          "BulkBarite",
+          "BulkBentonite",
+          "Cuttings"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.RigType": {
+        "enum": [
+          "Unknown",
+          "ConventionalLandRig",
+          "MobileLandRig",
+          "PlatformRig",
+          "JackUp",
+          "Semisubmersible",
+          "Drillship",
+          "TenderAssistedRig",
+          "DrillingBarge"
+        ],
+        "type": "string"
       },
       "OSDC.Drilling.Rig.Model.RiserClass": {
         "enum": [
@@ -3660,6 +6811,11 @@
       "OSDC.Drilling.Rig.Model.RiserHeaveCompensator": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3684,16 +6840,54 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "RiserCompensatorClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserCompensatorClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RiserCompensatorClass"
+              }
+            ],
+            "nullable": true
           },
           "CompensatorCapacity": {
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "CompensatorStatus": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.CompensatorStatus"
           },
           "MaxLimitCompensatorStroke": {
             "type": "number",
@@ -3706,6 +6900,11 @@
       "OSDC.Drilling.Rig.Model.RotaryHose": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3720,6 +6919,11 @@
       "OSDC.Drilling.Rig.Model.RotaryTable": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3744,8 +6948,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "RotaryTableType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTableType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTableType"
+              }
+            ],
+            "nullable": true
           },
           "TableOpeningDiameter": {
             "type": "number",
@@ -3753,7 +6998,12 @@
             "nullable": true
           },
           "BushingType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTableBushingType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RotaryTableBushingType"
+              }
+            ],
+            "nullable": true
           },
           "BushingSize": {
             "type": "number",
@@ -3888,6 +7138,11 @@
       "OSDC.Drilling.Rig.Model.ShaleShaker": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3912,11 +7167,48 @@
             "type": "string",
             "nullable": true
           },
-          "ShakerClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ShakerClass"
-          },
-          "ActiveShakers": {
+          "AssetTag": {
             "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
+          "ShakerClass": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.ShakerClass"
+              }
+            ],
             "nullable": true
           },
           "ShakerScreens": {
@@ -3937,6 +7229,11 @@
       "OSDC.Drilling.Rig.Model.Slips": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3968,6 +7265,11 @@
       "OSDC.Drilling.Rig.Model.StandPipe": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -3992,6 +7294,11 @@
       "OSDC.Drilling.Rig.Model.StandPipeManifold": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -4016,13 +7323,54 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "PipeDiameter": {
             "type": "number",
             "format": "double",
             "nullable": true
           },
           "StandpipeSpecLevel": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandpipeSpecLevel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StandpipeSpecLevel"
+              }
+            ],
+            "nullable": true
           },
           "MaxLimitDesignPressure": {
             "type": "number",
@@ -4055,6 +7403,52 @@
         ],
         "type": "string"
       },
+      "OSDC.Drilling.Rig.Model.StationKeepingMode": {
+        "enum": [
+          "Unknown",
+          "Fixed",
+          "SelfElevating",
+          "Moored",
+          "DynamicPositioning"
+        ],
+        "type": "string"
+      },
+      "OSDC.Drilling.Rig.Model.StationKeepingSystem": {
+        "type": "object",
+        "properties": {
+          "Modes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.StationKeepingMode"
+            },
+            "nullable": true
+          },
+          "DynamicPositioningClass": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.DynamicPositioningClass"
+              }
+            ],
+            "nullable": true
+          },
+          "ThrusterCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "MooringLineCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "MaximumMooringLineTension": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.SurfaceMpdClass": {
         "enum": [
           "BackPressurePump",
@@ -4065,6 +7459,11 @@
       "OSDC.Drilling.Rig.Model.SurfaceMpdEquipment": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -4089,8 +7488,49 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "SurfaceMpdClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SurfaceMpdClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.SurfaceMpdClass"
+              }
+            ],
+            "nullable": true
           },
           "MinimumBoreholeSize": {
             "type": "number",
@@ -4141,31 +7581,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "StrokeRate": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "FlowRate": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "PressureAtDischarge": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "Power": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "PressureAtInlet": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4193,6 +7608,11 @@
       "OSDC.Drilling.Rig.Model.TopDrive": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -4217,11 +7637,57 @@
             "type": "string",
             "nullable": true
           },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
+            "nullable": true
+          },
           "TopDriveClass": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDriveClass"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDriveClass"
+              }
+            ],
+            "nullable": true
           },
           "TopDriveControllerType": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDriveControllerType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.TopDriveControllerType"
+              }
+            ],
+            "nullable": true
           },
           "Orientable": {
             "type": "boolean",
@@ -4272,9 +7738,41 @@
             "format": "double",
             "nullable": true
           },
-          "TopDriveHeight": {
+          "RatedPower": {
             "type": "number",
             "format": "double",
+            "nullable": true
+          },
+          "RatedHoistingCapacity": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RatedContinuousTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "RatedIntermittentTorque": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "MotorCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "MotorType": {
+            "type": "string",
+            "nullable": true
+          },
+          "IbopConfiguration": {
+            "type": "string",
+            "nullable": true
+          },
+          "AutomationSystemCompatibility": {
+            "type": "string",
             "nullable": true
           },
           "ProportionalGain": {
@@ -4350,6 +7848,11 @@
       "OSDC.Drilling.Rig.Model.TorqueTurnSub": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -4372,6 +7875,42 @@
           },
           "SerialNumber": {
             "type": "string",
+            "nullable": true
+          },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
             "nullable": true
           },
           "Length": {
@@ -4438,51 +7977,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "SurfaceTorque": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "Hookload": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceTurnCount": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "SurfaceAcceleration": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceRotationRate": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceBorePressure": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceAxialVibration": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceTorsionalVibration": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "SurfaceLateralVibration": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4490,6 +7984,11 @@
       "OSDC.Drilling.Rig.Model.TravellingBlock": {
         "type": "object",
         "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "Name": {
             "type": "string",
             "nullable": true
@@ -4512,6 +8011,42 @@
           },
           "SerialNumber": {
             "type": "string",
+            "nullable": true
+          },
+          "AssetTag": {
+            "type": "string",
+            "nullable": true
+          },
+          "InstallationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "CommissioningDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LifecycleStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentLifecycleStatus"
+              }
+            ],
+            "nullable": true
+          },
+          "CertificationReferences": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "MeasurementCapabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.EquipmentMeasurementCapability"
+            },
             "nullable": true
           },
           "Weight": {
@@ -4543,16 +8078,6 @@
             "type": "number",
             "format": "double",
             "nullable": true
-          },
-          "HookVelocity": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "HookPosition": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -4569,49 +8094,67 @@
             "format": "date-span"
           },
           "GetAllRigIdPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
           },
           "GetAllRigMetaInfoPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
           },
           "GetRigByIdPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
           },
           "GetAllRigLightPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
           },
           "GetAllRigPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
           },
           "PostRigPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
           },
           "PutRigByIdPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
           },
           "DeleteRigByIdPerDay": {
-            "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
-          }
-        },
-        "additionalProperties": false
-      },
-      "OSDC.DotnetLibraries.General.DataManagement.MetaInfo": {
-        "type": "object",
-        "properties": {
-          "ID": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "HttpHostName": {
-            "type": "string",
-            "nullable": true
-          },
-          "HttpHostBasePath": {
-            "type": "string",
-            "nullable": true
-          },
-          "HttpEndPoint": {
-            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
             "nullable": true
           }
         },

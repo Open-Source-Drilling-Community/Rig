@@ -37,6 +37,11 @@
                 </MudStack>
             </MudStack>
 
+            @if (!_isNewRig && _currentRig.MetaInfo?.ID != Guid.Empty)
+            {
+                <RigPhotoGallery RigId="_currentRig.MetaInfo!.ID" />
+            }
+
             <MudGrid>
                 <MudItem xs="12" md="4" lg="3">
                     <MudPaper Class="pa-3" Outlined="true">
@@ -155,7 +160,11 @@
                                 </MudStack>
                             </MudStack>
 
-                            @if (SelectedNode.IsList)
+                            @if (SelectedNode.ValueType == typeof(RigFeatureAssignment))
+                            {
+                                <RigFeatureAssignmentsEditor Rig="_currentRig" Categories="_featureCategories" />
+                            }
+                            else if (SelectedNode.IsList)
                             {
                                 <MudText Typo="Typo.body1">Select a list item in the tree to edit its values.</MudText>
                                 <MudText Typo="Typo.body2">Current items: @GetListCount(SelectedNode)</MudText>
@@ -187,6 +196,30 @@
                                                       Label="Last modification date"
                                                       Variant="Variant.Outlined"
                                                       HelperText="UTC ISO-8601" />
+                                    </MudItem>
+                                    <MudItem xs="12" md="4">
+                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.RigType?" @bind-Value="_currentRig.RigType" Label="Rig type" Variant="Variant.Outlined">
+                                            @foreach (OSDC.Drilling.Rig.ModelShared.RigType value in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.RigType>())
+                                            {
+                                                <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.RigType?" Value="@((OSDC.Drilling.Rig.ModelShared.RigType?)value)">@DataUtils.GetDisplayName(value.ToString())</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                    <MudItem xs="12" md="4">
+                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.RigEnvironment?" @bind-Value="_currentRig.OperatingEnvironment" Label="Operating environment" Variant="Variant.Outlined">
+                                            @foreach (OSDC.Drilling.Rig.ModelShared.RigEnvironment value in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.RigEnvironment>())
+                                            {
+                                                <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.RigEnvironment?" Value="@((OSDC.Drilling.Rig.ModelShared.RigEnvironment?)value)">@DataUtils.GetDisplayName(value.ToString())</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                    </MudItem>
+                                    <MudItem xs="12" md="4">
+                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.RigMobilityType?" @bind-Value="_currentRig.MobilityType" Label="Mobility" Variant="Variant.Outlined">
+                                            @foreach (OSDC.Drilling.Rig.ModelShared.RigMobilityType value in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.RigMobilityType>())
+                                            {
+                                                <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.RigMobilityType?" Value="@((OSDC.Drilling.Rig.ModelShared.RigMobilityType?)value)">@DataUtils.GetDisplayName(value.ToString())</MudSelectItem>
+                                            }
+                                        </MudSelect>
                                     </MudItem>
                                     <MudItem xs="12">
                                         <MudSwitch T="bool"
@@ -264,18 +297,27 @@
                                         <MudTextField @bind-Value="selectedHoistingSystem.Description" Label="Description" Variant="Variant.Outlined" Lines="3" />
                                     </MudItem>
                                     <MudItem xs="12" md="6">
-                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.HoistingSystemType"
+                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.HoistingSystemType?"
                                                    Value="selectedHoistingSystem.HoistingSystemType"
-                                                   ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.HoistingSystemType>(this, value => OnHoistingSystemTypeChanged(selectedHoistingSystem, value)))"
+                                                   ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.HoistingSystemType?>(this, value => OnHoistingSystemTypeChanged(selectedHoistingSystem, value)))"
                                                    Label="Hoisting System Type"
                                                    Variant="Variant.Outlined">
                                             @foreach (OSDC.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.HoistingSystemType>())
                                             {
-                                                <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.HoistingSystemType" Value="hoistingSystemType">@DataUtils.GetDisplayName(hoistingSystemType.ToString())</MudSelectItem>
+                                                <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.HoistingSystemType?" Value="@((OSDC.Drilling.Rig.ModelShared.HoistingSystemType?)hoistingSystemType)">@DataUtils.GetDisplayName(hoistingSystemType.ToString())</MudSelectItem>
                                             }
                                         </MudSelect>
                                     </MudItem>
                                 </MudGrid>
+                            }
+                            else if (SelectedNode.Value is MudPump selectedMudPump)
+                            {
+                                <MudStack Spacing="3">
+                                    <MudPumpLinerConfigurationTable
+                                        Configurations="selectedMudPump.LinerConfigurations"
+                                        ConfigurationsChanged="@(EventCallback.Factory.Create<ICollection<MudPumpLinerConfiguration>?>(this, value => selectedMudPump.LinerConfigurations = value))" />
+                                    <ModelDirectEditor Value="selectedMudPump" ModelType="@typeof(MudPump)" />
+                                </MudStack>
                             }
                             else if (SelectedNode.Value is TopDrive selectedTopDrive)
                             {
@@ -300,75 +342,107 @@
                                             <MudTextField @bind-Value="selectedTopDrive.SerialNumber" Label="Serial Number" Variant="Variant.Outlined" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
-                                            <MudSelect T="OSDC.Drilling.Rig.ModelShared.TopDriveClass"
+                                            <MudSelect T="OSDC.Drilling.Rig.ModelShared.TopDriveClass?"
                                                        Value="selectedTopDrive.TopDriveClass"
-                                                       ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.TopDriveClass>(this, value => selectedTopDrive.TopDriveClass = value))"
+                                                       ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.TopDriveClass?>(this, value => selectedTopDrive.TopDriveClass = value))"
                                                        Label="Top Drive Class"
                                                        Variant="Variant.Outlined">
                                                 @foreach (OSDC.Drilling.Rig.ModelShared.TopDriveClass topDriveClass in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.TopDriveClass>())
                                                 {
-                                                    <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.TopDriveClass" Value="topDriveClass">@GetTopDriveClassLabel(topDriveClass)</MudSelectItem>
+                                                    <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.TopDriveClass?" Value="@((OSDC.Drilling.Rig.ModelShared.TopDriveClass?)topDriveClass)">@GetTopDriveClassLabel(topDriveClass)</MudSelectItem>
                                                 }
                                             </MudSelect>
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.Weight"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.Weight = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.Weight))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.Weight))"
                                                            Label="Weight" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
-                                            <QuantityField Value="@selectedTopDrive.TopDriveHeight"
-                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TopDriveHeight = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TopDriveHeight))"
-                                                           Label="Top Drive Height" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.RatedPower"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.RatedPower = value))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.RatedPower))"
+                                                           Label="Rated Power" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.RatedHoistingCapacity"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.RatedHoistingCapacity = value))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.RatedHoistingCapacity))"
+                                                           Label="Rated Hoisting Capacity" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.RatedContinuousTorque"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.RatedContinuousTorque = value))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.RatedContinuousTorque))"
+                                                           Label="Rated Continuous Torque" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <QuantityField Value="@selectedTopDrive.RatedIntermittentTorque"
+                                                           ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.RatedIntermittentTorque = value))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.RatedIntermittentTorque))"
+                                                           Label="Rated Intermittent Torque" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudNumericField T="int?" @bind-Value="selectedTopDrive.MotorCount" Label="Motor Count" Variant="Variant.Outlined" Min="0" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.MotorType" Label="Motor Type" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.IbopConfiguration" Label="IBOP Configuration" Variant="Variant.Outlined" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudTextField @bind-Value="selectedTopDrive.AutomationSystemCompatibility" Label="Automation System Compatibility" Variant="Variant.Outlined" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitRotationSpeed"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitRotationSpeed = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitRotationSpeed))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitRotationSpeed))"
                                                            Label="Max Limit Rotation Speed" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitMakeupTorque"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitMakeupTorque = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitMakeupTorque))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitMakeupTorque))"
                                                            Label="Max Limit Makeup Torque" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitBreakoutTorque"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitBreakoutTorque = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitBreakoutTorque))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitBreakoutTorque))"
                                                            Label="Max Limit Breakout Torque" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitOperatingTorque"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitOperatingTorque = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitOperatingTorque))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitOperatingTorque))"
                                                            Label="Max Limit Operating Torque" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitDesignTorque"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitDesignTorque = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitDesignTorque))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitDesignTorque))"
                                                            Label="Max Limit Design Torque" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitOperatingLoad"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitOperatingLoad = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitOperatingLoad))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitOperatingLoad))"
                                                            Label="Max Limit Operating Load" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitDesignLoad"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitDesignLoad = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitDesignLoad))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitDesignLoad))"
                                                            Label="Max Limit Design Load" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
                                             <QuantityField Value="@selectedTopDrive.MaxLimitIbopPressure"
                                                            ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.MaxLimitIbopPressure = value))"
-                                                           Quantity="@DataUtils.InferQuantity(nameof(TopDrive.MaxLimitIbopPressure))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.MaxLimitIbopPressure))"
                                                            Label="Max Limit iBOP Pressure" />
                                         </MudItem>
                                         <MudItem xs="12" md="6">
@@ -399,13 +473,13 @@
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.ProportionalGain"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.ProportionalGain = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.ProportionalGain))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.ProportionalGain))"
                                                                Label="Proportional Gain" />
                                             </MudItem>
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.IntegralGain"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.IntegralGain = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.IntegralGain))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.IntegralGain))"
                                                                Label="Integral Gain" />
                                             </MudItem>
                                         </MudGrid>
@@ -417,13 +491,13 @@
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.TuningFrequency"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TuningFrequency = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TuningFrequency))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.TuningFrequency))"
                                                                Label="Tuning Frequency" />
                                             </MudItem>
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.InertiaCorrectionFactor"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.InertiaCorrectionFactor = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.InertiaCorrectionFactor))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.InertiaCorrectionFactor))"
                                                                Label="Inertia Correction Factor" />
                                             </MudItem>
                                         </MudGrid>
@@ -435,37 +509,37 @@
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.VFDFilterTimeConstant"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.VFDFilterTimeConstant = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.VFDFilterTimeConstant))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.VFDFilterTimeConstant))"
                                                                Label="VFD Filter Time Constant" />
                                             </MudItem>
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.EncoderTimeConstant"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.EncoderTimeConstant = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.EncoderTimeConstant))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.EncoderTimeConstant))"
                                                                Label="Encoder Time Constant" />
                                             </MudItem>
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.AccelerationFilterTimeConstant"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.AccelerationFilterTimeConstant = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.AccelerationFilterTimeConstant))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.AccelerationFilterTimeConstant))"
                                                                Label="Acceleration Filter Time Constant" />
                                             </MudItem>
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.TorqueHighPassFilterTimeConstant"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TorqueHighPassFilterTimeConstant = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TorqueHighPassFilterTimeConstant))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.TorqueHighPassFilterTimeConstant))"
                                                                Label="Torque High Pass Filter Time Constant" />
                                             </MudItem>
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.TorqueLowPassFilterTimeConstant"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TorqueLowPassFilterTimeConstant = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TorqueLowPassFilterTimeConstant))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.TorqueLowPassFilterTimeConstant))"
                                                                Label="Torque Low Pass Filter Time Constant" />
                                             </MudItem>
                                             <MudItem xs="12" md="6">
                                                 <QuantityField Value="@selectedTopDrive.TuningFactor"
                                                                ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => selectedTopDrive.TuningFactor = value))"
-                                                               Quantity="@DataUtils.InferQuantity(nameof(TopDrive.TuningFactor))"
+                                                           Quantity="@DataUtils.InferQuantity(typeof(TopDrive), nameof(TopDrive.TuningFactor))"
                                                                Label="Tuning Factor" />
                                             </MudItem>
                                         </MudGrid>
@@ -496,6 +570,7 @@
     private HashSet<string> _expandedTreeKeys = new(StringComparer.Ordinal);
     private Dictionary<Guid, OSDC.Drilling.Rig.ModelShared.Field> _fields = new();
     private Dictionary<Guid, OSDC.Drilling.Rig.ModelShared.Cluster> _clusters = new();
+    private List<RigFeatureCategory> _featureCategories = [];
     private OSDC.Drilling.Rig.ModelShared.Field? _selectedField;
     private OSDC.Drilling.Rig.ModelShared.Cluster? _selectedCluster;
     private OSDC.Drilling.Rig.ModelShared.Cluster? CurrentRigCluster =>
@@ -529,6 +604,7 @@
         try
         {
             await LoadFieldAndClusterData();
+            _featureCategories = await RigApiClient.GetRigFeatureCategoriesAsync();
 
             if (Id.HasValue)
             {
@@ -608,7 +684,7 @@
         }
     }
 
-    private void OnHoistingSystemTypeChanged(HoistingSystem hoistingSystem, OSDC.Drilling.Rig.ModelShared.HoistingSystemType hoistingSystemType)
+    private void OnHoistingSystemTypeChanged(HoistingSystem hoistingSystem, OSDC.Drilling.Rig.ModelShared.HoistingSystemType? hoistingSystemType)
     {
         hoistingSystem.HoistingSystemType = hoistingSystemType;
 

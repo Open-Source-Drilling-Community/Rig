@@ -7,6 +7,83 @@ namespace OSDC.Drilling.Rig.Service.Mcp.Tools;
 
 internal static class McpToolArgumentHelpers
 {
+    private static readonly IReadOnlyDictionary<string, string> ScalarUnits =
+        new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["AutoDriller.MaxLimitRop"] = "metre per second (m/s), physical quantity RateOfPenetrationDrilling",
+            ["AutoDriller.MinLimitRop"] = "metre per second (m/s), physical quantity RateOfPenetrationDrilling",
+            ["AutoDriller.MaxLimitWob"] = "newton (N), physical quantity WeightOnBitDrilling",
+            ["AutoDriller.MinLimitWob"] = "newton (N), physical quantity WeightOnBitDrilling",
+            ["AutoDriller.MaxLimitTrq"] = "newton metre (N·m), physical quantity TorqueDrilling",
+            ["AutoDriller.MinLimitTrq"] = "newton metre (N·m), physical quantity TorqueDrilling",
+            ["BopLineDefinition.LineId"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["BopLineDefinition.LineOd"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["CasingDriveSystem.HoistingCapacity"] = "newton (N), physical quantity HookLoadDrilling",
+            ["CasingDriveSystem.MaxLimitPushDown"] = "newton (N), physical quantity ForceDrilling",
+            ["CoilDriveSystem.ReelPayloadCapacity"] = "newton (N), physical quantity ForceDrilling",
+            ["CoilDriveSystem.ReelPayloadLength"] = "metre (m), physical quantity LengthStandard",
+            ["CoilDriveSystem.InjectorHeadMinTubingOd"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["CoilDriveSystem.InjHeadDesignPullCapacity"] = "newton (N), physical quantity ForceDrilling",
+            ["CoilDriveSystem.InjHeadDesignSnubCapacity"] = "newton (N), physical quantity ForceDrilling",
+            ["CoilDriveSystem.InjHeadPullCapacity"] = "newton (N), physical quantity ForceDrilling",
+            ["CoilDriveSystem.InjHeadSnubCapacity"] = "newton (N), physical quantity ForceDrilling",
+            ["CoilDriveSystem.InjHeadMaxSpeed"] = "metre per second (m/s), physical quantity AxialVelocityDrilling",
+            ["ContinuousCirculationDevice.MaxLimitMudWeight"] = "kilogram per cubic metre (kg/m³), physical quantity MassDensityDrilling",
+            ["ContinuousCirculationDevice.MaxLimitRotationRate"] = "radian per second (rad/s), physical quantity AngularVelocityDrilling",
+            ["CrownBlock.GrooveDiameter"] = "metre (m), physical quantity CableDiameterDrilling",
+            ["CrownBlock.MaxLimitCompensatorStroke"] = "metre (m), physical quantity LengthStandard",
+            ["Derrick.MaxLimitWindSpeed"] = "metre per second (m/s), physical quantity Velocity",
+            ["DrillingChokeManifold.MaxLimitOpeningSpeed"] = "proportion per second (1/s), physical quantity ChokeOpeningRateDrilling",
+            ["DrillingChokeManifold.TrimSize"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["DrillingChokeManifold.FlowMeterSize"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["DrillingMarineRiser.JointWeight"] = "kilogram per metre (kg/m), physical quantity MassGradientPerLengthDrilling",
+            ["DrillLine.Diameter"] = "metre (m), physical quantity CableDiameterDrilling",
+            ["DrillLine.LinearWeight"] = "kilogram per metre (kg/m), physical quantity MassGradientPerLengthDrilling",
+            ["DrillstringHeaveCompensator.MaxLimitCompensatorStroke"] = "metre (m), physical quantity LengthStandard",
+            ["FlowRoutingManifold.FlangeSize"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["FlowRoutingManifold.PressureReliefValveTrim"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["Generator.PowerFactor"] = "dimensionless SI ratio, physical quantity ProportionStandard",
+            ["Generator.StartupTimeCold"] = "second (s), physical quantity DurationDrilling",
+            ["Generator.StartupTimeWarm"] = "second (s), physical quantity DurationDrilling",
+            ["Generator.Voltage"] = "volt (V), physical quantity ElectricTension",
+            ["Generator.MaxLimitVoltage"] = "volt (V), physical quantity ElectricTension",
+            ["Generator.MinLimitVoltage"] = "volt (V), physical quantity ElectricTension",
+            ["Generator.MaxLimitPowerIncrease"] = "watt per second (W/s), physical quantity PowerRateOfChangeDrilling",
+            ["Generator.MaxLimitSpeedIncrease"] = "hertz per second (Hz/s), physical quantity RotationalFrequencyRateOfChangeDrilling",
+            ["Generator.MaxLimitFrequency"] = "hertz (Hz), physical quantity Frequency",
+            ["Generator.MinLimitFrequency"] = "hertz (Hz), physical quantity Frequency",
+            ["MarineMpdEquipment.Weight"] = "kilogram (kg), physical quantity MassDrilling",
+            ["MarineUnitProfile.MaximumTransitSpeed"] = "metre per second (m/s), physical quantity Velocity",
+            ["MeasurementAfm.UpdateRate"] = "hertz (Hz), physical quantity Frequency",
+            ["MpdControlDevice.NominalSize"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["MpdController.PrimaryChokeTrim"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["MpdController.SecondaryChokeTrim"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["MudPump.MaxLimitOperatingSpeed"] = "hertz (Hz), physical quantity StrokeFrequency",
+            ["CementPumpDisplacementPoint.StrokeRate"] = "hertz (Hz), physical quantity StrokeFrequency",
+            ["Rig.DrillFloorElevation"] = "metre (m), physical quantity HeightDrilling",
+            ["RigOperatingEnvelope.MaximumDrillingDepth"] = "metre (m), physical quantity DepthDrilling",
+            ["RigOperatingEnvelope.MaximumWaterDepth"] = "metre (m), physical quantity DepthDrilling",
+            ["RigOperatingEnvelope.MaximumOperatingWindSpeed"] = "metre per second (m/s), physical quantity Velocity",
+            ["RigOperatingEnvelope.MaximumSurvivalWindSpeed"] = "metre per second (m/s), physical quantity Velocity",
+            ["RiserHeaveCompensator.MaxLimitCompensatorStroke"] = "metre (m), physical quantity LengthStandard",
+            ["ShaleShaker.MaxLimitOperatingCapacity"] = "cubic metre per second (m³/s), physical quantity VolumetricFlowrateDrilling",
+            ["SurfaceMpdEquipment.MinimumBoreholeSize"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["SurfaceMpdEquipment.MaximumBoreholeSize"] = "metre (m), physical quantity DiameterPipeDrilling",
+            ["SurfaceMpdEquipment.MaxLimitMudWeight"] = "kilogram per cubic metre (kg/m³), physical quantity MassDensityDrilling",
+            ["TopDrive.Weight"] = "kilogram (kg), physical quantity MassDrilling",
+            ["TopDrive.TorqueHighPassFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
+            ["TopDrive.TorqueLowPassFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
+            ["TopDrive.VFDFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
+            ["TopDrive.EncoderTimeConstant"] = "second (s), physical quantity DurationDrilling",
+            ["TopDrive.AccelerationFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
+            ["TorqueTurnSub.Weight"] = "kilogram (kg), physical quantity MassDrilling",
+            ["TorqueTurnSub.BatteryLife"] = "second (s), physical quantity DurationDrilling",
+            ["TravellingBlock.GrooveDiameter"] = "metre (m), physical quantity CableDiameterDrilling",
+            ["TravellingBlock.MaxLimitBlockTravel"] = "metre (m), physical quantity LengthStandard",
+            ["EquipmentMeasurementCapability.RelativeAccuracy"] = "dimensionless SI ratio, physical quantity ProportionStandard",
+            ["EquipmentMeasurementCapability.UpdateFrequency"] = "hertz (Hz), physical quantity Frequency"
+        };
+
     private static readonly IReadOnlyDictionary<string, string> PropertyDescriptions =
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -21,10 +98,28 @@ internal static class McpToolArgumentHelpers
             ["MainRigMast"] = "Primary rig-mast assembly and its hoisting, rotary, pipe-handling, standpipe, choke, and related equipment.",
             ["AuxiliaryRigMast"] = "Optional secondary rig-mast assembly with the same nested equipment structure as MainRigMast.",
             ["MudPumpList"] = "Mud-circulation pumps installed on the rig, including equipment identity, pump class, displacement curve, and operating limits.",
+            ["LinerConfigurations"] = "Ordered table of installable mud-pump liner sizes and their rated hydraulic performance. Use one row per distinct liner inner diameter.",
+            ["LinerInnerDiameter"] = "Nominal mud-pump liner inner diameter in SI metres (m).",
+            ["DisplacementPerStroke"] = "Theoretical or manufacturer-rated displaced volume per pump stroke in SI cubic metres (m3).",
+            ["MaximumVolumetricFlowRate"] = "Maximum rated volumetric output for this liner at the pump's rated operating speed in SI cubic metres per second (m3/s).",
+            ["MaximumDischargePressure"] = "Maximum rated discharge pressure for this liner in SI pascals (Pa); it must not exceed the pump design pressure.",
             ["CementPumpList"] = "Cement pumps installed on the rig, including displacement curve and pressure/flow limits.",
-            ["MudTankList"] = "Mud tanks and their class, fluid type, capacities, and operating measurements.",
-            ["GeneratorList"] = "Electrical generators and their engine, cooling, phase, speed, power, and efficiency characteristics.",
-            ["ShaleShakerList"] = "Shale shakers and their classification, active state, screen definitions, and capacity.",
+            ["MudTankList"] = "Mud tanks and their class, fluid type, and rated capacity.",
+            ["GeneratorList"] = "Electrical generators and their engine, cooling, phase, speed, power, and electrical ratings.",
+            ["ShaleShakerList"] = "Shale shakers and their classification, screen definitions, and rated capacity.",
+            ["MeasurementCapabilities"] = "Installed sensor, manual, or calculated measurement capabilities. These definitions describe instrumentation only and never contain live measurement values.",
+            ["MeasurementCode"] = "Stable machine-readable measurement name, for example standpipe_pressure. Codes must be unique within one equipment item.",
+            ["PhysicalQuantity"] = "OSDC physical-quantity name that defines the SI unit for range and absolute-accuracy values.",
+            ["SourceKind"] = "Measurement provenance: Sensor, Calculated, Manual, or Other.",
+            ["SourceType"] = "Human-readable transducer, manual procedure, or calculation type. It is required when SourceKind is Sensor.",
+            ["SourceComponentID"] = "Optional UUID of the component supplying the signal when it differs from the equipment containing this capability. The UUID must identify a component in the same rig.",
+            ["MinimumValue"] = "Optional lower measurement-range boundary in the SI unit selected by PhysicalQuantity.",
+            ["MaximumValue"] = "Optional upper measurement-range boundary in the SI unit selected by PhysicalQuantity.",
+            ["AbsoluteAccuracy"] = "Optional non-negative absolute accuracy in the SI unit selected by PhysicalQuantity.",
+            ["RelativeAccuracy"] = "Optional relative accuracy as a dimensionless fraction from 0 through 1; 0.01 means one percent.",
+            ["UpdateFrequency"] = "Optional positive nominal measurement update frequency in hertz (Hz).",
+            ["UnitReferences"] = "Ordered equipment unit or stack references. Use one string per reference.",
+            ["Capabilities"] = "Ordered human-readable equipment capabilities. Use one string per capability.",
             ["ErrorSourceList"] = "Nested model items associated with this resource.",
             ["Manufacturer"] = "Equipment manufacturer.",
             ["Model"] = "Manufacturer's model designation.",
@@ -49,11 +144,36 @@ internal static class McpToolArgumentHelpers
         ["additionalProperties"] = false
     };
 
+    public static JsonObject CreateRigReadSchema(bool includeId)
+    {
+        var properties = new JsonObject
+        {
+            ["includePhotos"] = new JsonObject
+            {
+                ["type"] = "boolean",
+                ["default"] = false,
+                ["description"] = "When true, include photo metadata such as title, media type, byte length, checksum, attribution, and photo UUID. Image bytes are never returned by MCP."
+            }
+        };
+        var schema = new JsonObject
+        {
+            ["type"] = "object",
+            ["properties"] = properties,
+            ["additionalProperties"] = false
+        };
+        if (includeId)
+        {
+            properties["id"] = new JsonObject { ["type"] = "string", ["format"] = "uuid", ["description"] = "UUID of the rig to retrieve." };
+            schema["required"] = new JsonArray("id");
+        }
+        return schema;
+    }
+
     public static JsonObject CreateRigSchema(bool includeId = false)
     {
         var definitions = new JsonObject();
         JsonObject rigSchema = TypeSchema(typeof(Model.Rig), definitions, nullable: false);
-        rigSchema["description"] = "Complete Rig representation. JSON property names are case-sensitive and use PascalCase. Optional equipment may be null or omitted; supplied measurements and limits use SI values.";
+        rigSchema["description"] = "Complete Rig master-data representation. JSON property names are case-sensitive and use PascalCase. Optional equipment may be null or omitted; specifications and limits use SI values. MeasurementCapabilities describe available instrumentation and never carry live telemetry.";
 
         var properties = new JsonObject { ["rig"] = rigSchema };
         var required = new JsonArray("rig");
@@ -75,6 +195,23 @@ internal static class McpToolArgumentHelpers
             ["additionalProperties"] = false,
             ["$defs"] = definitions
         };
+    }
+
+    public static JsonObject CreateFeatureCategorySchema(bool includeUpdateFields = false)
+    {
+        var definitions = new JsonObject();
+        JsonObject categorySchema = TypeSchema(typeof(RigFeatureCategory), definitions, nullable: false);
+        categorySchema["description"] = "Rig feature category. The service generates UUIDs for custom categories and new options; built-in definitions are immutable.";
+        var properties = new JsonObject { ["category"] = categorySchema };
+        var required = new JsonArray("category");
+        if (includeUpdateFields)
+        {
+            properties["id"] = new JsonObject { ["type"] = "string", ["format"] = "uuid", ["description"] = "UUID of the custom category to replace." };
+            properties["expectedModifiedUtc"] = new JsonObject { ["type"] = "string", ["format"] = "date-time", ["description"] = "LastModificationDate returned by the preceding read, used for optimistic concurrency." };
+            required.Add("id");
+            required.Add("expectedModifiedUtc");
+        }
+        return new JsonObject { ["type"] = "object", ["properties"] = properties, ["required"] = required, ["additionalProperties"] = false, ["$defs"] = definitions };
     }
 
     private static JsonObject TypeSchema(Type declaredType, JsonObject definitions, bool nullable)
@@ -161,9 +298,13 @@ internal static class McpToolArgumentHelpers
     private static string DescribeType(Type type)
     {
         if (type == typeof(Model.Rig)) return "Complete rig configuration, containing identity, platform/cluster association, drill-floor elevation, mast assemblies, and installed drilling equipment.";
+        if (type == typeof(RigFeatureCategory)) return "User-extensible rig capability category with stable options, exclusivity, provenance, and optional assignment validity periods.";
+        if (type == typeof(RigFeatureOption)) return "One selectable option within a rig feature category.";
+        if (type == typeof(RigFeatureAssignment)) return "Assignment of one stored rig feature option to a rig, optionally with validity and evidence.";
+        if (type == typeof(EquipmentMeasurementCapability)) return "Installed or calculated measurement capability, including its physical quantity, provenance, SI range, accuracy, and update frequency; no live value is stored.";
         if (type.Name == "MetaInfo") return "Shared resource metadata containing the caller-owned UUID and optional HTTP location fields.";
         if (type == typeof(RigMast)) return "Rig mast assembly containing hoisting, rotary, pipe-handling, standpipe, choke, and related equipment.";
-        if (typeof(RigEquipmentBase).IsAssignableFrom(type)) return $"{SplitName(type.Name)} equipment definition, including identity and manufacturer details plus its type-specific ratings, limits, and measurements.";
+        if (typeof(RigEquipmentBase).IsAssignableFrom(type)) return $"{SplitName(type.Name)} equipment definition, including identity and manufacturer details plus its type-specific ratings, limits, and optional instrumentation capabilities.";
         if (typeof(RigComponentBase).IsAssignableFrom(type)) return $"{SplitName(type.Name)} component definition with a name, description, and any component-specific fields.";
         return $"Nested {SplitName(type.Name)} definition used by the Rig model.";
     }
@@ -177,13 +318,20 @@ internal static class McpToolArgumentHelpers
         if (itemType is not null) return $"Collection of {SplitName(itemType.Name)} definitions. Send full nested objects, not resource UUIDs.";
         if (type.IsEnum) return $"{label} classification. Use one of the exact string values listed by this schema.";
         if (type == typeof(bool)) return $"Whether {label.ToLowerInvariant()} is enabled or present.";
-        if (type == typeof(double) || type == typeof(float) || type == typeof(decimal)) return NumericDescription(property.Name, label);
+        if (type == typeof(double) || type == typeof(float) || type == typeof(decimal)) return NumericDescription(property, label);
         if (!type.IsValueType && type != typeof(string)) return $"Optional nested {label} definition. Set null or omit it when the rig does not have this component.";
         return $"{label} value for this rig component.";
     }
 
-    private static string NumericDescription(string name, string label)
+    private static string NumericDescription(PropertyInfo property, string label)
     {
+        string propertyKey = $"{property.DeclaringType?.Name}.{property.Name}";
+        if (ScalarUnits.TryGetValue(propertyKey, out string? scalarUnit))
+        {
+            return $"{label} in {scalarUnit}; do not send a display-unit value.";
+        }
+
+        string name = property.Name;
         string key = name.ToLowerInvariant();
         string? unit = key switch
         {

@@ -2,7 +2,7 @@
 
 `WebApp` is the server-side Blazor user interface for the Rig microservice.
 
-It provides an interactive web client for browsing, creating, editing, and deleting Rig entities, as well as viewing simple usage statistics exposed by the service. The application is designed to sit in front of the Rig API and related supporting services such as Field, Cluster, and UnitConversion.
+It provides an interactive web client for listing, creating, editing, and deleting Rig entities, managing custom rig-feature catalogs, and viewing simple usage statistics exposed by the service. The application is designed to sit in front of the Rig API and related supporting services such as Field, Cluster, Vertical Datum, and Unit Conversion.
 
 ## Purpose
 
@@ -11,8 +11,9 @@ This project gives users a browser-based way to manage Rig data without working 
 Its main responsibilities are:
 
 - listing rigs stored by the Rig microservice
-- showing rig details and read-only views of the full object graph
-- editing complex Rig structures through specialized Razor components
+- opening every selected rig directly in its editor; there is no separate display mode
+- editing the complete Rig model through specialized Razor components
+- managing custom rig-feature categories and options
 - creating and deleting rigs
 - loading related Field and Cluster data from external services
 - presenting basic usage statistics from the Rig API
@@ -45,10 +46,9 @@ At startup the application:
 
 The main user-facing pages are:
 
-- [`Pages/RigMain.razor`](C:\OSDC\Rig\WebApp\Pages\RigMain.razor)
-  Rig catalog/list page with search, refresh, detail viewing, edit navigation, and delete actions.
-- [`Pages/RigEdit.razor`](C:\OSDC\Rig\WebApp\Pages\RigEdit.razor)
-  Main editor for creating or updating rigs, including tree-based navigation of the nested Rig object graph.
+- `RigMain`: searchable catalog whose rows open the rig editor directly.
+- `RigEdit`: create/update editor with tree-based navigation of the complete nested Rig object graph.
+- `RigFeatures`: catalog for viewing built-in feature definitions and managing custom categories and options.
 - [`Pages/StatisticsMain.razor`](C:\OSDC\Rig\WebApp\Pages\StatisticsMain.razor)
   Summary view of usage statistics returned by the Rig service.
 
@@ -117,10 +117,12 @@ The current UI supports these primary flows:
 
 - browse the rig catalog
 - search rigs by name, description, or ID
-- open a read-only detail panel for an existing rig
-- navigate to create or edit screens
+- open an existing rig directly in edit mode
+- create a rig through the same editor
 - edit complex nested rig structures with tree-driven navigation
 - assign fields and clusters when relevant
+- assign named rig features without entering catalog UUIDs
+- attach and manage rig photographs; existing photos are displayed automatically in the expanded photo panel of a stored rig
 - delete existing rigs
 - review aggregate usage statistics
 

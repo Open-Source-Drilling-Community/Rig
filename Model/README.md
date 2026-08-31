@@ -19,11 +19,9 @@ example is the top-drive controller configuration.
 
 The model has been streamlined with four main rules:
 
-1. Spreadsheet naming has priority when a legacy name and a spreadsheet name
-   describe the same concept.
+1. Spreadsheet naming has priority when two names describe the same concept.
 2. Repeated metadata fields are centralized in shared base classes.
-3. Equipment that exists as a detailed spreadsheet concept is preferred over
-   legacy placeholders.
+3. Equipment that exists as a detailed spreadsheet concept is modeled directly.
 4. The model remains serialization-friendly: all entities expose public
    parameterless constructors and nullable properties where data may be absent.
 
@@ -42,6 +40,12 @@ The model has been streamlined with four main rules:
 - MPD equipment and associated control devices
 - Platform-level metadata such as `DrillFloorElevation`, `IsFixedPlatform`,
   and `ClusterID`
+- Structured identity and provenance through `RigIdentification`
+- Explicit `RigType`, `RigEnvironment`, and `RigMobilityType` classifications
+- Certified or advertised limits through `RigOperatingEnvelope`
+- Optional `MarineUnitProfile`, `JackUpProfile`, and `StationKeepingSystem`
+- General storage capacities and extensible `RigFeatureAssignment` records
+- Optional `RigPhotoMetadata` in read responses when explicitly requested; binary image content is kept outside the core aggregate
 
 
 ### RigMast
@@ -50,15 +54,16 @@ The model has been streamlined with four main rules:
 
 - Pipe-handling support: `CatWalk`, `PipeRack`
 - Rotary and drive equipment: `RotaryTable`, `TopDrive`, `Kelly`
-- Hoisting-system detail: `Derrick`, `Drawworks`, `CrownBlock`,
-  `TravellingBlock`, `DrillLine`
+- Hoisting-system detail: `Derrick` and a nested `HoistingSystem` containing
+  `Drawworks`, `CrownBlock`, `TravellingBlock`, and `DrillLine`
 - Pipe and pressure-handling components: `StandPipe`, `StandPipeManifold`,
   `RotaryHose`, `ChokeManifold`, `RigChokeList`
 - Additional intervention tools: `TorqueTurnSub`, `IronRoughneck`,
   `CasingTongs`, `CasingRunningTool`, `CasingDriveSystem`, `CoilDriveSystem`
 
-The generic legacy `HoistingSystem` placeholder is no longer used by
-`RigMast`. The model now favors the detailed spreadsheet components above.
+`RigMast.HoistingSystem` is the authoritative container for the drawworks,
+crown block, travelling block, and drill line. This matches the serialized
+contract and the web editor.
 
 ## Shared Base Types
 
@@ -67,6 +72,7 @@ The generic legacy `HoistingSystem` placeholder is no longer used by
 `RigComponentBase` defines the common descriptive properties shared by most
 model entities:
 
+- `ID`
 - `Name`
 - `Description`
 
@@ -83,6 +89,11 @@ properties:
 - `Model`
 - `ProductCode`
 - `SerialNumber`
+- `AssetTag`
+- `InstallationDate` and `CommissioningDate`
+- `LifecycleStatus`
+- `CertificationReferences`
+- `MeasurementCapabilities`
 
 This base type is used by the spreadsheet-derived equipment classes such as
 `MudPump`, `TopDrive`, `Generator`, `MudTank`, `CementPump`,
@@ -90,6 +101,13 @@ This base type is used by the spreadsheet-derived equipment classes such as
 
 Centralizing these fields avoids drift and ensures a consistent public contract
 for all equipment records.
+
+`EquipmentMeasurementCapability` describes installed instrumentation without
+storing live telemetry. It records a stable measurement code, an OSDC physical
+quantity, sensor/calculation provenance, an optional source component, equipment
+identity, SI range and accuracy, and nominal update frequency. Current pressures,
+flows, temperatures, speeds, setpoints, and equipment states are intentionally
+outside the Rig master-data contract.
 
 ## Main Equipment Groups
 
@@ -121,6 +139,23 @@ spreadsheet import:
 These properties were intentionally preserved even though they are not part of
 the spreadsheet, because they remain valuable rig-control metadata.
 
+The lift only adds commercial ratings (`RatedPower`, rated hoisting capacity,
+continuous/intermittent torque, motor and automation compatibility). It does
+not rename or remove any controller property or serialized controller value.
+
+## Extensible Rig Features
+
+`RigFeatureCategory`, `RigFeatureOption`, and `RigFeatureAssignment` provide
+customizable classification without replacing engineering properties. The
+predefined catalogs cover supported operations, advanced drilling, workflow,
+automation, mobility/deployment, environmental suitability, and
+energy/emissions. Built-ins use stable UUIDs and custom definitions use
+server-generated UUIDs.
+
+Features are intended for classification and discovery. Loads, pressures,
+depths, dimensions, equipment, relationships, and controller parameters remain
+strongly modeled properties.
+
 ### Mud System and Solids Control
 
 - `MudPump`
@@ -139,9 +174,14 @@ the spreadsheet, because they remain valuable rig-control metadata.
 - `CuttingsDryer`
 - `DrillingFluidTypeDescriptor`
 
-`MudTank` replaces the older, lower-fidelity `Pit` concept for the active rig
-aggregate. The retained `Pit` class exists only as a legacy type and is not
-used from `Rig`.
+Mud storage is represented by the ordered `MudTankList` collection.
+
+`MudPump.Stroke` remains a pump-level mechanical dimension. Selectable fluid-end
+configurations are represented by the ordered `LinerConfigurations` table. Each
+`MudPumpLinerConfiguration` records liner inner diameter, displacement per
+stroke, maximum volumetric flow rate, and maximum discharge pressure in SI
+units. This captures the higher-flow/lower-pressure versus
+lower-flow/higher-pressure trade-off between liner sizes.
 
 ### Cementing and Pumping
 
@@ -177,6 +217,10 @@ that was previously hidden behind more generic placeholders.
 `BopStack` includes array-backed lists describing stack components and BOP
 lines. The manifold classes include curve/list helper records where the
 spreadsheet defined structured array fields.
+
+`BopStack.UnitReferences` and `CementUnit.Capabilities` are collections rather
+than delimiter-dependent scalar strings. Choke, flow-meter, and pressure-sensor
+voting counts are nullable integers.
 
 ### MPD and Separation Equipment
 
@@ -222,7 +266,7 @@ Most categorical values live in `RigEquipmentTypes.cs`. This file contains:
 - Array helper records such as `ShakerScreenDefinition`,
   `CementPumpDisplacementPoint`, `ChokeCvCurvePoint`,
   `RoutingManifoldCurvePoint`, `BopStackComponentDefinition`,
-  `BopLineDefinition`, and `RheometerAfmMeasurement`
+  `BopLineDefinition`, and `EquipmentMeasurementCapability`
 
 The intent is to keep most simple categorical primitives strongly typed rather
 than using free-form strings.
@@ -242,22 +286,23 @@ No custom converters are required for the core model classes.
 
 The following streamlining decisions are intentional:
 
-- `MudTankList` is preferred over `PitList`
-- detailed hoisting components are preferred over `HoistingSystem`
+- mud storage is represented by `MudTankList`
+- detailed hoisting components are stored under `RigMast.HoistingSystem`
 - spreadsheet-derived equipment classes inherit `RigEquipmentBase`
 - lightweight named components inherit `RigComponentBase`
 - `DrillingFluidType` remains the property name on `Rig` to align with the
   spreadsheet terminology, while the class name `DrillingFluidTypeDescriptor`
   avoids an awkward type/property name collision
 
-## Known Modeling Tradeoffs
+## Modeling Boundary
 
-- Most measured values are currently represented as `double?` rather than
-  strongly typed physical quantities
-- Some legacy lightweight classes still exist for backward compatibility even
-  when they are no longer referenced by the root aggregate
-- The model focuses on structure and classification; it does not implement
-  validation or behavioral logic inside these DTO-style classes
+- Numeric specifications and limits are stored in SI and rendered through the
+  OSDC unit system.
+- Live telemetry and changing controller state are not persisted with rig
+  master data.
+- DTO classes remain behavior-free; the service validates feature references,
+  instrumentation ranges, catalog rules, and referential integrity at its API
+  boundary.
 
 ## Project Contents
 

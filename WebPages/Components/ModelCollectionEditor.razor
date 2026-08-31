@@ -32,6 +32,13 @@ else
                     {
                         <MudText Typo="Typo.caption">Cannot create this item type automatically.</MudText>
                     }
+                    else if (ItemType == typeof(string))
+                    {
+                        <MudTextField Value="@(item as string)"
+                                      ValueChanged="@(EventCallback.Factory.Create<string?>(this, value => UpdateStringItem(index, value)))"
+                                      Label="@($"{Label} #{index + 1}")"
+                                      Variant="Variant.Outlined" />
+                    }
                     else if (ModelObjectEditor.IsEditableComplexType(ItemType))
                     {
                         <ModelObjectEditor @key="@(Label + "-item-" + index)"
@@ -94,6 +101,13 @@ else
         }
 
         Items[index] = CreateInstance();
+        await ItemsChanged.InvokeAsync(Items);
+    }
+
+    private async Task UpdateStringItem(int index, string? value)
+    {
+        if (Items == null) return;
+        Items[index] = value ?? string.Empty;
         await ItemsChanged.InvokeAsync(Items);
     }
 

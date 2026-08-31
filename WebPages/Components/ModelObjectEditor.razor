@@ -57,7 +57,7 @@ else
                 {
                     <QuantityField Value="@GetDoubleValue(propertyValue)"
                                    ValueChanged="@(EventCallback.Factory.Create<double?>(this, value => SetValue(property, value)))"
-                                   Quantity="@DataUtils.InferQuantity(property.Name)"
+                                   Quantity="@GetQuantity(property.Name)"
                                    Label="@DataUtils.GetDisplayName(property.Name)" />
                 }
                 else if (coreType == typeof(Guid))
@@ -87,6 +87,12 @@ else
                             <MudSelectItem T="string" Value="@enumValue">@DataUtils.GetDisplayName(enumValue)</MudSelectItem>
                         }
                     </MudSelect>
+                }
+                else if (ModelType == typeof(MudPump) && property.Name == nameof(MudPump.LinerConfigurations))
+                {
+                    <MudPumpLinerConfigurationTable
+                        Configurations="@(propertyValue as ICollection<MudPumpLinerConfiguration>)"
+                        ConfigurationsChanged="@(EventCallback.Factory.Create<ICollection<MudPumpLinerConfiguration>?>(this, value => SetValue(property, value)))" />
                 }
                 else if (TryGetListItemType(propertyType, out Type? itemType))
                 {
@@ -145,6 +151,7 @@ else
     private IEnumerable<PropertyInfo> EditableProperties => ModelType
         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
         .Where(p => p.CanRead && p.CanWrite && p.GetIndexParameters().Length == 0)
+        .Where(p => GetCoreType(p.PropertyType) != typeof(Guid))
         .Where(p => !IsHiddenProperty(ModelType, p.Name))
         .Where(p => ExcludedProperties == null || !ExcludedProperties.Contains(p.Name))
         .OrderBy(p => GetPropertyOrder(ModelType, p.Name))
@@ -167,6 +174,27 @@ else
     }
 
     private static Type GetCoreType(Type type) => Nullable.GetUnderlyingType(type) ?? type;
+
+    private string GetQuantity(string propertyName)
+    {
+        if (ModelType == typeof(EquipmentMeasurementCapability)
+            && Value is EquipmentMeasurementCapability capability
+            && propertyName is nameof(EquipmentMeasurementCapability.MinimumValue)
+                or nameof(EquipmentMeasurementCapability.MaximumValue)
+                or nameof(EquipmentMeasurementCapability.AbsoluteAccuracy)
+            && !string.IsNullOrWhiteSpace(capability.PhysicalQuantity))
+        {
+            return capability.PhysicalQuantity;
+        }
+
+        if (ModelType == typeof(EquipmentMeasurementCapability)
+            && propertyName == nameof(EquipmentMeasurementCapability.UpdateFrequency))
+        {
+            return "Frequency";
+        }
+
+        return DataUtils.InferQuantity(ModelType, propertyName);
+    }
 
     private static bool TryGetListItemType(Type type, out Type? itemType)
     {
@@ -274,7 +302,6 @@ else
                 "SerialNumber" => 5,
                 "TopDriveClass" => 6,
                 "Weight" => 7,
-                "TopDriveHeight" => 8,
                 "MaxLimitRotationSpeed" => 9,
                 "MaxLimitMakeupTorque" => 10,
                 "MaxLimitBreakoutTorque" => 11,

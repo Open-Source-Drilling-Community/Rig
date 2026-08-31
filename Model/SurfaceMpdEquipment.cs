@@ -13,12 +13,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitMudWeight { get; set; }
         public double? MaxLimitPressure { get; set; }
         public double? MinLimitMudPumpFlowrate { get; set; }
-        public double? StrokeRate { get; set; }
-        public double? FlowRate { get; set; }
-        public double? PressureAtDischarge { get; set; }
-        public double? Power { get; set; }
-        public double? PressureAtInlet { get; set; }
-
         public SurfaceMpdEquipment() { }
     }
 }

@@ -16,11 +16,15 @@ namespace OSDC.Drilling.Rig.Service.Controllers
     {
         private readonly ILogger<RigManager> _logger;
         private readonly RigManager _rigManager;
+        private readonly RigFeatureCategoryManager _featureManager;
+        private readonly RigPhotoManager _photoManager;
 
         public RigController(ILogger<RigManager> logger, SqlConnectionManager connectionManager)
         {
             _logger = logger;
             _rigManager = RigManager.GetInstance(_logger, connectionManager);
+            _featureManager = new RigFeatureCategoryManager(_logger, connectionManager);
+            _photoManager = new RigPhotoManager(connectionManager);
         }
 
         /// <summary>
@@ -67,7 +71,7 @@ namespace OSDC.Drilling.Rig.Service.Controllers
         /// <param name="guid"></param>
         /// <returns>the Rig identified by its Guid from the microservice database, at endpoint Rig/api/Rig/MetaInfo/id</returns>
         [HttpGet("{id}", Name = "GetRigById")]
-        public ActionResult<Model.Rig?> GetRigById(Guid id)
+        public ActionResult<RigReadResponse?> GetRigById(Guid id, [FromQuery] bool includePhotos = false)
         {
             UsageStatisticsRig.Instance.IncrementGetRigByIdPerDay();
             if (!id.Equals(Guid.Empty))
@@ -75,7 +79,7 @@ namespace OSDC.Drilling.Rig.Service.Controllers
                 var val = _rigManager.GetRigById(id);
                 if (val != null)
                 {
-                    return Ok(val);
+                    return Ok(ToReadResponse(val, includePhotos));
                 }
                 else
                 {
@@ -112,13 +116,13 @@ namespace OSDC.Drilling.Rig.Service.Controllers
         /// </summary>
         /// <returns>the list of all Rig present in the microservice database, at endpoint Rig/api/Rig/HeavyData</returns>
         [HttpGet("HeavyData", Name = "GetAllRig")]
-        public ActionResult<IEnumerable<Model.Rig?>> GetAllRig()
+        public ActionResult<IEnumerable<RigReadResponse?>> GetAllRig([FromQuery] bool includePhotos = false)
         {
             UsageStatisticsRig.Instance.IncrementGetAllRigPerDay();
             var vals = _rigManager.GetAllRig();
             if (vals != null)
             {
-                return Ok(vals);
+                return Ok(vals.Select(value => value is null ? null : ToReadResponse(value, includePhotos)).ToList());
             }
             else
             {
@@ -138,6 +142,9 @@ namespace OSDC.Drilling.Rig.Service.Controllers
             // Check if rig exists in the database through ID
             if (data != null && data.MetaInfo != null && data.MetaInfo.ID != Guid.Empty)
             {
+                List<string> featureErrors = _featureManager.ValidateAssignments(data.FeatureAssignments);
+                featureErrors.AddRange(RigDefinitionValidator.Validate(data));
+                if (featureErrors.Count > 0) return BadRequest(new { error = "invalid_rig_definition", errors = featureErrors });
                 var existingData = _rigManager.GetRigById(data.MetaInfo.ID);
                 if (existingData == null)
                 {   
@@ -177,6 +184,9 @@ namespace OSDC.Drilling.Rig.Service.Controllers
             // Check if Rig is in the data base
             if (data != null && data.MetaInfo != null && data.MetaInfo.ID.Equals(id))
             {
+                List<string> featureErrors = _featureManager.ValidateAssignments(data.FeatureAssignments);
+                featureErrors.AddRange(RigDefinitionValidator.Validate(data));
+                if (featureErrors.Count > 0) return BadRequest(new { error = "invalid_rig_definition", errors = featureErrors });
                 var existingData = _rigManager.GetRigById(id);
                 if (existingData != null)
                 {
@@ -215,6 +225,7 @@ namespace OSDC.Drilling.Rig.Service.Controllers
             {
                 if (_rigManager.DeleteRigById(id))
                 {
+                    _photoManager.DeleteAll(id);
                     return Ok();
                 }
                 else
@@ -227,6 +238,14 @@ namespace OSDC.Drilling.Rig.Service.Controllers
                 _logger.LogWarning("The Rig of given ID does not exist");
                 return NotFound();
             }
+        }
+
+        private RigReadResponse ToReadResponse(Model.Rig value, bool includePhotos)
+        {
+            RigReadResponse response = System.Text.Json.JsonSerializer.Deserialize<RigReadResponse>(
+                System.Text.Json.JsonSerializer.Serialize(value, JsonSettings.Options), JsonSettings.Options)!;
+            if (includePhotos) response.Photos = _photoManager.GetAll(value.MetaInfo!.ID);
+            return response;
         }
     }
 }

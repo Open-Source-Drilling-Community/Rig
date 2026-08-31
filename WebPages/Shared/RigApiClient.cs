@@ -36,6 +36,64 @@ public sealed class RigApiClient
 
     public Task<RigModel.Rig?> GetRigAsync(Guid id) => GetAsync<RigModel.Rig>($"Rig/{id}");
 
+    public async Task<List<RigModel.RigPhotoMetadata>> GetRigPhotosAsync(Guid rigId) =>
+        await GetAsync<List<RigModel.RigPhotoMetadata>>($"Rig/{rigId}/Photos") ?? [];
+
+    public async Task<string> GetRigPhotoDataUrlAsync(Guid rigId, Guid photoId)
+    {
+        using HttpResponseMessage response = await _httpClient.GetAsync($"Rig/{rigId}/Photos/{photoId}/Content");
+        response.EnsureSuccessStatusCode();
+        string contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+        return $"data:{contentType};base64,{Convert.ToBase64String(await response.Content.ReadAsByteArrayAsync())}";
+    }
+
+    public async Task<RigModel.RigPhotoMetadata> UploadRigPhotoAsync(Guid rigId, Stream stream, string fileName, string contentType, RigModel.RigPhotoMetadata metadata)
+    {
+        using MultipartFormDataContent form = new();
+        StreamContent file = new(stream); file.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType); form.Add(file, "file", fileName);
+        void Add(string name, object? value) { if (value != null) form.Add(new StringContent(Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture)!), name); }
+        Add("title", metadata.Title); Add("caption", metadata.Caption); Add("alternativeText", metadata.AlternativeText); Add("displayOrder", metadata.DisplayOrder); Add("isPrimary", metadata.IsPrimary); Add("source", metadata.Source); Add("attribution", metadata.Attribution); Add("license", metadata.License);
+        using HttpResponseMessage response = await _httpClient.PostAsync($"Rig/{rigId}/Photos", form); response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<RigModel.RigPhotoMetadata>(JsonOptions))!;
+    }
+
+    public async Task<RigModel.RigPhotoMetadata> UpdateRigPhotoAsync(Guid rigId, RigModel.RigPhotoMetadata metadata)
+    {
+        if (metadata.MetaInfo == null || metadata.LastModificationDate == null) throw new InvalidOperationException("Stored photo metadata is required.");
+        string expected = Uri.EscapeDataString(metadata.LastModificationDate.Value.ToString("O"));
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"Rig/{rigId}/Photos/{metadata.MetaInfo.ID}?expectedModifiedUtc={expected}", metadata, JsonOptions); response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<RigModel.RigPhotoMetadata>(JsonOptions))!;
+    }
+
+    public async Task<HttpStatusCode> DeleteRigPhotoAsync(Guid rigId, Guid photoId)
+    { using HttpResponseMessage response = await _httpClient.DeleteAsync($"Rig/{rigId}/Photos/{photoId}"); return response.StatusCode; }
+
+    public async Task<List<RigModel.RigFeatureCategory>> GetRigFeatureCategoriesAsync() =>
+        await GetAsync<List<RigModel.RigFeatureCategory>>("RigFeatureCategory/HeavyData") ?? new List<RigModel.RigFeatureCategory>();
+
+    public async Task<RigModel.RigFeatureCategory> CreateRigFeatureCategoryAsync(RigModel.RigFeatureCategory category)
+    {
+        using HttpResponseMessage response = await _httpClient.PostAsJsonAsync("RigFeatureCategory", category, JsonOptions);
+        response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<RigModel.RigFeatureCategory>(JsonOptions))!;
+    }
+
+    public async Task<RigModel.RigFeatureCategory> UpdateRigFeatureCategoryAsync(RigModel.RigFeatureCategory category)
+    {
+        if (category.MetaInfo == null || category.MetaInfo.ID == Guid.Empty || category.LastModificationDate == null)
+            throw new InvalidOperationException("A stored category UUID and LastModificationDate are required for update.");
+        string timestamp = Uri.EscapeDataString(category.LastModificationDate.Value.ToString("O"));
+        using HttpResponseMessage response = await _httpClient.PutAsJsonAsync($"RigFeatureCategory/{category.MetaInfo.ID}?expectedModifiedUtc={timestamp}", category, JsonOptions);
+        response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadFromJsonAsync<RigModel.RigFeatureCategory>(JsonOptions))!;
+    }
+
+    public async Task<HttpStatusCode> DeleteRigFeatureCategoryAsync(Guid id)
+    {
+        using HttpResponseMessage response = await _httpClient.DeleteAsync($"RigFeatureCategory/{id}");
+        return response.StatusCode;
+    }
+
     public Task<RigModel.UsageStatisticsRig?> GetUsageStatisticsAsync() => GetAsync<RigModel.UsageStatisticsRig>("RigUsageStatistics");
 
     public Task<HttpStatusCode> CreateRigAsync(RigModel.Rig rig) => SendAsync(HttpMethod.Post, "Rig", rig);

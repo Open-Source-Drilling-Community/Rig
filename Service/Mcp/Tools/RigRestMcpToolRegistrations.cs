@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OSDC.Drilling.Rig.Service.Controllers;
 using OSDC.Drilling.Rig.Service.Managers;
+using OSDC.Drilling.Rig.Model;
 using RigModel = OSDC.Drilling.Rig.Model.Rig;
 
 namespace OSDC.Drilling.Rig.Service.Mcp.Tools;
@@ -17,18 +18,32 @@ public static class RigRestMcpToolRegistrations
             (sp, _, ct) => Invoke(ct, () => Controller(sp).GetAllRigId()));
         services.AddLegacyMcpTool("rig_get_all_meta_info", "List MetaInfo for every stored rig without loading the large equipment payloads. Each result contains the persistent UUID and may contain HTTP location metadata; use its ID with rig_get_by_id for the complete configuration.", McpToolArgumentHelpers.CreateEmptySchema(),
             (sp, _, ct) => Invoke(ct, () => Controller(sp).GetAllRigMetaInfo()));
-        services.AddLegacyMcpTool("rig_get_by_id", "Retrieve one complete rig by UUID, including platform and Cluster association, drill-floor elevation, main and auxiliary mast assemblies, pumps, tanks, solids-control equipment, MPD/BOP equipment, and all nested ratings and measurements. Numeric physical values use SI units.", McpToolArgumentHelpers.CreateGuidSchema("id", "UUID of the rig to retrieve."),
-            (sp, args, ct) => InvokeById(args, ct, id => Controller(sp).GetRigById(id)));
+        services.AddLegacyMcpTool("rig_get_by_id", "Retrieve one complete rig by UUID, including platform and Cluster association, drill-floor elevation, main and auxiliary mast assemblies, pumps, tanks, solids-control equipment, MPD/BOP equipment, ratings, limits, and instrumentation capabilities. The Rig contract contains no live telemetry. Numeric physical values use SI units. Photo metadata is opt-in through includePhotos; image bytes are never placed in MCP results.", McpToolArgumentHelpers.CreateRigReadSchema(includeId: true),
+            (sp, args, ct) => InvokeById(args, ct, id => Controller(sp).GetRigById(id, ReadIncludePhotos(args))));
         services.AddLegacyMcpTool("rig_get_all_light", "List lightweight rig records containing metadata, name, description, timestamps, fixed-platform status, and optional Cluster UUID. Use this for listing, sorting, and selection; it deliberately omits mast and equipment payloads.", McpToolArgumentHelpers.CreateEmptySchema(),
             (sp, _, ct) => Invoke(ct, () => Controller(sp).GetAllRigLight()));
-        services.AddLegacyMcpTool("rig_get_all", "Retrieve every rig with its complete nested mast and equipment configuration. This can produce a very large response, so prefer rig_get_all_ids, rig_get_all_meta_info, or rig_get_all_light for discovery and rig_get_by_id for one selected rig. Physical values use SI units.", McpToolArgumentHelpers.CreateEmptySchema(),
-            (sp, _, ct) => Invoke(ct, () => Controller(sp).GetAllRig()));
-        services.AddLegacyMcpTool("rig_create", "Persist a new complete rig configuration. Generate a non-empty rig.MetaInfo.ID first; an existing UUID produces a conflict. For a fixed platform set IsFixedPlatform true and ClusterID to an existing Cluster UUID; otherwise leave ClusterID null. Send nested equipment objects and all physical values in SI units.", McpToolArgumentHelpers.CreateRigSchema(),
+        services.AddLegacyMcpTool("rig_get_all", "Retrieve every rig with its complete nested mast and equipment configuration, including static ratings, limits, and instrumentation capabilities but no live telemetry. This can produce a very large response, so prefer rig_get_all_ids, rig_get_all_meta_info, or rig_get_all_light for discovery and rig_get_by_id for one selected rig. Physical values use SI units. Photo metadata is excluded unless includePhotos is true; image bytes are never placed in MCP results.", McpToolArgumentHelpers.CreateRigReadSchema(includeId: false),
+            (sp, args, ct) => Invoke(ct, () => Controller(sp).GetAllRig(ReadIncludePhotos(args))));
+        services.AddLegacyMcpTool("rig_create", "Persist a new complete rig master-data configuration. Generate a non-empty rig.MetaInfo.ID first; an existing UUID produces a conflict. For a fixed platform set IsFixedPlatform true and ClusterID to an existing Cluster UUID; otherwise leave ClusterID null. Send static equipment specifications and limits in SI units; describe available signals through MeasurementCapabilities and do not send live telemetry.", McpToolArgumentHelpers.CreateRigSchema(),
             (sp, args, ct) => InvokeWithBody<RigModel>(args, "rig", ct, data => Controller(sp).PostRig(data)));
-        services.AddLegacyMcpTool("rig_update_by_id", "Replace an existing rig configuration. The path id must exactly match rig.MetaInfo.ID or the request is rejected. Send the complete desired representation because omitted equipment may be lost, update LastModificationDate, preserve the fixed-platform/Cluster relationship, and use SI physical values.", McpToolArgumentHelpers.CreateRigSchema(includeId: true),
+        services.AddLegacyMcpTool("rig_update_by_id", "Replace an existing rig master-data configuration. The path id must exactly match rig.MetaInfo.ID or the request is rejected. Send the complete desired representation because omitted equipment is removed, update LastModificationDate, preserve the fixed-platform/Cluster relationship, and use SI physical values. MeasurementCapabilities describe instrumentation only; live telemetry is not accepted by the schema.", McpToolArgumentHelpers.CreateRigSchema(includeId: true),
             (sp, args, ct) => InvokeWithIdAndBody<RigModel>(args, "rig", ct, (id, data) => Controller(sp).PutRigById(id, data)));
         services.AddLegacyMcpTool("rig_delete_by_id", "Permanently delete the stored rig identified by UUID. Use a read operation first when the target is uncertain. The operation returns not found when the UUID is unknown; it accepts a Rig resource UUID, not a Cluster UUID or equipment identifier.", McpToolArgumentHelpers.CreateGuidSchema("id", "UUID of the rig to delete."),
             (sp, args, ct) => InvokeDelete(args, ct, id => Controller(sp).DeleteRigById(id)));
+        services.AddLegacyMcpTool("rig_feature_category_get_all_ids", "List the UUIDs of all built-in and custom rig feature categories without returning their option catalogs. Use this compact discovery call when identifiers alone are sufficient, then retrieve a selected definition with rig_feature_category_get_by_id.", McpToolArgumentHelpers.CreateEmptySchema(),
+            (sp, _, ct) => Invoke(ct, () => FeatureController(sp).GetAllIds()));
+        services.AddLegacyMcpTool("rig_feature_category_get_all_meta_info", "List the MetaInfo envelopes of all built-in and custom rig feature categories without returning option catalogs. Each result supplies the stable persistent UUID used by assignments and by rig_feature_category_get_by_id.", McpToolArgumentHelpers.CreateEmptySchema(),
+            (sp, _, ct) => Invoke(ct, () => FeatureController(sp).GetAllMetaInfo()));
+        services.AddLegacyMcpTool("rig_feature_category_get_all", "List all built-in and custom rig feature categories and their selectable options, stable codes, descriptions, validity behavior, provenance, deprecation state, and timestamps. Built-ins use stable UUIDs shared by every deployment.", McpToolArgumentHelpers.CreateEmptySchema(),
+            (sp, _, ct) => Invoke(ct, () => FeatureController(sp).GetAll()));
+        services.AddLegacyMcpTool("rig_feature_category_get_by_id", "Retrieve one rig feature category by UUID, including every option UUID, stable machine code, human description, validity behavior, provenance, deprecation state, and modification timestamp required for a concurrency-safe custom update.", McpToolArgumentHelpers.CreateGuidSchema("id", "UUID of the rig feature category."),
+            (sp, args, ct) => InvokeById(args, ct, id => FeatureController(sp).GetById(id)));
+        services.AddLegacyMcpTool("rig_feature_category_create", "Create a custom rig feature category and its initial option catalog. The server normalizes stable codes and generates the category UUID and every option UUID; callers cannot claim built-in provenance or modify the immutable predefined catalog.", McpToolArgumentHelpers.CreateFeatureCategorySchema(),
+            (sp, args, ct) => InvokeFeatureCreate(sp, args, ct));
+        services.AddLegacyMcpTool("rig_feature_category_update_by_id", "Replace one complete custom rig feature category using expectedModifiedUtc for optimistic concurrency. Built-in categories are immutable, new option UUIDs are generated by the server, and options still assigned to rigs cannot be removed.", McpToolArgumentHelpers.CreateFeatureCategorySchema(includeUpdateFields: true),
+            (sp, args, ct) => InvokeFeatureUpdate(sp, args, ct));
+        services.AddLegacyMcpTool("rig_feature_category_delete_by_id", "Permanently delete an unreferenced custom rig feature category. The service protects immutable built-ins and rejects deletion with conflict while any stored rig assignment references the category, preventing dangling catalog references.", McpToolArgumentHelpers.CreateGuidSchema("id", "UUID of the custom rig feature category to delete."),
+            (sp, args, ct) => InvokeDelete(args, ct, id => FeatureController(sp).Delete(id)));
         return services;
     }
 
@@ -53,6 +68,9 @@ public static class RigRestMcpToolRegistrations
             ? Task.FromResult<JsonNode?>(McpActionResultConverter.FromActionResult(action(id)))
             : Task.FromResult(error);
     }
+
+    private static bool ReadIncludePhotos(JsonObject? args) =>
+        args?["includePhotos"]?.GetValue<bool>() ?? false;
 
     private static Task<JsonNode?> InvokeWithBody<T>(JsonObject? args, string bodyName, CancellationToken ct, Func<T?, ActionResult> action)
     {
@@ -93,7 +111,28 @@ public static class RigRestMcpToolRegistrations
         }
     }
 
+    private static Task<JsonNode?> InvokeFeatureCreate(IServiceProvider sp, JsonObject? args, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        if (!TryDeserialize(args, "category", out RigFeatureCategory? category, out JsonNode? error)) return Task.FromResult(error);
+        return Task.FromResult<JsonNode?>(McpActionResultConverter.FromActionResult(FeatureController(sp).Create(category)));
+    }
+
+    private static Task<JsonNode?> InvokeFeatureUpdate(IServiceProvider sp, JsonObject? args, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        if (!McpToolArgumentHelpers.TryParseGuid(args, "id", out Guid id, out JsonNode? idError)) return Task.FromResult(idError);
+        if (!TryDeserialize(args, "category", out RigFeatureCategory? category, out JsonNode? categoryError)) return Task.FromResult(categoryError);
+        if (!DateTimeOffset.TryParse(args?["expectedModifiedUtc"]?.GetValue<string>(), out DateTimeOffset expected))
+            return Task.FromResult<JsonNode?>(McpToolResponses.CreateValidationError("Argument 'expectedModifiedUtc' must be an ISO 8601 timestamp."));
+        return Task.FromResult<JsonNode?>(McpActionResultConverter.FromActionResult(FeatureController(sp).Update(id, expected, category)));
+    }
+
     private static RigController Controller(IServiceProvider sp) => new(
         sp.GetRequiredService<ILogger<RigManager>>(),
+        sp.GetRequiredService<SqlConnectionManager>());
+
+    private static RigFeatureCategoryController FeatureController(IServiceProvider sp) => new(
+        sp.GetRequiredService<ILogger<RigFeatureCategoryManager>>(),
         sp.GetRequiredService<SqlConnectionManager>());
 }

@@ -163,6 +163,13 @@ public static class RigTreeBuilder
 
     private static void BuildRigChildren(RigTreeNode parentNode, RigShared.Rig? rig, string parentKey, int depth, Func<object?>? ensureInstance)
     {
+        AddComplexNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.Identification), typeof(RigShared.RigIdentification), parentKey, depth, ensureInstance);
+        AddComplexNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.OperatingEnvelope), typeof(RigShared.RigOperatingEnvelope), parentKey, depth, ensureInstance);
+        AddComplexNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.MarineUnitProfile), typeof(RigShared.MarineUnitProfile), parentKey, depth, ensureInstance);
+        AddComplexNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.JackUpProfile), typeof(RigShared.JackUpProfile), parentKey, depth, ensureInstance);
+        AddComplexNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.StationKeepingSystem), typeof(RigShared.StationKeepingSystem), parentKey, depth, ensureInstance);
+        AddListNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.StorageCapacities), typeof(RigShared.RigStorageCapacity), parentKey, depth, ensureInstance);
+        AddListNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.FeatureAssignments), typeof(RigShared.RigFeatureAssignment), parentKey, depth, ensureInstance);
         AddComplexNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.MainRigMast), typeof(RigShared.RigMast), parentKey, depth, ensureInstance);
         AddComplexNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.AuxiliaryRigMast), typeof(RigShared.RigMast), parentKey, depth, ensureInstance);
         AddListNode(parentNode, rig, typeof(RigShared.Rig), nameof(RigShared.Rig.MudPumpList), typeof(RigShared.MudPump), parentKey, depth, ensureInstance);
@@ -272,6 +279,7 @@ public static class RigTreeBuilder
         PropertyInfo property = ownerType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance)!;
         IList? listValue = instance == null ? null : property.GetValue(instance) as IList;
         string listKey = parentKey + "." + propertyName;
+        bool usesDedicatedFeatureEditor = itemType == typeof(RigShared.RigFeatureAssignment);
         RigTreeNode listNode = new()
         {
             Key = listKey,
@@ -281,8 +289,8 @@ public static class RigTreeBuilder
             ValueType = itemType,
             IsList = true,
             Depth = depth,
-            AddItemAction = ensureInstance == null ? null : () => AddListItem(ensureInstance, property, itemType, listKey),
-            ClearAction = ensureInstance == null ? null : () =>
+            AddItemAction = ensureInstance == null || usesDedicatedFeatureEditor ? null : () => AddListItem(ensureInstance, property, itemType, listKey),
+            ClearAction = ensureInstance == null || usesDedicatedFeatureEditor ? null : () =>
             {
                 object? owner = ensureInstance();
                 property.SetValue(owner, null);
@@ -290,7 +298,7 @@ public static class RigTreeBuilder
             }
         };
 
-        if (listValue != null)
+        if (listValue != null && !usesDedicatedFeatureEditor)
         {
             for (int i = 0; i < listValue.Count; i++)
             {

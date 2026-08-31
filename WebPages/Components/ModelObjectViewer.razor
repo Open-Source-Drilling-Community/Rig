@@ -80,6 +80,7 @@ else
     private IEnumerable<PropertyInfo> VisibleProperties => ModelType
         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
         .Where(p => p.CanRead && p.GetIndexParameters().Length == 0)
+        .Where(p => GetCoreType(p.PropertyType) != typeof(Guid))
         .Where(p => !IsHiddenProperty(ModelType, p.Name))
         .Where(p => ExcludedProperties == null || !ExcludedProperties.Contains(p.Name))
         .OrderBy(p => GetPropertyOrder(ModelType, p.Name))
@@ -184,7 +185,6 @@ else
                 "SerialNumber" => 5,
                 "TopDriveClass" => 6,
                 "Weight" => 7,
-                "TopDriveHeight" => 8,
                 "MaxLimitRotationSpeed" => 9,
                 "MaxLimitMakeupTorque" => 10,
                 "MaxLimitBreakoutTorque" => 11,
@@ -283,14 +283,21 @@ else
         _ => value.ToString() ?? string.Empty
     };
 
-    private static string FormatDoubleValue(string propertyName, object value)
+    private string FormatDoubleValue(string propertyName, object value)
     {
         if (value is not double doubleValue)
         {
             return string.Empty;
         }
 
-        string quantity = DataUtils.InferQuantity(propertyName);
+        string quantity = ModelType == typeof(EquipmentMeasurementCapability)
+            && Value is EquipmentMeasurementCapability capability
+            && propertyName is nameof(EquipmentMeasurementCapability.MinimumValue)
+                or nameof(EquipmentMeasurementCapability.MaximumValue)
+                or nameof(EquipmentMeasurementCapability.AbsoluteAccuracy)
+            && !string.IsNullOrWhiteSpace(capability.PhysicalQuantity)
+                ? capability.PhysicalQuantity
+                : DataUtils.InferQuantity(ModelType, propertyName);
         return $"{doubleValue:G} {quantity}";
     }
 }

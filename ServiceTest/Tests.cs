@@ -1,33 +1,40 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using OSDC.Drilling.Rig.Model;
+using OSDC.Drilling.Rig.Service;
 using OSDC.Drilling.Rig.Service.Controllers;
 using OSDC.Drilling.Rig.Service.Managers;
 using OSDC.DotnetLibraries.General.DataManagement;
 using System.Reflection;
+using System.Text.Json;
 
 namespace ServiceTest
 {
     public class Tests
     {
-        private static readonly string DatabaseFilePath = Path.Combine(SqlConnectionManager.HOME_DIRECTORY, SqlConnectionManager.DATABASE_FILENAME);
+        private string _databaseFilePath = null!;
 
         private ILoggerFactory _loggerFactory = null!;
         private SqlConnectionManager _connectionManager = null!;
         private RigController _controller = null!;
+        private RigFeatureCategoryController _featureController = null!;
 
         [SetUp]
         public void SetUp()
         {
             _loggerFactory = LoggerFactory.Create(builder => { });
             ResetRigManagerSingleton();
-            RecreateDatabaseFile();
+            string testDirectory = Path.Combine(Path.GetTempPath(), "OSDC.Drilling.Rig.ServiceTest");
+            Directory.CreateDirectory(testDirectory);
+            _databaseFilePath = Path.Combine(testDirectory, $"Rig-{Guid.NewGuid():N}.db");
 
             _connectionManager = new SqlConnectionManager(
-                $"Data Source={DatabaseFilePath}",
+                $"Data Source={_databaseFilePath}",
                 _loggerFactory.CreateLogger<SqlConnectionManager>());
 
             _controller = new RigController(_loggerFactory.CreateLogger<RigManager>(), _connectionManager);
+            _featureController = new RigFeatureCategoryController(_loggerFactory.CreateLogger<RigFeatureCategoryManager>(), _connectionManager);
         }
 
         [TearDown]
@@ -35,6 +42,8 @@ namespace ServiceTest
         {
             ResetRigManagerSingleton();
             _loggerFactory.Dispose();
+            SqliteConnection.ClearAllPools();
+            DeleteTestDatabaseFile(_databaseFilePath);
         }
 
         [Test]
@@ -70,9 +79,9 @@ namespace ServiceTest
         [Test]
         public void GetAllRig_ReturnsEmptyList_WhenDatabaseIsEmpty()
         {
-            ActionResult<IEnumerable<Rig?>> actionResult = _controller.GetAllRig();
+            ActionResult<IEnumerable<RigReadResponse?>> actionResult = _controller.GetAllRig();
 
-            List<Rig?> rigs = AssertOk<List<Rig?>>(actionResult.Result);
+            List<RigReadResponse?> rigs = AssertOk<List<RigReadResponse?>>(actionResult.Result);
 
             Assert.That(rigs, Is.Empty);
         }
@@ -80,7 +89,7 @@ namespace ServiceTest
         [Test]
         public void GetRigById_ReturnsBadRequest_ForEmptyGuid()
         {
-            ActionResult<Rig?> actionResult = _controller.GetRigById(Guid.Empty);
+            ActionResult<RigReadResponse?> actionResult = _controller.GetRigById(Guid.Empty);
 
             Assert.That(actionResult.Result, Is.TypeOf<BadRequestResult>());
         }
@@ -88,7 +97,7 @@ namespace ServiceTest
         [Test]
         public void GetRigById_ReturnsNotFound_WhenRigDoesNotExist()
         {
-            ActionResult<Rig?> actionResult = _controller.GetRigById(Guid.NewGuid());
+            ActionResult<RigReadResponse?> actionResult = _controller.GetRigById(Guid.NewGuid());
 
             Assert.That(actionResult.Result, Is.TypeOf<NotFoundResult>());
         }
@@ -138,7 +147,7 @@ namespace ServiceTest
             List<MetaInfo?> metaInfos = AssertOk<List<MetaInfo?>>(_controller.GetAllRigMetaInfo().Result);
             Assert.That(metaInfos.Any(x => x?.ID == id), Is.True);
 
-            Rig persistedRig = AssertOk<Rig>(_controller.GetRigById(id).Result);
+            RigReadResponse persistedRig = AssertOk<RigReadResponse>(_controller.GetRigById(id).Result);
             Assert.That(persistedRig.MetaInfo?.ID, Is.EqualTo(id));
             Assert.That(persistedRig.Name, Is.EqualTo(rig.Name));
             Assert.That(persistedRig.Description, Is.EqualTo(rig.Description));
@@ -152,7 +161,7 @@ namespace ServiceTest
             Assert.That(rigLight.IsFixedPlatform, Is.EqualTo(rig.IsFixedPlatform));
             Assert.That(rigLight.ClusterID, Is.EqualTo(rig.ClusterID));
 
-            List<Rig?> rigs = AssertOk<List<Rig?>>(_controller.GetAllRig().Result);
+            List<RigReadResponse?> rigs = AssertOk<List<RigReadResponse?>>(_controller.GetAllRig().Result);
             Assert.That(rigs.Any(x => x?.MetaInfo?.ID == id && x.Name == rig.Name), Is.True);
         }
 
@@ -201,7 +210,7 @@ namespace ServiceTest
 
             Assert.That(actionResult, Is.TypeOf<OkResult>());
 
-            Rig updatedRig = AssertOk<Rig>(_controller.GetRigById(id).Result);
+            RigReadResponse updatedRig = AssertOk<RigReadResponse>(_controller.GetRigById(id).Result);
             Assert.That(updatedRig.Name, Is.EqualTo("updated-rig"));
             Assert.That(updatedRig.Description, Is.EqualTo("updated-description"));
             Assert.That(updatedRig.IsFixedPlatform, Is.EqualTo(rig.IsFixedPlatform));
@@ -231,6 +240,185 @@ namespace ServiceTest
 
             List<Guid> ids = AssertOk<List<Guid>>(_controller.GetAllRigId().Result);
             Assert.That(ids, Does.Not.Contain(id));
+        }
+
+        [Test]
+        public void RigPhotos_AreSeparateFromDefaultRead_AndIncludedOnRequest()
+        {
+            Guid rigId = Guid.NewGuid();
+            Assert.That(_controller.PostRig(CreateRig(rigId, "photo-rig")), Is.TypeOf<OkResult>());
+            RigPhotoManager photos = new(_connectionManager);
+            byte[] png = [137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 0];
+            RigPhotoMetadata? created = photos.Create(rigId, "rig.png", "image/png", png,
+                new RigPhotoMetadata { Title = "Rig floor", AlternativeText = "Rig floor", IsPrimary = true }, out string? error);
+
+            Assert.That(error, Is.Null);
+            Assert.That(created?.MetaInfo?.ID, Is.Not.EqualTo(Guid.Empty));
+            RigReadResponse defaultRead = AssertOk<RigReadResponse>(_controller.GetRigById(rigId).Result);
+            RigReadResponse mediaRead = AssertOk<RigReadResponse>(_controller.GetRigById(rigId, includePhotos: true).Result);
+            Assert.That(defaultRead.Photos, Is.Null);
+            Assert.That(JsonSerializer.Serialize(defaultRead, JsonSettings.Options), Does.Not.Contain("\"Photos\""));
+            Assert.That(mediaRead.Photos, Has.Count.EqualTo(1));
+            Assert.That(mediaRead.Photos![0].ByteLength, Is.EqualTo(png.Length));
+            Assert.That(mediaRead.Photos[0].Sha256, Is.Not.Empty);
+
+            Assert.That(_controller.DeleteRigById(rigId), Is.TypeOf<OkResult>());
+            Assert.That(photos.GetAll(rigId), Is.Empty);
+        }
+
+        [Test]
+        public void FeatureCatalog_SeedsStableBuiltIns_AndProtectsThem()
+        {
+            List<RigFeatureCategory> categories = AssertOk<List<RigFeatureCategory>>(_featureController.GetAll().Result);
+            Assert.That(categories, Has.Count.EqualTo(7));
+            Assert.That(categories, Has.All.Property(nameof(RigFeatureCategory.IsBuiltIn)).True);
+            RigFeatureCategory walking = categories.Single(value => value.Code == "mobility-deployment");
+            Assert.That(walking.Options, Has.Some.Property(nameof(RigFeatureOption.Code)).EqualTo("walking"));
+            Assert.That(_featureController.Delete(walking.MetaInfo!.ID), Is.TypeOf<ConflictObjectResult>());
+        }
+
+        [Test]
+        public void FeatureCatalog_CustomLifecycle_UsesServerIdsAndOptimisticConcurrency()
+        {
+            RigFeatureCategory request = new()
+            {
+                Name = "Operator classification",
+                Options = [new RigFeatureOption { Name = "Preferred" }]
+            };
+            RigFeatureCategory created = AssertOk<RigFeatureCategory>(_featureController.Create(request).Result);
+            Assert.That(created.MetaInfo?.ID, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(created.Options!.Single().ID, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(created.IsBuiltIn, Is.False);
+
+            created.Description = "Updated";
+            ActionResult<RigFeatureCategory> stale = _featureController.Update(created.MetaInfo!.ID, created.LastModificationDate!.Value.AddSeconds(-1), created);
+            Assert.That(stale.Result, Is.TypeOf<ConflictObjectResult>());
+
+            RigFeatureCategory updated = AssertOk<RigFeatureCategory>(_featureController.Update(created.MetaInfo.ID, created.LastModificationDate, created).Result);
+            Assert.That(updated.Description, Is.EqualTo("Updated"));
+            Assert.That(_featureController.Delete(updated.MetaInfo!.ID), Is.TypeOf<OkResult>());
+        }
+
+        [Test]
+        public void RigCreate_ValidatesFeatureReferencesAndProtectsReferencedCategory()
+        {
+            RigFeatureCategory custom = AssertOk<RigFeatureCategory>(_featureController.Create(new RigFeatureCategory
+            {
+                Name = "Local capability",
+                Options = [new RigFeatureOption { Name = "Available" }]
+            }).Result);
+            Rig rig = CreateRig(Guid.NewGuid(), "featured-rig");
+            rig.FeatureAssignments = [new RigFeatureAssignment
+            {
+                ID = Guid.NewGuid(), FeatureCategoryID = custom.MetaInfo!.ID, FeatureOptionID = custom.Options!.Single().ID
+            }];
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
+            Assert.That(_featureController.Delete(custom.MetaInfo.ID), Is.TypeOf<ConflictObjectResult>());
+
+            Rig invalid = CreateRig(Guid.NewGuid(), "invalid-featured-rig");
+            invalid.FeatureAssignments = [new RigFeatureAssignment
+            {
+                ID = Guid.NewGuid(), FeatureCategoryID = custom.MetaInfo.ID, FeatureOptionID = Guid.NewGuid()
+            }];
+            Assert.That(_controller.PostRig(invalid), Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public void RigCreate_ValidatesMudPumpLinerPerformanceRows()
+        {
+            Rig invalid = CreateRig(Guid.NewGuid(), "invalid-liner-table");
+            invalid.MudPumpList =
+            [
+                new MudPump
+                {
+                    Name = "Mud pump 1",
+                    MaxLimitDesignPressure = 30_000_000,
+                    LinerConfigurations =
+                    [
+                        new MudPumpLinerConfiguration
+                        {
+                            LinerInnerDiameter = 0.1524,
+                            MaximumVolumetricFlowRate = 0,
+                            MaximumDischargePressure = 40_000_000
+                        }
+                    ]
+                }
+            ];
+
+            BadRequestObjectResult result = (BadRequestObjectResult)_controller.PostRig(invalid);
+            string json = JsonSerializer.Serialize(result.Value, JsonSettings.Options);
+            Assert.That(json, Does.Contain("MaximumVolumetricFlowRate"));
+            Assert.That(json, Does.Contain("must not exceed the pump MaxLimitDesignPressure"));
+        }
+
+        [Test]
+        public void RigCreate_ValidatesEquipmentMeasurementCapabilities()
+        {
+            Rig invalid = CreateRig(Guid.NewGuid(), "invalid-instrumentation");
+            invalid.MainRigMast!.TopDrive = new TopDrive
+            {
+                Name = "Top drive",
+                MeasurementCapabilities =
+                [
+                    new EquipmentMeasurementCapability
+                    {
+                        MeasurementCode = "surface_torque",
+                        PhysicalQuantity = "TorqueDrilling",
+                        SourceKind = MeasurementSourceKind.Sensor,
+                        MinimumValue = 100,
+                        MaximumValue = 10,
+                        RelativeAccuracy = 1.1,
+                        UpdateFrequency = 0
+                    },
+                    new EquipmentMeasurementCapability
+                    {
+                        MeasurementCode = "SURFACE_TORQUE",
+                        PhysicalQuantity = "TorqueDrilling",
+                        SourceKind = MeasurementSourceKind.Calculated,
+                        SourceComponentID = Guid.NewGuid()
+                    }
+                ]
+            };
+
+            BadRequestObjectResult result = (BadRequestObjectResult)_controller.PostRig(invalid);
+            string json = JsonSerializer.Serialize(result.Value, JsonSettings.Options);
+            Assert.That(json, Does.Contain("SourceType is required"));
+            Assert.That(json, Does.Contain("MinimumValue must not exceed MaximumValue"));
+            Assert.That(json, Does.Contain("RelativeAccuracy must not exceed 1"));
+            Assert.That(json, Does.Contain("UpdateFrequency"));
+            Assert.That(json, Does.Contain("duplicates another capability"));
+            Assert.That(json, Does.Contain("SourceComponentID does not identify"));
+        }
+
+        [Test]
+        public void RigRead_MapsPreviouslyStoredMudPumpLinerScalarsToOnePerformanceRow()
+        {
+            Guid id = Guid.NewGuid();
+            Rig rig = CreateRig(id, "stored-liner-shape");
+            rig.MudPumpList = [new MudPump { Name = "Mud pump 1" }];
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
+
+            using (SqliteConnection connection = _connectionManager.GetConnection()!)
+            using (SqliteCommand command = connection.CreateCommand())
+            {
+                command.CommandText = """
+                    UPDATE RigTable SET data=json_set(data,
+                      '$.MudPumpList[0].LinerId', 0.1524,
+                      '$.MudPumpList[0].PumpDisplacement', 0.02,
+                      '$.MudPumpList[0].MaxLimitOperatingFlowRate', 0.04,
+                      '$.MudPumpList[0].MaxLimitOperatingPressure', 30000000)
+                    WHERE json_extract(MetaInfo,'$.ID')=$id
+                    """;
+                command.Parameters.AddWithValue("$id", id.ToString());
+                Assert.That(command.ExecuteNonQuery(), Is.EqualTo(1));
+            }
+
+            RigReadResponse read = AssertOk<RigReadResponse>(_controller.GetRigById(id).Result);
+            MudPumpLinerConfiguration row = read.MudPumpList!.Single().LinerConfigurations!.Single();
+            Assert.That(row.LinerInnerDiameter, Is.EqualTo(0.1524));
+            Assert.That(row.DisplacementPerStroke, Is.EqualTo(0.02));
+            Assert.That(row.MaximumVolumetricFlowRate, Is.EqualTo(0.04));
+            Assert.That(row.MaximumDischargePressure, Is.EqualTo(30_000_000));
         }
 
         private static Rig CreateRig(Guid id, string name)
@@ -266,13 +454,11 @@ namespace ServiceTest
             instanceField?.SetValue(null, null);
         }
 
-        private static void RecreateDatabaseFile()
+        private static void DeleteTestDatabaseFile(string databaseFilePath)
         {
-            Directory.CreateDirectory(SqlConnectionManager.HOME_DIRECTORY);
-
-            if (File.Exists(DatabaseFilePath))
+            foreach (string path in new[] { databaseFilePath, $"{databaseFilePath}-shm", $"{databaseFilePath}-wal" })
             {
-                File.Delete(DatabaseFilePath);
+                if (File.Exists(path)) File.Delete(path);
             }
         }
     }

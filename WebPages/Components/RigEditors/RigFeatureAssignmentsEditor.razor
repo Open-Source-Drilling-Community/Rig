@@ -1,0 +1,114 @@
+<MudStack Spacing="3">
+    <MudAlert Severity="Severity.Info" Dense="true">
+        Features describe configurable rig capabilities. Engineering limits and installed equipment remain in their dedicated sections.
+    </MudAlert>
+
+    <MudPaper Class="pa-3" Outlined="true">
+        <MudGrid>
+            <MudItem xs="12" md="5">
+                <MudSelect T="Guid?" Value="_selectedCategoryId" ValueChanged="SelectCategory" Label="Feature category" Variant="Variant.Outlined" Placeholder="To be selected" Clearable="true">
+                    @foreach (RigFeatureCategory category in AvailableCategories)
+                    {
+                        <MudSelectItem T="Guid?" Value="@((Guid?)category.MetaInfo.ID)">@category.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="5">
+                <MudSelect T="Guid?" @bind-Value="_selectedOptionId" Label="Feature" Variant="Variant.Outlined" Placeholder="To be selected" Clearable="true" Disabled="@(!_selectedCategoryId.HasValue)">
+                    @foreach (RigFeatureOption option in SelectedCategoryOptions)
+                    {
+                        <MudSelectItem T="Guid?" Value="@((Guid?)option.ID)">@option.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_selectedOptionId.HasValue)" OnClick="AddAssignment">Add</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    @if (Assignments.Count == 0)
+    {
+        <MudText Typo="Typo.body2">No rig features have been assigned.</MudText>
+    }
+    else
+    {
+        @foreach (RigFeatureAssignment assignment in Assignments)
+        {
+            RigFeatureCategory? category = FindCategory(assignment.FeatureCategoryID);
+            RigFeatureOption? option = category?.Options?.FirstOrDefault(value => value.ID == assignment.FeatureOptionID);
+            <MudPaper @key="assignment.ID" Class="pa-3" Outlined="true">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+                    <div>
+                        <MudText Typo="Typo.subtitle1">@(option?.Name ?? assignment.FeatureOptionID.ToString())</MudText>
+                        <MudText Typo="Typo.caption">@(category?.Name ?? assignment.FeatureCategoryID.ToString())</MudText>
+                    </div>
+                    <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline" Color="Color.Error" OnClick="@(() => RemoveAssignment(assignment))" />
+                </MudStack>
+                <MudGrid>
+                    @if (category?.HasValidityPeriod == true)
+                    {
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string" Value="@FormatDate(assignment.FromDate)" ValueChanged="@(value => SetFromDate(assignment, value))" Label="Valid from" Variant="Variant.Outlined" HelperText="UTC ISO-8601; empty means unbounded" />
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField T="string" Value="@FormatDate(assignment.ToDate)" ValueChanged="@(value => SetToDate(assignment, value))" Label="Valid to" Variant="Variant.Outlined" HelperText="UTC ISO-8601; empty means unbounded" />
+                        </MudItem>
+                    }
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="assignment.Notes" Label="Notes" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField @bind-Value="assignment.EvidenceReference" Label="Evidence or certification reference" Variant="Variant.Outlined" />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        }
+    }
+</MudStack>
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = null!;
+    [Parameter] public IReadOnlyCollection<RigFeatureCategory> Categories { get; set; } = Array.Empty<RigFeatureCategory>();
+
+    private Guid? _selectedCategoryId;
+    private Guid? _selectedOptionId;
+    private List<RigFeatureAssignment> Assignments => Rig.FeatureAssignments?.ToList() ?? [];
+    private IEnumerable<RigFeatureCategory> AvailableCategories => Categories
+        .Where(category => category.MetaInfo?.ID != Guid.Empty && !category.IsDeprecated)
+        .OrderBy(category => category.Name, StringComparer.OrdinalIgnoreCase);
+    private IEnumerable<RigFeatureOption> SelectedCategoryOptions => (FindCategory(_selectedCategoryId)?.Options ?? Array.Empty<RigFeatureOption>())
+        .Where(option => option.ID != Guid.Empty && !option.IsDeprecated)
+        .OrderBy(option => option.Name, StringComparer.OrdinalIgnoreCase);
+
+    private Task SelectCategory(Guid? id)
+    {
+        _selectedCategoryId = id;
+        _selectedOptionId = null;
+        return Task.CompletedTask;
+    }
+
+    private void AddAssignment()
+    {
+        if (!_selectedCategoryId.HasValue || !_selectedOptionId.HasValue) return;
+        Rig.FeatureAssignments ??= new List<RigFeatureAssignment>();
+        if (Rig.FeatureAssignments.Any(value => value.FeatureCategoryID == _selectedCategoryId.Value && value.FeatureOptionID == _selectedOptionId.Value)) return;
+        if (FindCategory(_selectedCategoryId)?.IsExclusive == true)
+        {
+            foreach (RigFeatureAssignment existing in Rig.FeatureAssignments.Where(value => value.FeatureCategoryID == _selectedCategoryId.Value).ToList())
+                Rig.FeatureAssignments.Remove(existing);
+        }
+        Rig.FeatureAssignments.Add(new RigFeatureAssignment
+        {
+            ID = Guid.NewGuid(), FeatureCategoryID = _selectedCategoryId.Value, FeatureOptionID = _selectedOptionId.Value
+        });
+        _selectedOptionId = null;
+    }
+
+    private void RemoveAssignment(RigFeatureAssignment assignment) => Rig.FeatureAssignments?.Remove(assignment);
+    private RigFeatureCategory? FindCategory(Guid? id) => id.HasValue ? Categories.FirstOrDefault(value => value.MetaInfo?.ID == id.Value) : null;
+    private static string FormatDate(DateTimeOffset? value) => value?.ToString("O") ?? string.Empty;
+    private static void SetFromDate(RigFeatureAssignment assignment, string? value) => assignment.FromDate = ParseDate(value);
+    private static void SetToDate(RigFeatureAssignment assignment, string? value) => assignment.ToDate = ParseDate(value);
+    private static DateTimeOffset? ParseDate(string? value) => string.IsNullOrWhiteSpace(value) ? null : DateTimeOffset.TryParse(value, out DateTimeOffset parsed) ? parsed : null;
+}

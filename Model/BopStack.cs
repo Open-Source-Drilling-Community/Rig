@@ -5,7 +5,7 @@ namespace OSDC.Drilling.Rig.Model
     public class BopStack : RigEquipmentBase
     {
         public BopStackClass? BopStackClass { get; set; }
-        public string? UnitReferenceList { get; set; }
+        public List<string>? UnitReferences { get; set; }
         public ControllerType? BopControlType { get; set; }
         public double? BoreDiameter { get; set; }
         public double? Height { get; set; }
@@ -17,11 +17,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MinLimitOperatingPressure { get; set; }
         public double? BopLineMaxLimitDesignPressure { get; set; }
         public double? BopLineMaxLimitOperatingPressure { get; set; }
-        public double? CasingPressure { get; set; }
-        public double? KillLinePressure { get; set; }
-        public double? ChokeLinePressure { get; set; }
-        public double? ShutInDrillpipePressure { get; set; }
-
         public BopStack() { }
     }
 }

@@ -11,6 +11,16 @@ namespace OSDC.Drilling.Rig.Model
         public string? Description { get; set; }
         public DateTimeOffset? CreationDate { get; set; }
         public DateTimeOffset? LastModificationDate { get; set; }
+        public RigIdentification? Identification { get; set; }
+        public RigType? RigType { get; set; }
+        public RigEnvironment? OperatingEnvironment { get; set; }
+        public RigMobilityType? MobilityType { get; set; }
+        public RigOperatingEnvelope? OperatingEnvelope { get; set; }
+        public MarineUnitProfile? MarineUnitProfile { get; set; }
+        public JackUpProfile? JackUpProfile { get; set; }
+        public StationKeepingSystem? StationKeepingSystem { get; set; }
+        public List<RigStorageCapacity>? StorageCapacities { get; set; }
+        public List<RigFeatureAssignment>? FeatureAssignments { get; set; }
         public List<MudPump>? MudPumpList { get; set; }
         public List<CementPump>? CementPumpList { get; set; }
         public CementUnit? CementUnit { get; set; }
@@ -49,6 +59,7 @@ namespace OSDC.Drilling.Rig.Model
         public DrillingMarineRiser? DrillingMarineRiser { get; set; }
         public RiserHeaveCompensator? RiserHeaveCompensator { get; set; }
         public double? DrillFloorElevation { get; set; }
+        /// <summary>Compatibility flag retained for existing clients. RigType is authoritative for new records.</summary>
         public bool IsFixedPlatform { get; set; }
         public Guid? ClusterID { get; set; }
 

@@ -10,9 +10,9 @@ namespace OSDC.Drilling.Rig.Model
         public double? FlowMeterSize { get; set; }
         public double? FlowMeterPressureRating { get; set; }
         public bool? JunkBasket { get; set; }
-        public string? ChokeCount { get; set; }
-        public string? FlowMeterCount { get; set; }
-        public string? PressureSensorVotingNumber { get; set; }
+        public int? ChokeCount { get; set; }
+        public int? FlowMeterCount { get; set; }
+        public int? PressureSensorVotingNumber { get; set; }
         public ChokeNumber? ChokeNumber { get; set; }
         public ChokeFunction? ChokeFunction { get; set; }
         public List<ChokeCvCurvePoint>? ChokeCvCurves { get; set; }
@@ -24,22 +24,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitBackPressure { get; set; }
         public double? MinLimitFlowrate { get; set; }
         public double? MaxLimitFlowrate { get; set; }
-        public double? PressureBeforeChoke { get; set; }
-        public double? PressureAfterChoke { get; set; }
-        public double? CvValue { get; set; }
-        public double? CloggingOccuring { get; set; }
-        public double? TemperatureBeforeChoke { get; set; }
-        public double? TemperatureAfterChoke { get; set; }
-        public double? FlowThroughChoke { get; set; }
-        public double? MudDensityOut { get; set; }
-        public double? MudDensityIn { get; set; }
-        public double? ReliefValvePressure { get; set; }
-        public double? PressureBeforeFlowMeter { get; set; }
-        public double? PressureAfterFlowMeter { get; set; }
-        public double? InletPressure { get; set; }
-        public double? OutletPressure { get; set; }
-        public int? VotingSensorsFailed { get; set; }
-
         public DrillingChokeManifold() { }
     }
 }

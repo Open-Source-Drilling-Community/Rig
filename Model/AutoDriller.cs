@@ -11,11 +11,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MinLimitDifferentialPressure { get; set; }
         public double? MaxLimitTrq { get; set; }
         public double? MinLimitTrq { get; set; }
-        public double? SetpointWob { get; set; }
-        public double? SetpointRop { get; set; }
-        public double? SetpointDiffp { get; set; }
-        public double? SetpointTrq { get; set; }
-
         public AutoDriller() { }
     }
 }

@@ -4,9 +4,6 @@ namespace OSDC.Drilling.Rig.Model
     {
         public FlowSensorType? FlowTransducer { get; set; }
         public bool? FlowOutOfBorehole { get; set; }
-        public double? MudFlowrateOut { get; set; }
-        public double? MudFlowrateIn { get; set; }
-
         public FlowSensor() { }
     }
 }

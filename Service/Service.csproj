@@ -36,7 +36,9 @@
 	</ItemGroup>
 
 	<Target Name="CreateSwaggerJson" AfterTargets="Build" Condition="$(Configuration)=='Debug'">
-		<Exec Command="dotnet swagger tofile --output ../ModelSharedOut/json-schemas/RigFullName.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />
+		<Exec Command="dotnet swagger tofile --output ../ModelSharedOut/json-schemas/RigFullName.json $(OutputPath)$(AssemblyName).dll v1"
+			  WorkingDirectory="$(ProjectDir)"
+			  EnvironmentVariables="DOTNET_ROLL_FORWARD=Major" />
 	</Target>
 
 </Project>

@@ -11,6 +11,10 @@
 UpgradeLog*.htm
 *.db
 
+# Local runtime state and completed deployment/migration workspaces
+/home/
+/deployment/
+
 # We don't care about azure docker support
 *azds.yaml
 .vs/Horizon/DesignTimeBuild/.dtbcache.v2

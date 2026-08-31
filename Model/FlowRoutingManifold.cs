@@ -16,13 +16,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MaxLimitOperatingTemperature { get; set; }
         public double? MinLimitOperatingTemperature { get; set; }
         public double? MaxLimitFlowrate { get; set; }
-        public double? InletPressure { get; set; }
-        public double? OutletPressure { get; set; }
-        public double? ReliefValvePressure { get; set; }
-        public double? CloggingOccuring { get; set; }
-        public double? TemperatureInlet { get; set; }
-        public double? TemperatureOutlet { get; set; }
-
         public FlowRoutingManifold() { }
     }
 }

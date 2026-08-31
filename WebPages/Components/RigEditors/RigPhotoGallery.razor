@@ -1,0 +1,115 @@
+@inject RigApiClient RigApiClient
+@inject ISnackbar Snackbar
+
+<MudExpansionPanels>
+    <MudExpansionPanel Text="Rig photos" Expanded="true">
+        <MudStack Spacing="3">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudButton Variant="Variant.Outlined" OnClick="LoadAsync">Refresh</MudButton>
+                <InputFile OnChange="SelectFile" accept="image/jpeg,image/png,image/webp" />
+            </MudStack>
+            @if (_selectedFile != null)
+            {
+                <MudPaper Class="pa-3" Outlined="true">
+                    <MudGrid>
+                        <MudItem xs="12" md="6"><MudTextField @bind-Value="_newPhoto.Title" Label="Title" Variant="Variant.Outlined" /></MudItem>
+                        <MudItem xs="12" md="6"><MudTextField @bind-Value="_newPhoto.AlternativeText" Label="Alternative text" Variant="Variant.Outlined" Required="true" /></MudItem>
+                        <MudItem xs="12"><MudTextField @bind-Value="_newPhoto.Caption" Label="Caption" Variant="Variant.Outlined" /></MudItem>
+                        <MudItem xs="12" md="4"><MudTextField @bind-Value="_newPhoto.Source" Label="Source" Variant="Variant.Outlined" /></MudItem>
+                        <MudItem xs="12" md="4"><MudTextField @bind-Value="_newPhoto.Attribution" Label="Attribution" Variant="Variant.Outlined" /></MudItem>
+                        <MudItem xs="12" md="4"><MudTextField @bind-Value="_newPhoto.License" Label="Licence" Variant="Variant.Outlined" /></MudItem>
+                        <MudItem xs="12" md="4"><MudNumericField T="int" @bind-Value="_newPhoto.DisplayOrder" Label="Display order" Variant="Variant.Outlined" Min="0" /></MudItem>
+                        <MudItem xs="12" md="4"><MudSwitch T="bool" @bind-Value="_newPhoto.IsPrimary" Label="Primary photo" /></MudItem>
+                    </MudGrid>
+                    <MudButton Class="mt-2" Variant="Variant.Filled" Color="Color.Primary" Disabled="_busy" OnClick="UploadAsync">Upload @_selectedFile.Name</MudButton>
+                </MudPaper>
+            }
+            @if (_busy) { <MudProgressLinear Indeterminate="true" /> }
+            @if (_loaded && _photos.Count == 0) { <MudText Typo="Typo.body2">No photos have been attached.</MudText> }
+            <MudGrid>
+                @foreach (RigPhotoMetadata photo in _photos)
+                {
+                    <MudItem xs="12" md="6" lg="4" @key="photo.MetaInfo?.ID">
+                        <MudCard>
+                            @if (_dataUrls.TryGetValue(photo.MetaInfo!.ID, out string? url))
+                            { <MudCardMedia Image="@url" Height="220" Title="@photo.AlternativeText" /> }
+                            else
+                            { <MudButton FullWidth="true" Variant="Variant.Text" OnClick="@(() => LoadImageAsync(photo))">Load image</MudButton> }
+                            <MudCardContent>
+                                <MudTextField @bind-Value="photo.Title" Label="Title" Variant="Variant.Outlined" />
+                                <MudTextField @bind-Value="photo.AlternativeText" Label="Alternative text" Variant="Variant.Outlined" Class="mt-2" />
+                                <MudTextField @bind-Value="photo.Caption" Label="Caption" Variant="Variant.Outlined" Class="mt-2" />
+                                <MudTextField @bind-Value="photo.Source" Label="Source" Variant="Variant.Outlined" Class="mt-2" />
+                                <MudTextField @bind-Value="photo.Attribution" Label="Attribution" Variant="Variant.Outlined" Class="mt-2" />
+                                <MudTextField @bind-Value="photo.License" Label="Licence" Variant="Variant.Outlined" Class="mt-2" />
+                                <MudNumericField T="int" @bind-Value="photo.DisplayOrder" Label="Display order" Variant="Variant.Outlined" Min="0" Class="mt-2" />
+                                <MudSwitch T="bool" @bind-Value="photo.IsPrimary" Label="Primary photo" />
+                                <MudText Typo="Typo.caption">@FormatSize(photo.ByteLength) - @photo.ContentType</MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton OnClick="@(() => SaveAsync(photo))">Save metadata</MudButton>
+                                <MudButton Color="Color.Error" OnClick="@(() => DeleteAsync(photo))">Delete</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudStack>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+@code {
+    [Parameter, EditorRequired] public Guid RigId { get; set; }
+    private readonly List<RigPhotoMetadata> _photos=[]; private readonly Dictionary<Guid,string> _dataUrls=[];
+    private IBrowserFile? _selectedFile; private RigPhotoMetadata _newPhoto=new(); private bool _loaded; private bool _busy;
+    private Guid _loadedRigId;
+    protected override async Task OnParametersSetAsync()
+    {
+        if (RigId != Guid.Empty && RigId != _loadedRigId)
+        {
+            _loadedRigId = RigId;
+            await LoadAsync();
+        }
+    }
+    private void SelectFile(InputFileChangeEventArgs args) { _selectedFile=args.File; _newPhoto=new RigPhotoMetadata{Title=Path.GetFileNameWithoutExtension(args.File.Name),AlternativeText=Path.GetFileNameWithoutExtension(args.File.Name)}; }
+    private async Task LoadAsync()
+    {
+        _busy = true;
+        try
+        {
+            _photos.Clear();
+            _dataUrls.Clear();
+            _photos.AddRange(await RigApiClient.GetRigPhotosAsync(RigId));
+            int failedImages = 0;
+            foreach (RigPhotoMetadata photo in _photos)
+            {
+                try { await LoadImageCoreAsync(photo); }
+                catch { failedImages++; }
+            }
+            _loaded = true;
+            if (failedImages > 0)
+                Snackbar.Add($"{failedImages} photo image(s) could not be loaded; use the card button to retry.", Severity.Warning);
+        }
+        catch
+        {
+            Snackbar.Add("Photos could not be loaded.", Severity.Error);
+        }
+        finally { _busy = false; }
+    }
+    private async Task LoadImageAsync(RigPhotoMetadata photo)
+    {
+        _busy = true;
+        try { await LoadImageCoreAsync(photo); }
+        catch { Snackbar.Add("The image could not be loaded.", Severity.Error); }
+        finally { _busy = false; }
+    }
+    private async Task LoadImageCoreAsync(RigPhotoMetadata photo)
+    {
+        if (photo.MetaInfo == null) return;
+        _dataUrls[photo.MetaInfo.ID] = await RigApiClient.GetRigPhotoDataUrlAsync(RigId, photo.MetaInfo.ID);
+    }
+    private async Task UploadAsync() { if(_selectedFile==null)return;_busy=true;try{await using System.IO.Stream stream=_selectedFile.OpenReadStream(10*1024*1024);await RigApiClient.UploadRigPhotoAsync(RigId,stream,_selectedFile.Name,_selectedFile.ContentType,_newPhoto);_selectedFile=null;await LoadAsync();Snackbar.Add("Photo uploaded.",Severity.Success);}catch{Snackbar.Add("Upload failed. Use a JPEG, PNG, or WebP image no larger than 10 MiB.",Severity.Error);}finally{_busy=false;} }
+    private async Task SaveAsync(RigPhotoMetadata photo) { try{RigPhotoMetadata saved=await RigApiClient.UpdateRigPhotoAsync(RigId,photo);int i=_photos.IndexOf(photo);_photos[i]=saved;Snackbar.Add("Photo metadata saved.",Severity.Success);}catch{Snackbar.Add("Photo metadata could not be saved.",Severity.Error);} }
+    private async Task DeleteAsync(RigPhotoMetadata photo) { if(photo.MetaInfo==null)return;if(await RigApiClient.DeleteRigPhotoAsync(RigId,photo.MetaInfo.ID)==HttpStatusCode.OK){_photos.Remove(photo);_dataUrls.Remove(photo.MetaInfo.ID);Snackbar.Add("Photo deleted.",Severity.Success);} }
+    private static string FormatSize(long bytes) => bytes < 1024*1024 ? $"{bytes/1024d:F1} KiB" : $"{bytes/(1024d*1024d):F1} MiB";
+}

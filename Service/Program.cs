@@ -28,6 +28,11 @@ builder.Services.AddControllers()
 builder.Services.AddSwaggerGen(config =>
 {
     config.CustomSchemaIds(type => type.FullName);
+    // Preserve nullable value types when their schema is represented by a
+    // reference (notably optional enums). Without the allOf wrapper,
+    // OpenAPI 3.0 drops the nullable facet beside $ref and generated clients
+    // reject valid null values returned by the service.
+    config.UseAllOfToExtendReferenceSchemas();
 });
 
 builder.Services.Configure<McpHubOptions>(builder.Configuration.GetSection(McpHubOptions.SectionName));

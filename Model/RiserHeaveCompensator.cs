@@ -4,7 +4,6 @@ namespace OSDC.Drilling.Rig.Model
     {
         public RiserCompensatorClass? RiserCompensatorClass { get; set; }
         public double? CompensatorCapacity { get; set; }
-        public CompensatorStatus? CompensatorStatus { get; set; }
         public double? MaxLimitCompensatorStroke { get; set; }
 
         public RiserHeaveCompensator() { }

@@ -23,18 +23,6 @@ namespace OSDC.Drilling.Rig.Model
         public double? MinLimitVoltage { get; set; }
         public double? MaxLimitFrequency { get; set; }
         public double? MinLimitFrequency { get; set; }
-        public double? EnginePower { get; set; }
-        public double? GeneratorPower { get; set; }
-        public double? EngineFuelConsumption { get; set; }
-        public double? EngineSpecificFuelConsumption { get; set; }
-        public double? RunningHours { get; set; }
-        public double? EngineSpeed { get; set; }
-        public double? GeneratorVoltage { get; set; }
-        public double? GridVoltage { get; set; }
-        public double? GridFrequency { get; set; }
-        public double? GeneratorFrequency { get; set; }
-        public double? EngineTemperature { get; set; }
-
         public Generator() { }
     }
 }

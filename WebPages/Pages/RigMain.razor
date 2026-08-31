@@ -21,20 +21,8 @@
 </MudUnitAndReferenceChoiceTag>
 
 @code {
-    private static readonly HashSet<string> _excludedViewProperties = new(StringComparer.Ordinal)
-    {
-        nameof(Rig.MetaInfo),
-        nameof(Rig.Name),
-        nameof(Rig.Description),
-        nameof(Rig.CreationDate),
-        nameof(Rig.LastModificationDate),
-        nameof(Rig.IsFixedPlatform),
-        nameof(Rig.ClusterID)
-    };
-
     private List<RigLight> _rigs = new();
     private Dictionary<Guid, OSDC.Drilling.Rig.ModelShared.Cluster> _clusters = new();
-    private Rig? _selectedRig;
     private bool _isLoading = true;
     private string _searchText = string.Empty;
     private RenderFragment PageContent => @<MudStack Spacing="3">
@@ -71,8 +59,7 @@
                 <MudTd DataLabel="Last Modified">@context.LastModificationDate?.ToString("u")</MudTd>
                 <MudTd>
                     <MudStack Row="true" Spacing="1">
-                        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@(() => ViewRig(context))">View</MudButton>
-                        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@(() => EditRig(context))">Edit</MudButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Color="Color.Primary" OnClick="@(() => EditRig(context))" />
                         <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" OnClick="@(() => DeleteRig(context))">Delete</MudButton>
                     </MudStack>
                 </MudTd>
@@ -80,26 +67,6 @@
         </MudTable>
 }
 
-@if (_selectedRig != null)
-{
-        <MudPaper Class="pa-4" Outlined="true">
-            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-3">
-                <MudText Typo="Typo.h5">Rig details</MudText>
-                <MudButton Variant="Variant.Text" OnClick="CloseSelectedRig">Close</MudButton>
-            </MudStack>
-            <MudGrid>
-                <MudItem xs="12" md="6"><MudText><strong>Name:</strong> @_selectedRig.Name</MudText></MudItem>
-                <MudItem xs="12" md="6"><MudText><strong>Description:</strong> @_selectedRig.Description</MudText></MudItem>
-                <MudItem xs="12" md="6"><MudText><strong>Created:</strong> @_selectedRig.CreationDate?.ToString("u")</MudText></MudItem>
-                <MudItem xs="12" md="6"><MudText><strong>Last Modified:</strong> @_selectedRig.LastModificationDate?.ToString("u")</MudText></MudItem>
-                <MudItem xs="12" md="6"><MudText><strong>Fixed Platform:</strong> @(_selectedRig.IsFixedPlatform ? "Yes" : "No")</MudText></MudItem>
-                <MudItem xs="12" md="6"><MudText><strong>Cluster:</strong> @GetClusterName(_selectedRig.ClusterID)</MudText></MudItem>
-            </MudGrid>
-            <MudDivider Class="my-4" />
-            <MudText Typo="Typo.subtitle2" Class="mb-2">Rig definition</MudText>
-            <ModelObjectViewer Value="@_selectedRig" ModelType="@typeof(Rig)" ExcludedProperties="@_excludedViewProperties" />
-        </MudPaper>
-}
 </MudStack>;
 
 private IEnumerable<RigLight> FilteredRigs => _rigs.Where(r => string.IsNullOrWhiteSpace(_searchText)
@@ -123,11 +90,7 @@ private async Task LoadRigs()
         Logger.LogError(ex, "Failed to load rigs");
         Snackbar.Add("Failed to load rigs from the microservice.", Severity.Error);
     }
-    finally
-    {
-        await UpdateSelectedRigDepthReferenceSourceAsync();
-        _isLoading = false;
-    }
+    finally { _isLoading = false; }
 }
 
 private async Task Reload() => await LoadRigs();
@@ -144,25 +107,6 @@ private void CreateRig() => NavigationManager.NavigateTo(BuildPageUri("Rig/Edit"
 
 private void EditRig(RigLight rig) => NavigationManager.NavigateTo(BuildPageUri($"Rig/Edit/{rig.MetaInfo?.ID}"));
 
-private async Task ViewRig(RigLight rig)
-{
-    if (rig.MetaInfo == null)
-    {
-        return;
-    }
-
-    try
-    {
-        _selectedRig = await RigApiClient.GetRigAsync(rig.MetaInfo.ID);
-        await UpdateSelectedRigDepthReferenceSourceAsync();
-    }
-    catch (Exception ex)
-    {
-        Logger.LogError(ex, "Failed to load rig {RigId}", rig.MetaInfo.ID);
-        Snackbar.Add("Failed to load rig details.", Severity.Error);
-    }
-}
-
 private async Task DeleteRig(RigLight rig)
 {
     if (rig.MetaInfo == null)
@@ -176,11 +120,6 @@ private async Task DeleteRig(RigLight rig)
         if (statusCode == HttpStatusCode.OK)
         {
             Snackbar.Add("Rig deleted.", Severity.Success);
-            if (_selectedRig?.MetaInfo?.ID == rig.MetaInfo.ID)
-            {
-                _selectedRig = null;
-                await UpdateSelectedRigDepthReferenceSourceAsync();
-            }
             await LoadRigs();
         }
         else
@@ -195,12 +134,10 @@ private async Task DeleteRig(RigLight rig)
     }
 }
 
-private async Task OnRowClick(TableRowClickEventArgs<RigLight> args)
+private Task OnRowClick(TableRowClickEventArgs<RigLight> args)
 {
-    if (args.Item != null)
-    {
-        await ViewRig(args.Item);
-    }
+    if (args.Item != null) EditRig(args.Item);
+    return Task.CompletedTask;
 }
 
 private string GetClusterName(Guid? clusterId)
@@ -213,31 +150,6 @@ private string GetClusterName(Guid? clusterId)
     return _clusters.TryGetValue(clusterId.Value, out OSDC.Drilling.Rig.ModelShared.Cluster? cluster)
         ? cluster.Name ?? clusterId.Value.ToString()
         : clusterId.Value.ToString();
-}
-
-private OSDC.Drilling.Rig.ModelShared.Cluster? GetCluster(Guid? clusterId)
-{
-    if (!clusterId.HasValue)
-    {
-        return null;
-    }
-
-    return _clusters.TryGetValue(clusterId.Value, out OSDC.Drilling.Rig.ModelShared.Cluster? cluster)
-        ? cluster
-        : null;
-}
-
-private async Task CloseSelectedRig()
-{
-    _selectedRig = null;
-    await UpdateSelectedRigDepthReferenceSourceAsync();
-}
-
-private async Task UpdateSelectedRigDepthReferenceSourceAsync()
-{
-    DataUtils.ApplyRigReferenceValues(_selectedRig, _clusters);
-    DataUtils.UnitAndReferenceParameters.MeanSeaLevelDepthReferenceSource.MeanSeaLevelDepthReference =
-        await MslDepthReferenceUtils.ResolveMeanSeaLevelDepthReferenceAsync(Api, GetCluster(_selectedRig?.ClusterID));
 }
 
 private string BuildPageUri(string relativePath) =>

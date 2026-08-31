@@ -43,7 +43,6 @@ namespace OSDC.Drilling.Rig.ModelTest
             yield return typeof(CementPumpDisplacementPoint);
             yield return typeof(ChokeCvCurvePoint);
             yield return typeof(RoutingManifoldCurvePoint);
-            yield return typeof(RheometerAfmMeasurement);
             yield return typeof(BopStackComponentDefinition);
             yield return typeof(BopLineDefinition);
             yield return typeof(CountPerDay);
@@ -208,7 +207,36 @@ namespace OSDC.Drilling.Rig.ModelTest
             Assert.That(typeof(Model.Rig).GetProperty("MudTankList"), Is.Not.Null);
             Assert.That(typeof(Model.Rig).GetProperty("PitList"), Is.Null);
             Assert.That(typeof(RigMast).GetProperty("Derrick"), Is.Not.Null);
-            Assert.That(typeof(RigMast).GetProperty("HoistingSystem"), Is.Null);
+            Assert.That(typeof(RigMast).GetProperty("HoistingSystem"), Is.Not.Null);
+        }
+
+        [Test]
+        public void MudPump_UsesLinerSpecificPerformanceConfigurations()
+        {
+            Assert.That(typeof(MudPump).GetProperty(nameof(MudPump.LinerConfigurations)), Is.Not.Null);
+            Assert.That(typeof(MudPump).GetProperty("LinerId"), Is.Null);
+            Assert.That(typeof(MudPump).GetProperty("PumpDisplacement"), Is.Null);
+            Assert.That(typeof(MudPump).GetProperty("MaxLimitOperatingPressure"), Is.Null);
+            Assert.That(typeof(MudPump).GetProperty("MaxLimitOperatingFlowRate"), Is.Null);
+
+            MudPump pump = new()
+            {
+                Stroke = 0.3048,
+                LinerConfigurations =
+                [
+                    new MudPumpLinerConfiguration
+                    {
+                        LinerInnerDiameter = 0.1778,
+                        DisplacementPerStroke = 0.025,
+                        MaximumVolumetricFlowRate = 0.05,
+                        MaximumDischargePressure = 20_000_000
+                    }
+                ]
+            };
+
+            string json = JsonSerializer.Serialize(pump, JsonOptions);
+            Assert.That(json, Does.Contain("\"LinerConfigurations\""));
+            Assert.That(json, Does.Contain("\"MaximumDischargePressure\""));
         }
 
         [Test]
@@ -258,10 +286,7 @@ namespace OSDC.Drilling.Rig.ModelTest
                 "CasingDriveSystem",
                 "CoilDriveSystem",
                 "Derrick",
-                "Drawworks",
-                "CrownBlock",
-                "TravellingBlock",
-                "DrillLine",
+                "HoistingSystem",
                 "TorqueTurnSub",
                 "RotaryTable",
                 "TopDrive",
@@ -293,7 +318,48 @@ namespace OSDC.Drilling.Rig.ModelTest
                 Assert.That(equipmentType.IsSubclassOf(typeof(RigEquipmentBase)), Is.True, equipmentType.Name);
                 Assert.That(equipmentType.GetProperty(nameof(RigEquipmentBase.Name)), Is.Not.Null, equipmentType.Name);
                 Assert.That(equipmentType.GetProperty(nameof(RigEquipmentBase.Manufacturer)), Is.Not.Null, equipmentType.Name);
+                Assert.That(equipmentType.GetProperty(nameof(RigEquipmentBase.MeasurementCapabilities)), Is.Not.Null, equipmentType.Name);
             }
+        }
+
+        [Test]
+        public void RigMasterData_DoesNotExposeSpreadsheetLiveMeasurements()
+        {
+            (Type Type, string Property)[] removedMeasurements =
+            {
+                (typeof(Generator), "EnginePower"),
+                (typeof(TopDrive), "TopDriveHeight"),
+                (typeof(Kelly), "SurfaceRotation"),
+                (typeof(TorqueTurnSub), "SurfaceTorque"),
+                (typeof(CoilDriveSystem), "CtLoad"),
+                (typeof(CrownBlock), "Hookload"),
+                (typeof(TravellingBlock), "HookVelocity"),
+                (typeof(DrillLine), "Hookload"),
+                (typeof(BopStack), "CasingPressure"),
+                (typeof(MudPump), "MudPumpStrokeRate"),
+                (typeof(AuxSolidsControl), "DesanderOn"),
+                (typeof(FlowSensor), "MudFlowrateOut"),
+                (typeof(MeasurementAfm), "AfmMudDensity"),
+                (typeof(AutoDriller), "SetpointWob"),
+                (typeof(MpdController), "ControlledDownholePressure"),
+                (typeof(SurfaceMpdEquipment), "PressureAtDischarge"),
+                (typeof(DrillingChokeManifold), "PressureBeforeChoke"),
+                (typeof(FlowRoutingManifold), "InletPressure"),
+                (typeof(MultiPhaseSeparator), "PressureSeparator")
+            };
+
+            foreach ((Type type, string property) in removedMeasurements)
+                Assert.That(type.GetProperty(property), Is.Null, $"{type.Name}.{property}");
+        }
+
+        [Test]
+        public void WeakSpreadsheetFields_AreRepresentedStructurally()
+        {
+            Assert.That(typeof(BopStack).GetProperty(nameof(BopStack.UnitReferences))!.PropertyType, Is.EqualTo(typeof(List<string>)));
+            Assert.That(typeof(CementUnit).GetProperty(nameof(CementUnit.Capabilities))!.PropertyType, Is.EqualTo(typeof(List<string>)));
+            Assert.That(typeof(DrillingChokeManifold).GetProperty(nameof(DrillingChokeManifold.ChokeCount))!.PropertyType, Is.EqualTo(typeof(int?)));
+            Assert.That(typeof(DrillingChokeManifold).GetProperty(nameof(DrillingChokeManifold.FlowMeterCount))!.PropertyType, Is.EqualTo(typeof(int?)));
+            Assert.That(typeof(DrillingChokeManifold).GetProperty(nameof(DrillingChokeManifold.PressureSensorVotingNumber))!.PropertyType, Is.EqualTo(typeof(int?)));
         }
 
         [Test]
@@ -334,12 +400,38 @@ namespace OSDC.Drilling.Rig.ModelTest
             string[] expectedControllerValues =
             {
                 "Unknown",
-                "StiffPIPController",
-                "TunedPIPController",
-                "ImpedanceMatchingController"
+                "StiffPIController",
+                "TunedPIController",
+                "ImpedanceMatching"
             };
 
             Assert.That(Enum.GetNames(typeof(TopDriveControllerType)), Is.EqualTo(expectedControllerValues));
+        }
+
+        [Test]
+        public void Rig_ExposesCompatibleMasterDataLift()
+        {
+            string[] properties =
+            {
+                nameof(Model.Rig.Identification), nameof(Model.Rig.RigType), nameof(Model.Rig.OperatingEnvironment),
+                nameof(Model.Rig.MobilityType), nameof(Model.Rig.OperatingEnvelope), nameof(Model.Rig.MarineUnitProfile),
+                nameof(Model.Rig.JackUpProfile), nameof(Model.Rig.StationKeepingSystem), nameof(Model.Rig.StorageCapacities),
+                nameof(Model.Rig.FeatureAssignments)
+            };
+            foreach (string property in properties) Assert.That(typeof(Model.Rig).GetProperty(property), Is.Not.Null, property);
+            Assert.That(typeof(Model.Rig).GetProperty(nameof(Model.Rig.IsFixedPlatform)), Is.Not.Null);
+        }
+
+        [Test]
+        public void TopDrive_AddsCommercialRatingsWithoutRemovingControllerConfiguration()
+        {
+            string[] additions =
+            {
+                nameof(TopDrive.RatedPower), nameof(TopDrive.RatedHoistingCapacity), nameof(TopDrive.RatedContinuousTorque),
+                nameof(TopDrive.RatedIntermittentTorque), nameof(TopDrive.MotorCount), nameof(TopDrive.MotorType),
+                nameof(TopDrive.IbopConfiguration), nameof(TopDrive.AutomationSystemCompatibility)
+            };
+            foreach (string property in additions) Assert.That(typeof(TopDrive).GetProperty(property), Is.Not.Null, property);
         }
 
         [Test]

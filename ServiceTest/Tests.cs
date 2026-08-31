@@ -19,6 +19,7 @@ namespace ServiceTest
         private SqlConnectionManager _connectionManager = null!;
         private RigController _controller = null!;
         private RigFeatureCategoryController _featureController = null!;
+        private ExistingClusterResolver _externalResolver = null!;
 
         [SetUp]
         public void SetUp()
@@ -33,7 +34,8 @@ namespace ServiceTest
                 $"Data Source={_databaseFilePath}",
                 _loggerFactory.CreateLogger<SqlConnectionManager>());
 
-            _controller = new RigController(_loggerFactory.CreateLogger<RigManager>(), _connectionManager);
+            _externalResolver = new ExistingClusterResolver();
+            _controller = new RigController(_loggerFactory.CreateLogger<RigManager>(), _connectionManager, _externalResolver);
             _featureController = new RigFeatureCategoryController(_loggerFactory.CreateLogger<RigFeatureCategoryManager>(), _connectionManager);
         }
 
@@ -107,7 +109,7 @@ namespace ServiceTest
         {
             ActionResult actionResult = _controller.PostRig(null);
 
-            Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+            Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -117,7 +119,7 @@ namespace ServiceTest
 
             ActionResult actionResult = _controller.PostRig(rig);
 
-            Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+            Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
         }
 
         [Test]
@@ -129,8 +131,7 @@ namespace ServiceTest
 
             ActionResult duplicateResult = _controller.PostRig(rig);
 
-            Assert.That(duplicateResult, Is.TypeOf<StatusCodeResult>());
-            Assert.That(((StatusCodeResult)duplicateResult).StatusCode, Is.EqualTo(409));
+            Assert.That(duplicateResult, Is.TypeOf<ConflictObjectResult>());
         }
 
         [Test]
@@ -208,6 +209,7 @@ namespace ServiceTest
             rig.Name = "updated-rig";
             rig.Description = "updated-description";
             rig.IsFixedPlatform = !rig.IsFixedPlatform;
+            rig.ClusterID = rig.IsFixedPlatform ? Guid.NewGuid() : null;
 
             ActionResult<Rig> actionResult = _controller.PutRigById(id, originalLastModification!.Value, rig);
 
@@ -220,6 +222,48 @@ namespace ServiceTest
             Assert.That(updatedRig.IsFixedPlatform, Is.EqualTo(rig.IsFixedPlatform));
             Assert.That(updatedRig.LastModificationDate, Is.Not.Null);
             Assert.That(updatedRig.LastModificationDate, Is.GreaterThanOrEqualTo(originalLastModification));
+        }
+
+        [Test]
+        public void PostRig_RejectsFixedPlatformWithoutClusterReference()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "missing-cluster");
+            rig.ClusterID = null;
+
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public void PostRig_RejectsNonFixedRigWithClusterReference()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "unexpected-cluster");
+            rig.IsFixedPlatform = false;
+
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public void PostRig_RejectsUnknownClusterReference()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "unknown-cluster");
+            _externalResolver.Exists = false;
+
+            ActionResult result = _controller.PostRig(rig);
+
+            Assert.That(result, Is.TypeOf<ConflictObjectResult>());
+            Assert.That(_controller.GetRigById(rig.MetaInfo!.ID).Result, Is.TypeOf<NotFoundResult>());
+        }
+
+        [Test]
+        public void PostRig_ReturnsBadGatewayWhenClusterCannotBeVerified()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "cluster-service-down");
+            _externalResolver.Failure = new HttpRequestException("Cluster service unavailable.");
+
+            ObjectResult result = (ObjectResult)_controller.PostRig(rig);
+
+            Assert.That(result.StatusCode, Is.EqualTo(502));
+            Assert.That(_controller.GetRigById(rig.MetaInfo!.ID).Result, Is.TypeOf<NotFoundResult>());
         }
 
         [Test]
@@ -496,6 +540,18 @@ namespace ServiceTest
             object? value = ((OkObjectResult)actionResult!).Value;
             Assert.That(value, Is.TypeOf<T>());
             return (T)value!;
+        }
+
+        private sealed class ExistingClusterResolver : IRigExternalReferenceResolver
+        {
+            public bool Exists { get; set; } = true;
+            public HttpRequestException? Failure { get; set; }
+            public Task<bool> ClusterExistsAsync(Guid clusterId, CancellationToken cancellationToken) =>
+                Failure is not null ? Task.FromException<bool>(Failure) : Task.FromResult(Exists && clusterId != Guid.Empty);
+            public Task<List<RigBatchError>> PopulateExportManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken) =>
+                Task.FromResult(new List<RigBatchError>());
+            public Task<RigExternalReferenceResolutionOutcome> ResolveRestoreManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken) =>
+                Task.FromResult(new RigExternalReferenceResolutionOutcome());
         }
 
         private static void ResetRigManagerSingleton()

@@ -9,6 +9,10 @@ internal static class RigDefinitionValidator
     public static List<string> Validate(Model.Rig rig)
     {
         List<string> errors = [];
+        if (rig.IsFixedPlatform && (!rig.ClusterID.HasValue || rig.ClusterID == Guid.Empty))
+            errors.Add("ClusterID must be a non-empty UUID when IsFixedPlatform is true.");
+        if (!rig.IsFixedPlatform && rig.ClusterID.HasValue)
+            errors.Add("ClusterID must be null when IsFixedPlatform is false.");
         ValidateIdentification(rig.Identification, errors);
         ValidateEnvelope(rig.OperatingEnvelope, errors);
         ValidateMarine(rig.MarineUnitProfile, errors);

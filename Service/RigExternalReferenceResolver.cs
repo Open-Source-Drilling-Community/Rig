@@ -15,6 +15,7 @@ public sealed class RigExternalReferenceResolutionOutcome
 
 public interface IRigExternalReferenceResolver
 {
+    Task<bool> ClusterExistsAsync(Guid clusterId, CancellationToken cancellationToken);
     Task<List<RigBatchError>> PopulateExportManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken);
     Task<RigExternalReferenceResolutionOutcome> ResolveRestoreManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken);
 }
@@ -26,6 +27,16 @@ public sealed class RigExternalReferenceResolver : IRigExternalReferenceResolver
     private readonly IConfiguration _configuration;
     public RigExternalReferenceResolver(IHttpClientFactory clients, IConfiguration configuration)
     { _clients = clients; _configuration = configuration; }
+
+    public async Task<bool> ClusterExistsAsync(Guid clusterId, CancellationToken cancellationToken)
+    {
+        if (clusterId == Guid.Empty) return false;
+        using HttpClient client = CreateClusterClient();
+        using HttpResponseMessage response = await client.GetAsync($"Cluster/api/Cluster/{clusterId:D}", cancellationToken);
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return false;
+        response.EnsureSuccessStatusCode();
+        return true;
+    }
 
     public async Task<List<RigBatchError>> PopulateExportManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken)
     {
@@ -65,16 +76,22 @@ public sealed class RigExternalReferenceResolver : IRigExternalReferenceResolver
 
     private async Task<IReadOnlyList<ExternalResource>> ReadClustersAsync(CancellationToken cancellationToken)
     {
-        string? host = _configuration["ClusterHostURL"];
-        if (string.IsNullOrWhiteSpace(host)) throw new HttpRequestException("ClusterHostURL is not configured for Cluster reference resolution.");
-        using HttpClient client = _clients.CreateClient(nameof(RigExternalReferenceResolver));
-        client.BaseAddress = new Uri(host.EndsWith('/') ? host : host + "/");
+        using HttpClient client = CreateClusterClient();
         using HttpResponseMessage response = await client.GetAsync("Cluster/api/Cluster/LightData", cancellationToken);
         response.EnsureSuccessStatusCode();
         List<ExternalResourceDto>? values = await response.Content.ReadFromJsonAsync<List<ExternalResourceDto>>(
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }, cancellationToken);
         return (values ?? []).Where(value => value.MetaInfo?.ID is Guid id && id != Guid.Empty)
             .Select(value => new ExternalResource(value.MetaInfo!.ID, value.Name ?? string.Empty)).ToList();
+    }
+
+    private HttpClient CreateClusterClient()
+    {
+        string? host = _configuration["ClusterHostURL"];
+        if (string.IsNullOrWhiteSpace(host)) throw new HttpRequestException("ClusterHostURL is not configured for Cluster reference resolution.");
+        HttpClient client = _clients.CreateClient(nameof(RigExternalReferenceResolver));
+        client.BaseAddress = new Uri(host.EndsWith('/') ? host : host + "/");
+        return client;
     }
 
     private static List<RigBatchExternalReference> BuildManifest(IEnumerable<Guid?> ids, IReadOnlyList<ExternalResource> available, List<RigBatchError> errors)

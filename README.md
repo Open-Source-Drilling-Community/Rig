@@ -77,6 +77,7 @@ The current work has been funded by the [Research Council of Norway](https://www
 - Rig features provide seven immutable built-in capability catalogs plus user-created catalogs. Assignments are validated atomically for category/option integrity, exclusivity, deprecation and validity periods.
 - Feature-category create generates server-owned UUIDs. Updates use optimistic concurrency; referenced definitions and built-ins cannot be deleted.
 - Full rig replacements use optimistic concurrency through `expectedModifiedUtc`; the service preserves `CreationDate`, assigns the new `LastModificationDate`, and rejects stale writes with HTTP 409.
+- Rig writes enforce the platform relationship: fixed-platform rigs require a non-empty `ClusterID`, non-fixed rigs must omit it, and referenced Clusters are verified live before create or replacement. An unavailable Cluster service rejects the write without changing Rig data.
 - Lightweight rig discovery includes rig type, operating environment, and mobility classification so catalogs can be filtered without retrieving complete equipment trees.
 - The SQLite catalog migration is additive: adding `RigFeatureCategoryTable` does not rebuild or delete `RigTable`.
 - One or more JPEG, PNG, or WebP photographs can be attached to a rig. Photo metadata and binary content are persisted separately from the Rig JSON, normal reads remain lightweight, and `includePhotos=true` opts into metadata only.

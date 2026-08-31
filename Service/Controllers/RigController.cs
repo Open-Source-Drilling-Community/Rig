@@ -140,7 +140,11 @@ namespace OSDC.Drilling.Rig.Service.Controllers
         /// <param name="rig"></param>
         /// <returns>true if the given Rig has been added successfully to the microservice database, at the endpoint Rig/api/Rig</returns>
         [HttpPost(Name = "PostRig")]
-        public ActionResult PostRig([FromBody] Model.Rig? data)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status409Conflict)]
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status502BadGateway)]
+        public async Task<ActionResult> PostRig([FromBody] Model.Rig? data, CancellationToken cancellationToken = default)
         {
             UsageStatisticsRig.Instance.IncrementPostRigPerDay();
             // Check if rig exists in the database through ID
@@ -148,7 +152,9 @@ namespace OSDC.Drilling.Rig.Service.Controllers
             {
                 List<string> featureErrors = _featureManager.ValidateAssignments(data.FeatureAssignments);
                 featureErrors.AddRange(RigDefinitionValidator.Validate(data));
-                if (featureErrors.Count > 0) return BadRequest(new { error = "invalid_rig_definition", errors = featureErrors });
+                if (featureErrors.Count > 0) return BadRequest(DefinitionError(featureErrors));
+                ActionResult? referenceFailure = await ValidateClusterReferenceAsync(data, cancellationToken);
+                if (referenceFailure is not null) return referenceFailure;
                 var existingData = _rigManager.GetRigById(data.MetaInfo.ID);
                 if (existingData == null)
                 {   
@@ -166,15 +172,27 @@ namespace OSDC.Drilling.Rig.Service.Controllers
                 else
                 {
                     _logger.LogWarning("The given Rig already exists and will not be added");
-                    return StatusCode(StatusCodes.Status409Conflict);
+                    return Conflict(new RigMutationErrorEnvelope
+                    {
+                        Error = "rig_already_exists", Message = "A rig with this UUID already exists.",
+                        Errors = [new RigMutationError { Property = "rig.MetaInfo.ID", Code = "duplicate_uuid", Message = "Use the existing UUID only when replacing that rig." }]
+                    });
                 }
             }
             else
             {
                 _logger.LogWarning("The given Rig is null, badly formed, or its ID is empty");
-                return BadRequest();
+                return BadRequest(new RigMutationErrorEnvelope
+                {
+                    Error = "invalid_request", Message = "A rig with a non-empty MetaInfo.ID is required.",
+                    Errors = [new RigMutationError { Property = "rig.MetaInfo.ID", Code = "required", Message = "Supply a caller-generated, non-empty UUID." }]
+                });
             }
         }
+
+        [NonAction]
+        public ActionResult PostRig(Model.Rig? data) =>
+            PostRig(data, CancellationToken.None).GetAwaiter().GetResult();
 
         /// <summary>
         /// Performs calculation on the given Rig and updates it in the microservice database, at the endpoint Rig/api/Rig/id
@@ -187,8 +205,10 @@ namespace OSDC.Drilling.Rig.Service.Controllers
         [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status404NotFound)]
         [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status409Conflict)]
         [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Model.Rig> PutRigById(Guid id,
-            [FromQuery, BindRequired] DateTimeOffset expectedModifiedUtc, [FromBody] Model.Rig? data)
+        [ProducesResponseType<RigMutationErrorEnvelope>(StatusCodes.Status502BadGateway)]
+        public async Task<ActionResult<Model.Rig>> PutRigById(Guid id,
+            [FromQuery, BindRequired] DateTimeOffset expectedModifiedUtc, [FromBody] Model.Rig? data,
+            CancellationToken cancellationToken = default)
         {
             UsageStatisticsRig.Instance.IncrementPutRigByIdPerDay();
             // Check if Rig is in the data base
@@ -196,12 +216,10 @@ namespace OSDC.Drilling.Rig.Service.Controllers
             {
                 List<string> featureErrors = _featureManager.ValidateAssignments(data.FeatureAssignments);
                 featureErrors.AddRange(RigDefinitionValidator.Validate(data));
-                if (featureErrors.Count > 0) return BadRequest(new RigMutationErrorEnvelope
-                {
-                    Error = "invalid_rig_definition", Message = "The rig definition is invalid.",
-                    Errors = featureErrors.Select(message => new RigMutationError
-                    { Property = "rig", Code = "invalid_value", Message = message }).ToList()
-                });
+                if (featureErrors.Count > 0) return BadRequest(DefinitionError(featureErrors));
+                ActionResult? referenceFailure = await ValidateClusterReferenceAsync(data, cancellationToken);
+                if (referenceFailure is ObjectResult objectResult)
+                    return new ObjectResult(objectResult.Value) { StatusCode = objectResult.StatusCode };
                 RigUpdateOutcome outcome = _rigManager.UpdateRigById(id, expectedModifiedUtc, data);
                 if (outcome.IsSuccess) return Ok(outcome.Rig);
                 return outcome.FailureKind switch
@@ -223,6 +241,10 @@ namespace OSDC.Drilling.Rig.Service.Controllers
                 });
             }
         }
+
+        [NonAction]
+        public ActionResult<Model.Rig> PutRigById(Guid id, DateTimeOffset expectedModifiedUtc, Model.Rig? data) =>
+            PutRigById(id, expectedModifiedUtc, data, CancellationToken.None).GetAwaiter().GetResult();
 
         /// <summary>
         /// Deletes the Rig of given ID from the microservice database, at the endpoint Rig/api/Rig/id
@@ -323,8 +345,40 @@ namespace OSDC.Drilling.Rig.Service.Controllers
             Errors = [new RigBatchError { Property = "ExternalReferences", Code = "dependency_unavailable", Message = message }]
         };
 
+        private async Task<ActionResult?> ValidateClusterReferenceAsync(Model.Rig rig, CancellationToken cancellationToken)
+        {
+            if (!rig.IsFixedPlatform || !rig.ClusterID.HasValue) return null;
+            try
+            {
+                if (await _externalReferenceResolver.ClusterExistsAsync(rig.ClusterID.Value, cancellationToken)) return null;
+                return Conflict(new RigMutationErrorEnvelope
+                {
+                    Error = "external_reference_invalid", Message = "The referenced Cluster does not exist.",
+                    Errors = [new RigMutationError { Property = "rig.ClusterID", Code = "external_reference_not_found", Message = $"Cluster UUID '{rig.ClusterID}' was not found by the Cluster service." }]
+                });
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Unable to validate Cluster reference {ClusterId}", rig.ClusterID);
+                return StatusCode(StatusCodes.Status502BadGateway, new RigMutationErrorEnvelope
+                {
+                    Error = "external_reference_service_unavailable", Message = "Cluster reference validation could not be completed. No changes were made.",
+                    Errors = [new RigMutationError { Property = "rig.ClusterID", Code = "dependency_unavailable", Message = ex.Message }]
+                });
+            }
+        }
+
+        private static RigMutationErrorEnvelope DefinitionError(IEnumerable<string> messages) => new()
+        {
+            Error = "invalid_rig_definition", Message = "The rig definition is invalid.",
+            Errors = messages.Select(message => new RigMutationError
+            { Property = message.StartsWith("ClusterID", StringComparison.Ordinal) ? "rig.ClusterID" : "rig", Code = "invalid_value", Message = message }).ToList()
+        };
+
         private sealed class UnavailableExternalReferenceResolver : IRigExternalReferenceResolver
         {
+            public Task<bool> ClusterExistsAsync(Guid clusterId, CancellationToken cancellationToken) =>
+                throw new HttpRequestException("Cluster reference resolution is not configured for this controller instance.");
             public Task<List<RigBatchError>> PopulateExportManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken) =>
                 throw new HttpRequestException("Cluster reference resolution is not configured for this controller instance.");
             public Task<RigExternalReferenceResolutionOutcome> ResolveRestoreManifestAsync(RigBatchExportDocument document, CancellationToken cancellationToken) =>

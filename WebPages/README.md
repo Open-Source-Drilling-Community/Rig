@@ -13,7 +13,7 @@ It contains the `RigMain`, `RigEdit`, `RigFeatures`, `RigBackupRestore`, and `St
 - Automatically displayed rig photo gallery with JPEG, PNG, and WebP upload, descriptive metadata, primary-photo selection, and a manual refresh/retry option
 - Unit-aware mud-pump liner performance table for adding and removing the supported liner sizes and their associated flow and pressure ratings
 - Batch backup/restore page for all rigs or a selected set, including dependency summaries, photographs, local feature-catalog mapping policy, UUID-conflict policy, atomic server validation, and JSON download/upload
-- Usage statistics page
+- Persistent usage-statistics page with summary totals and sortable endpoint activity
 - Rig tree and editor components
 - Host-configurable API access through injected configuration
 

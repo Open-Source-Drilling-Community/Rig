@@ -2,7 +2,7 @@
 
 `WebApp` is the server-side Blazor user interface for the Rig microservice.
 
-It provides an interactive web client for listing, creating, editing, and deleting Rig entities, managing custom rig-feature catalogs, and viewing simple usage statistics exposed by the service. The application is designed to sit in front of the Rig API and related supporting services such as Field, Cluster, Vertical Datum, and Unit Conversion.
+It provides an interactive web client for listing, creating, editing, and deleting Rig entities, managing custom rig-feature catalogs, and viewing persistent usage statistics exposed by the service. The application is designed to sit in front of the Rig API and related supporting services such as Field, Cluster, Vertical Datum, and Unit Conversion.
 
 ## Purpose
 
@@ -16,7 +16,7 @@ Its main responsibilities are:
 - managing custom rig-feature categories and options
 - creating and deleting rigs
 - loading related Field and Cluster data from external services
-- presenting basic usage statistics from the Rig API
+- presenting persistent usage summaries and endpoint totals from the Rig API
 
 ## Technology Stack
 
@@ -49,8 +49,8 @@ The main user-facing pages are:
 - `RigMain`: searchable catalog whose rows open the rig editor directly.
 - `RigEdit`: create/update editor with tree-based navigation of the complete nested Rig object graph.
 - `RigFeatures`: catalog for viewing built-in feature definitions and managing custom categories and options.
-- [`Pages/StatisticsMain.razor`](C:\OSDC\Rig\WebApp\Pages\StatisticsMain.razor)
-  Summary view of usage statistics returned by the Rig service.
+- [`Pages/StatisticsRig.razor`](C:\OSDC\Rig\WebPages\Pages\StatisticsRig.razor)
+  Persistent usage summary and sortable endpoint breakdown returned by the Rig service.
 
 The component library under [`Components`](C:\OSDC\Rig\WebApp\Components) contains reusable editors and viewers for the many nested rig-related model types.
 

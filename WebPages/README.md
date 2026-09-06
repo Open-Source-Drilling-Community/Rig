@@ -1,5 +1,7 @@
 # OSDC.Drilling.Rig.WebPages
 
+This release targets MudBlazor 9.9.0 and the matching OSDC shared web component packages.
+
 Reusable Razor class library for the Rig web UI.
 
 It contains the `RigMain`, `RigEdit`, `RigFeatures`, `RigBackupRestore`, and `StatisticsMain` pages together with the editor components, API clients, and helper utilities they depend on.

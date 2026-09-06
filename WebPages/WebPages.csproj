@@ -19,13 +19,13 @@
     <PackageProjectUrl>https://github.com/Open-Source-Drilling-Community/Rig</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="8.14.0" />
-    <PackageReference Include="OSDC.DotnetLibraries.Drilling.WebAppUtils" Version="1.1.3" />
-    <PackageReference Include="OSDC.UnitConversion.DrillingRazorMudComponents" Version="3.4.1" />
+    <PackageReference Include="MudBlazor" Version="9.9.0" />
+    <PackageReference Include="OSDC.DotnetLibraries.Drilling.WebAppUtils" Version="1.1.5" />
+    <PackageReference Include="OSDC.UnitConversion.DrillingRazorMudComponents" Version="3.4.2" />
     <PackageReference Include="Plotly.Blazor" Version="6.0.2" />
   </ItemGroup>
 

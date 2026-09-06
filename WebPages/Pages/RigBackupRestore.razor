@@ -184,7 +184,7 @@
     private async Task RestoreAsync()
     {
         if (!CanRestore || _document == null) return;
-        bool? confirmed = await DialogService.ShowMessageBox("Restore rigs",
+        bool? confirmed = await DialogService.ShowMessageBoxAsync("Restore rigs",
             _conflictPolicy == RigBatchRestoreConflictPolicy.ReplaceExisting
                 ? $"Restore {_document.Rigs.Count} rig(s) and replace UUID collisions and photographs?"
                 : $"Restore {_document.Rigs.Count} rig(s)? Any UUID collision stops the operation.",

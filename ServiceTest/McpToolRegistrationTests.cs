@@ -134,11 +134,13 @@ public sealed class McpToolRegistrationTests
         JsonNode categoryBody = _tools["rig_feature_category_create"].InputSchema["properties"]!["category"]!;
         JsonNode batchBody = _tools["rig_batch_restore"].InputSchema["properties"]!["request"]!;
         JsonNode rigResult = _tools["rig_get_by_id"].OutputSchema["properties"]!["data"]!;
+        JsonNode createdRig = _tools["rig_create"].OutputSchema["properties"]!["data"]!;
 
         Assert.That(rigBody["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/Rig"));
         Assert.That(categoryBody["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/RigFeatureCategory"));
         Assert.That(batchBody["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/RigBatchRestoreRequest"));
         Assert.That(rigResult["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/RigReadResponse"));
+        Assert.That(createdRig["$ref"]?.GetValue<string>(), Is.EqualTo("#/$defs/Rig"));
         Assert.That(rigBody["anyOf"], Is.Null);
         Assert.That(categoryBody["anyOf"], Is.Null);
         Assert.That(batchBody["anyOf"], Is.Null);

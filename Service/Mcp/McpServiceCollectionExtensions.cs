@@ -45,7 +45,7 @@ public static class McpServiceCollectionExtensions
         "rig_get_by_id" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(RigReadResponse)),
         "rig_get_all" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(RigReadResponse), true),
         "rig_get_all_light" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(RigLight), true),
-        "rig_update_by_id" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(Model.Rig)),
+        "rig_create" or "rig_update_by_id" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(Model.Rig)),
         "rig_batch_export" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(RigBatchExportDocument)),
         "rig_batch_restore" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(RigBatchRestoreResponse)),
         "rig_feature_category_get_all" => McpToolArgumentHelpers.CreateResourceOutputSchema(typeof(RigFeatureCategory), true),

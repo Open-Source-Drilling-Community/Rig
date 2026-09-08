@@ -221,6 +221,10 @@ namespace OSDC.Drilling.Rig.Service.Managers
                         {
                             string data = reader.GetString(0);
                             rig = DeserializeRig(data);
+                            if (rig != null)
+                            {
+                                rig.LastModificationDate ??= rig.CreationDate ?? DateTimeOffset.UnixEpoch;
+                            }
                             if (rig != null && rig.MetaInfo != null && !rig.MetaInfo.ID.Equals(guid))
                                 throw new SqliteException("SQLite database corrupted: returned Rig is null or has been jsonified with the wrong ID.", 1);
                         }
@@ -269,6 +273,10 @@ namespace OSDC.Drilling.Rig.Service.Managers
                     {
                         string data = reader.GetString(0);
                         Model.Rig? rig = DeserializeRig(data);
+                        if (rig != null)
+                        {
+                            rig.LastModificationDate ??= rig.CreationDate ?? DateTimeOffset.UnixEpoch;
+                        }
                         vals.Add(rig);
                     }
                     _logger.LogInformation("Returning the list of existing Rig from RigTable");
@@ -354,6 +362,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
                         // make sure DateTimeOffset are properly instantiated when stored values are null (and parsed as empty string)
                         DateTimeOffset? creationDate = TryReadDateTimeOffset(reader, 3);
                         DateTimeOffset? lastModificationDate = TryReadDateTimeOffset(reader, 4);
+                        lastModificationDate ??= creationDate ?? DateTimeOffset.UnixEpoch;
                         bool isFixedPlatform = !reader.IsDBNull(5) && reader.GetBoolean(5);
                         Guid? clusterID = null;
                         if (!reader.IsDBNull(6) && Guid.TryParse(reader.GetString(6), out Guid id))
@@ -410,9 +419,12 @@ namespace OSDC.Drilling.Rig.Service.Managers
                         try
                         {
                             //add the Rig to the RigTable
+                            DateTimeOffset now = DateTimeOffset.UtcNow;
+                            rig.CreationDate = now;
+                            rig.LastModificationDate = now;
                             string metaInfo = JsonSerializer.Serialize(rig.MetaInfo, JsonSettings.Options);
-                            string? cDate = FormatDateTimeOffset(rig.CreationDate);
-                            string? lDate = FormatDateTimeOffset(rig.LastModificationDate);
+                            string? cDate = FormatDateTimeOffset(now);
+                            string? lDate = cDate;
                             string data = JsonSerializer.Serialize(rig, JsonSettings.Options);
                             var command = connection.CreateCommand();
                             command.Transaction = transaction;
@@ -511,10 +523,11 @@ namespace OSDC.Drilling.Rig.Service.Managers
                     storedModified = TryReadDateTimeOffset(reader, 1);
                 }
 
-                if (!storedModified.HasValue || storedModified.Value.UtcTicks != expectedModifiedUtc.UtcTicks)
+                DateTimeOffset effectiveModified = storedModified ?? storedCreated ?? DateTimeOffset.UnixEpoch;
+                if (effectiveModified.UtcTicks != expectedModifiedUtc.UtcTicks)
                 {
                     transaction.Rollback();
-                    return RigUpdateOutcome.Conflict(storedModified);
+                    return RigUpdateOutcome.Conflict(effectiveModified);
                 }
 
                 rig.CreationDate = storedCreated;

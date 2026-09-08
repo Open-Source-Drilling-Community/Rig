@@ -24,8 +24,8 @@ public static class RigRestMcpToolRegistrations
             (sp, _, ct) => Invoke(ct, () => Controller(sp).GetAllRigLight()));
         services.AddLegacyMcpTool("rig_get_all", "Retrieve every rig with its complete nested mast and equipment configuration, including static ratings, limits, and instrumentation capabilities but no live telemetry. This can produce a very large response, so prefer rig_get_all_ids, rig_get_all_meta_info, or rig_get_all_light for discovery and rig_get_by_id for one selected rig. Physical values use SI units. Photo metadata is excluded unless includePhotos is true; image bytes are never placed in MCP results.", McpToolArgumentHelpers.CreateRigReadSchema(includeId: false),
             (sp, args, ct) => Invoke(ct, () => Controller(sp).GetAllRig(ReadIncludePhotos(args))));
-        services.AddLegacyMcpTool("rig_create", "Persist a new complete rig master-data configuration. Generate a non-empty rig.MetaInfo.ID first; an existing UUID produces a conflict. A fixed platform requires IsFixedPlatform true and a non-empty ClusterID that is verified live against the Cluster service; a non-fixed rig requires ClusterID null. Dependency failure rejects the write without persisting it. Send static equipment specifications and limits in SI units.", McpToolArgumentHelpers.CreateRigSchema(),
-            (sp, args, ct) => InvokeWithBodyAsync<RigModel>(args, "rig", ct, (data, token) => Controller(sp).PostRig(data, token)));
+        services.AddLegacyMcpTool("rig_create", "Persist a new complete rig master-data configuration and return it with server-owned CreationDate and LastModificationDate. Generate a non-empty rig.MetaInfo.ID first; an existing UUID produces a conflict. A fixed platform requires IsFixedPlatform true and a non-empty ClusterID that is verified live against the Cluster service; a non-fixed rig requires ClusterID null. Dependency failure rejects the write without persisting it. Send static equipment specifications and limits in SI units.", McpToolArgumentHelpers.CreateRigSchema(),
+            InvokeRigCreate);
         services.AddLegacyMcpTool("rig_update_by_id", "Replace an existing rig master-data configuration using expectedModifiedUtc from the latest read for optimistic concurrency. The path id must exactly match rig.MetaInfo.ID or the request is rejected. Send the complete desired representation because omitted equipment is removed; the server assigns LastModificationDate. Fixed-platform ClusterID references are verified live, while non-fixed rigs must leave ClusterID null; failed verification changes nothing.", McpToolArgumentHelpers.CreateRigSchema(includeId: true),
             (sp, args, ct) => InvokeRigUpdate(sp, args, ct));
         services.AddLegacyMcpTool("rig_delete_by_id", "Permanently delete the stored rig identified by UUID. Use a read operation first when the target is uncertain. The operation returns not found when the UUID is unknown; it accepts a Rig resource UUID, not a Cluster UUID or equipment identifier.", McpToolArgumentHelpers.CreateGuidSchema("id", "UUID of the rig to delete."),
@@ -103,6 +103,23 @@ public static class RigRestMcpToolRegistrations
         if (!DateTimeOffset.TryParse(args?["expectedModifiedUtc"]?.GetValue<string>(), out DateTimeOffset expected))
             return McpToolResponses.CreateValidationError("Argument 'expectedModifiedUtc' must be an ISO 8601 timestamp.");
         return McpActionResultConverter.FromActionResult(await Controller(sp).PutRigById(id, expected, rig, ct));
+    }
+
+    private static async Task<JsonNode?> InvokeRigCreate(
+        IServiceProvider serviceProvider, JsonObject? arguments, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (!TryDeserialize(arguments, "rig", out RigModel? rig, out JsonNode? error))
+        {
+            return error;
+        }
+
+        ActionResult result = await Controller(serviceProvider).PostRig(rig, cancellationToken);
+        JsonObject response = McpActionResultConverter.FromActionResult(result);
+        int status = response["status"]?.GetValue<int>() ?? 500;
+        return status is >= 200 and <= 299 && rig != null
+            ? McpActionResultConverter.FromActionResult(new OkObjectResult(rig))
+            : response;
     }
 
     private static async Task<JsonNode?> InvokeWithBodyAsync<T>(JsonObject? args, string bodyName, CancellationToken ct,

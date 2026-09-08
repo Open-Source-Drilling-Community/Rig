@@ -7,6 +7,8 @@ namespace OSDC.Drilling.Rig.Service.Mcp.Tools;
 
 internal static class McpToolArgumentHelpers
 {
+    private static readonly NullabilityInfoContext Nullability = new();
+
     private static readonly IReadOnlyDictionary<string, string> ScalarUnits =
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -291,7 +293,7 @@ internal static class McpToolArgumentHelpers
     {
         Type? underlying = Nullable.GetUnderlyingType(declaredType);
         Type type = underlying ?? declaredType;
-        nullable |= underlying is not null || (!type.IsValueType && type != typeof(string));
+        nullable |= underlying is not null;
 
         if (type == typeof(string)) return Primitive("string", nullable);
         if (type == typeof(bool)) return Primitive("boolean", nullable);
@@ -326,7 +328,7 @@ internal static class McpToolArgumentHelpers
             var properties = new JsonObject();
             foreach (PropertyInfo property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.CanRead && p.CanWrite))
             {
-                JsonObject propertySchema = TypeSchema(property.PropertyType, definitions, nullable: false);
+                JsonObject propertySchema = TypeSchema(property.PropertyType, definitions, IsNullable(property));
                 propertySchema["description"] = DescribeProperty(property);
                 properties[property.Name] = propertySchema;
             }
@@ -367,6 +369,10 @@ internal static class McpToolArgumentHelpers
             .FirstOrDefault(candidate => candidate.IsGenericType && candidate.GetGenericTypeDefinition() == typeof(IEnumerable<>))
             ?.GetGenericArguments()[0];
     }
+
+    private static bool IsNullable(PropertyInfo property) =>
+        Nullable.GetUnderlyingType(property.PropertyType) is not null ||
+        (!property.PropertyType.IsValueType && Nullability.Create(property).ReadState is not NullabilityState.NotNull);
 
     private static string DescribeType(Type type)
     {

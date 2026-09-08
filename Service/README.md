@@ -265,6 +265,7 @@ The schema documents caller-owned `MetaInfo.ID` values, the update path/body ID 
 
 Every MCP tool publishes a human-readable title, exact input and success-output JSON Schemas, and read-only/destructive/idempotent/open-world annotations. Successes return schema-conforming structured content plus a JSON text fallback. Failures set `isError=true`, return a stable `{error,message,errors}` JSON text envelope, and omit structured content so it cannot conflict with the success schema.
 Required resource bodies (`rig`, `category`, and batch requests) and single-resource success payloads use direct, non-null `$ref` schemas. Optional nested components retain their declared nullability.
+Nullable reference strings are also emitted as `string | null` in MCP schemas, matching the C# nullable annotations and persisted legacy records.
 
 - Streamable HTTP: `/rig/api/mcp`
 - WebSocket: `/rig/api/mcp/ws`

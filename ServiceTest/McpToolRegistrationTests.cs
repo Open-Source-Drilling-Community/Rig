@@ -148,6 +148,19 @@ public sealed class McpToolRegistrationTests
     }
 
     [Test]
+    public void Output_schema_preserves_nullable_reference_string_annotations()
+    {
+        JsonObject definitions = (JsonObject)_tools["rig_get_by_id"].OutputSchema["$defs"]!;
+        JsonNode manufacturer = definitions["CrownBlock"]!["properties"]!["Manufacturer"]!;
+        JsonNode name = definitions["RigReadResponse"]!["properties"]!["Name"]!;
+
+        Assert.That(manufacturer["type"]!.AsArray().Select(node => node!.GetValue<string>()),
+            Is.EquivalentTo(new[] { "string", "null" }));
+        Assert.That(name["type"]!.AsArray().Select(node => node!.GetValue<string>()),
+            Is.EquivalentTo(new[] { "string", "null" }));
+    }
+
+    [Test]
     public void Protocol_tools_publish_output_schemas_titles_and_behavior_annotations()
     {
         foreach (McpServerTool serverTool in _provider.GetServices<McpServerTool>())

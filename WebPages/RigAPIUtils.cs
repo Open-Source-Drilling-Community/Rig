@@ -33,7 +33,7 @@ public class RigAPIUtils : APIUtils, IRigAPIUtils
     public string HostNameCluster { get; }
     public string HostBasePathCluster => "Cluster/api/";
     public string HostNameVerticalDatum { get; }
-    public string HostBasePathVerticalDatum => "VerticalDatum/api/";
+    public string HostBasePathVerticalDatum => "EarthVerticalDatum/api/";
 
     public HttpClient CreateHttpClient(string host, string microServiceUri)
     {

@@ -10,8 +10,8 @@ public static class MslDepthReferenceUtils
     {
         return CalculateMeanSeaLevelDepthReferenceAsync(
             api,
-            cluster?.ReferenceLatitude?.GaussianValue?.Mean,
-            cluster?.ReferenceLongitude?.GaussianValue?.Mean);
+            cluster?.ReferencePoint?.Latitude,
+            cluster?.ReferencePoint?.Longitude);
     }
 
     private static async Task<double?> CalculateMeanSeaLevelDepthReferenceAsync(IRigAPIUtils api, double? latitude, double? longitude)
@@ -21,54 +21,22 @@ public static class MslDepthReferenceUtils
             return null;
         }
 
-        using HttpClient client = api.CreateHttpClient(api.HostNameVerticalDatum, api.HostBasePathVerticalDatum);
-        Guid orderId = Guid.NewGuid();
-        object order = new
+        using HttpClient httpClient = api.CreateHttpClient(api.HostNameVerticalDatum, api.HostBasePathVerticalDatum);
+        RigModel.Client client = new(httpClient.BaseAddress!.ToString(), httpClient);
+        RigModel.MeanSeaLevelToWgs84Request request = new()
         {
-            MetaInfo = new { ID = orderId, HttpHostName = api.HostNameVerticalDatum, HttpHostBasePath = api.HostBasePathVerticalDatum, HttpEndPoint = "VerticalDatumOrder/" },
-            Name = $"MSL reference {orderId}",
-            Description = "Temporary MSL-to-WGS84 conversion.",
-            CreationDate = DateTimeOffset.UtcNow,
-            LastModificationDate = DateTimeOffset.UtcNow,
-            VerticalDatum = new
-            {
-                MetaInfo = new { ID = Guid.NewGuid(), HttpHostName = api.HostNameVerticalDatum, HttpHostBasePath = api.HostBasePathVerticalDatum, HttpEndPoint = "VerticalDatum/" },
-                Name = $"MSL reference {orderId}",
-                Description = "Temporary MSL-to-WGS84 conversion.",
-                CreationDate = DateTimeOffset.UtcNow,
-                LastModificationDate = DateTimeOffset.UtcNow,
-                DatumSet = new[] { new { Latitude = latitude.Value, Longitude = longitude.Value, GenericVerticalDatum = 0 } },
-                ConversionFrom = "FromMeanSeaLevel",
-                Type = "Raw"
-            }
+            Positions =
+            [
+                new RigModel.EarthVerticalDatumPosition
+                {
+                    Latitude = latitude.Value,
+                    Longitude = longitude.Value,
+                    MeanSeaLevelDepth = 0
+                }
+            ]
         };
-
-        try
-        {
-            using HttpResponseMessage postResponse = await client.PostAsJsonAsync("VerticalDatumOrder", order);
-            postResponse.EnsureSuccessStatusCode();
-
-            using JsonDocument document = await client.GetFromJsonAsync<JsonDocument>($"VerticalDatumOrder/{orderId}") ?? throw new InvalidOperationException("VerticalDatumOrder response was empty.");
-            JsonElement datumSet = document.RootElement.GetProperty("VerticalDatum").GetProperty("DatumSet");
-            if (datumSet.GetArrayLength() == 0 ||
-                !datumSet[0].TryGetProperty("VerticalDatumWGS64", out JsonElement valueElement) ||
-                valueElement.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-
-            return -valueElement.GetDouble();
-        }
-        finally
-        {
-            try
-            {
-                await client.DeleteAsync($"VerticalDatumOrder/{orderId}");
-            }
-            catch
-            {
-                // Best-effort cleanup of a temporary calculation order.
-            }
-        }
+        RigModel.MeanSeaLevelToWgs84Response response =
+            await client.ConvertMeanSeaLevelToWgs84Async(request);
+        return response.Samples?.FirstOrDefault()?.Wgs84EllipsoidalDepth;
     }
 }

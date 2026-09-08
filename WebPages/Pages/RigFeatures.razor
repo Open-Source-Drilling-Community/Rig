@@ -1,32 +1,62 @@
 @page "/Rig/Features"
 @inject ILogger<RigFeatures> Logger
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
 @inject RigApiClient RigApiClient
 
-<MudStack Spacing="3">
-    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-        <div>
-            <MudText Typo="Typo.h4">Rig Features</MudText>
-            <MudText Typo="Typo.body2">Built-in capability catalogs are shared by every deployment. Custom catalogs can be added for local classifications.</MudText>
-        </div>
-        <MudStack Row="true" Spacing="2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddCategory">Create</MudButton>
-            <MudButton Variant="Variant.Outlined" OnClick="LoadAsync">Refresh</MudButton>
-        </MudStack>
-    </MudStack>
+@if (_loading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <MudText Class="mt-4 mb-2" Typo="Typo.h6">Rig Features</MudText>
+    <MudText Typo="Typo.body2" Class="mb-4">Built-in capability catalogs are shared by every deployment. Custom catalogs can be added for local classifications.</MudText>
+    <MudContainer Class="d-flex flex-row pa-0 mb-3">
+        <MudButton Class="me-1" Variant="Variant.Filled" Color="Color.Success" OnClick="AddCategory">Add Category</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" Disabled="@(!_selectedCategories.Any())" OnClick="DeleteSelectedCategoriesAsync">Delete</MudButton>
+    </MudContainer>
 
-    @if (_loading)
+    <MudGrid Class="mt-2">
+        <MudItem xs="2" md="1" Class="d-flex align-center">
+            <MudCheckBox T="bool" Value="@AreAllCategoriesSelected()" ValueChanged="@SetAllCategoriesSelected" />
+        </MudItem>
+        <MudItem xs="10" md="3" Class="d-flex align-center"><MudText Typo="Typo.subtitle2">Category</MudText></MudItem>
+        <MudItem xs="6" md="1" Class="d-flex align-center"><MudText Typo="Typo.subtitle2">Exclusive</MudText></MudItem>
+        <MudItem xs="6" md="1" Class="d-flex align-center"><MudText Typo="Typo.subtitle2">Dated</MudText></MudItem>
+        <MudItem xs="10" md="5" Class="d-flex align-center"><MudText Typo="Typo.subtitle2">Options</MudText></MudItem>
+        <MudItem xs="2" md="1" />
+    </MudGrid>
+
+    @foreach (RigFeatureCategory category in _categories)
     {
-        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
-    }
-    else
-    {
-        @foreach (RigFeatureCategory category in _categories)
-        {
-            <MudExpansionPanel @key="category.MetaInfo?.ID" Text="@CategoryTitle(category)" Expanded="@(!category.IsBuiltIn)">
+        <MudGrid Class="mt-2" @key="category">
+            <MudItem xs="2" md="1" Class="d-flex align-center">
+                <MudCheckBox T="bool" Disabled="@category.IsBuiltIn" Value="@IsCategorySelected(category)" ValueChanged="@((bool selected) => SetCategorySelected(category, selected))" />
+            </MudItem>
+            <MudItem xs="10" md="3">
                 @if (category.IsBuiltIn)
                 {
-                    <MudText Typo="Typo.body2" Class="mb-2">@category.Description</MudText>
+                    <MudText Typo="Typo.body1">@CategoryTitle(category)</MudText>
+                    <MudText Typo="Typo.caption">@category.Description</MudText>
+                }
+                else
+                {
+                    <MudTextField @bind-Value="category.Name" Required="true" />
+                    <MudTextField @bind-Value="category.Code" Label="Stable code" HelperText="Leave empty to derive it from the name" />
+                    <MudTextField @bind-Value="category.Description" Label="Description" Lines="2" />
+                    <MudCheckBox T="bool" @bind-Value="category.IsDeprecated" Label="Deprecated" Color="Color.Warning" />
+                }
+            </MudItem>
+            <MudItem xs="6" md="1" Class="d-flex align-center">
+                <MudCheckBox T="bool" Disabled="@category.IsBuiltIn" @bind-Value="category.IsExclusive" />
+            </MudItem>
+            <MudItem xs="6" md="1" Class="d-flex align-center">
+                <MudCheckBox T="bool" Disabled="@category.IsBuiltIn" @bind-Value="category.HasValidityPeriod" />
+            </MudItem>
+            <MudItem xs="10" md="5">
+                @if (category.IsBuiltIn)
+                {
                     <MudStack Row="true" Spacing="1" Class="flex-wrap">
                         @foreach (RigFeatureOption option in category.Options ?? [])
                         {
@@ -36,42 +66,44 @@
                 }
                 else
                 {
-                    <MudGrid>
-                        <MudItem xs="12" md="6"><MudTextField @bind-Value="category.Name" Label="Name" Required="true" Variant="Variant.Outlined" /></MudItem>
-                        <MudItem xs="12" md="6"><MudTextField @bind-Value="category.Code" Label="Stable code" Variant="Variant.Outlined" HelperText="Leave empty to derive it from the name" /></MudItem>
-                        <MudItem xs="12"><MudTextField @bind-Value="category.Description" Label="Description" Variant="Variant.Outlined" Lines="2" /></MudItem>
-                        <MudItem xs="12" md="4"><MudSwitch T="bool" @bind-Value="category.IsExclusive" Label="Exclusive options" Color="Color.Primary" /></MudItem>
-                        <MudItem xs="12" md="4"><MudSwitch T="bool" @bind-Value="category.HasValidityPeriod" Label="Assignments can be dated" Color="Color.Primary" /></MudItem>
-                        <MudItem xs="12" md="4"><MudSwitch T="bool" @bind-Value="category.IsDeprecated" Label="Deprecated" Color="Color.Warning" /></MudItem>
-                    </MudGrid>
-                    <MudDivider Class="my-3" />
-                    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
-                        <MudText Typo="Typo.h6">Options</MudText>
-                        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="@(() => AddOption(category))">Add option</MudButton>
-                    </MudStack>
+                    <MudContainer Class="d-flex flex-row align-center pa-0 mb-1">
+                        <MudCheckBox T="bool" Value="@AreAllOptionsSelected(category)" ValueChanged="@((bool selected) => SetAllOptionsSelected(category, selected))" />
+                        <MudButton Class="ms-1 me-1" Variant="Variant.Outlined" Color="Color.Success" Size="Size.Small" OnClick="@(() => AddOption(category))">Add Option</MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" Disabled="@(!HasSelectedOptions(category))" OnClick="@(() => DeleteSelectedOptions(category))">Delete</MudButton>
+                    </MudContainer>
                     @foreach (RigFeatureOption option in category.Options ?? [])
                     {
-                        <MudGrid @key="option.ID" Class="mb-2">
-                            <MudItem xs="12" md="4"><MudTextField @bind-Value="option.Name" Label="Name" Required="true" Variant="Variant.Outlined" /></MudItem>
-                            <MudItem xs="12" md="3"><MudTextField @bind-Value="option.Code" Label="Code" Variant="Variant.Outlined" /></MudItem>
-                            <MudItem xs="12" md="3"><MudTextField @bind-Value="option.Description" Label="Description" Variant="Variant.Outlined" /></MudItem>
-                            <MudItem xs="8" md="1"><MudSwitch T="bool" @bind-Value="option.IsDeprecated" Label="Deprecated" /></MudItem>
-                            <MudItem xs="4" md="1"><MudIconButton Icon="@Icons.Material.Filled.DeleteOutline" Color="Color.Error" OnClick="@(() => RemoveOption(category, option))" /></MudItem>
+                        <MudGrid @key="option" Class="mb-2">
+                            <MudItem xs="1" Class="d-flex align-center"><MudCheckBox T="bool" Value="@IsOptionSelected(option)" ValueChanged="@((bool selected) => SetOptionSelected(option, selected))" /></MudItem>
+                            <MudItem xs="11"><MudTextField @bind-Value="option.Name" Label="Name" Required="true" /></MudItem>
+                            <MudItem xs="1" />
+                            <MudItem xs="5"><MudTextField @bind-Value="option.Code" Label="Code" /></MudItem>
+                            <MudItem xs="5"><MudTextField @bind-Value="option.Description" Label="Description" /></MudItem>
+                            <MudItem xs="1" Class="d-flex align-center"><MudCheckBox T="bool" @bind-Value="option.IsDeprecated" Label="Deprecated" /></MudItem>
                         </MudGrid>
                     }
-                    <MudStack Row="true" Spacing="2" Class="mt-3">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => SaveCategoryAsync(category))">Save</MudButton>
-                        <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="@(() => DeleteCategoryAsync(category))">Delete</MudButton>
-                    </MudStack>
                 }
-            </MudExpansionPanel>
-        }
+            </MudItem>
+            <MudItem xs="2" md="1" Class="d-flex align-center justify-end">
+                @if (!category.IsBuiltIn)
+                {
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteCategoryAsync(category))" />
+                }
+            </MudItem>
+        </MudGrid>
     }
-</MudStack>
+
+    <MudContainer Class="d-flex flex-row pa-0 mt-4">
+        <MudButton Class="me-1" Variant="Variant.Filled" Color="Color.Success" OnClick="SaveAsync">Save</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadAsync">Reload</MudButton>
+    </MudContainer>
+}
 
 @code {
     private List<RigFeatureCategory> _categories = [];
     private bool _loading = true;
+    private readonly HashSet<RigFeatureCategory> _selectedCategories = [];
+    private readonly HashSet<RigFeatureOption> _selectedOptions = [];
 
     protected override Task OnInitializedAsync() => LoadAsync();
 
@@ -84,6 +116,8 @@
                 .OrderByDescending(value => value.IsBuiltIn)
                 .ThenBy(value => value.Name, StringComparer.OrdinalIgnoreCase)
                 .ToList();
+            _selectedCategories.Clear();
+            _selectedOptions.Clear();
         }
         catch (Exception ex)
         {
@@ -105,6 +139,25 @@
     }
 
     private static void RemoveOption(RigFeatureCategory category, RigFeatureOption option) => category.Options?.Remove(option);
+
+    private void DeleteSelectedOptions(RigFeatureCategory category)
+    {
+        if (category.Options == null) return;
+        foreach (RigFeatureOption option in category.Options.Where(_selectedOptions.Contains).ToList())
+        {
+            category.Options.Remove(option);
+            _selectedOptions.Remove(option);
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        foreach (RigFeatureCategory category in _categories.Where(category => !category.IsBuiltIn).ToList())
+        {
+            await SaveCategoryAsync(category);
+        }
+        await LoadAsync();
+    }
 
     private async Task SaveCategoryAsync(RigFeatureCategory category)
     {
@@ -131,11 +184,23 @@
 
     private async Task DeleteCategoryAsync(RigFeatureCategory category)
     {
-        if (category.MetaInfo?.ID == Guid.Empty) { _categories.Remove(category); return; }
+        bool? confirmed = await DialogService.ShowMessageBoxAsync(
+            "Delete",
+            $"Delete rig feature category '{category.Name ?? "Custom category"}'?",
+            yesText: "Delete",
+            cancelText: "Cancel",
+            options: new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall });
+        if (confirmed != true) return;
+        if (category.MetaInfo?.ID == Guid.Empty)
+        {
+            _categories.Remove(category);
+            _selectedCategories.Remove(category);
+            return;
+        }
         try
         {
             HttpStatusCode status = await RigApiClient.DeleteRigFeatureCategoryAsync(category.MetaInfo!.ID);
-            if (status == HttpStatusCode.OK) { _categories.Remove(category); Snackbar.Add("Rig feature category deleted.", Severity.Success); }
+            if (status == HttpStatusCode.OK) { _categories.Remove(category); _selectedCategories.Remove(category); Snackbar.Add("Rig feature category deleted.", Severity.Success); }
             else Snackbar.Add("The category is built-in or still assigned to a rig and cannot be deleted.", Severity.Warning);
         }
         catch (Exception ex)
@@ -143,6 +208,49 @@
             Logger.LogError(ex, "Failed to delete rig feature category");
             Snackbar.Add("The category could not be deleted.", Severity.Error);
         }
+    }
+
+    private async Task DeleteSelectedCategoriesAsync()
+    {
+        foreach (RigFeatureCategory category in _categories.Where(_selectedCategories.Contains).ToList())
+        {
+            await DeleteCategoryAsync(category);
+        }
+    }
+
+    private bool IsCategorySelected(RigFeatureCategory category) => _selectedCategories.Contains(category);
+    private void SetCategorySelected(RigFeatureCategory category, bool selected)
+    {
+        if (category.IsBuiltIn) return;
+        if (selected) _selectedCategories.Add(category);
+        else _selectedCategories.Remove(category);
+    }
+    private bool AreAllCategoriesSelected()
+    {
+        List<RigFeatureCategory> editable = _categories.Where(category => !category.IsBuiltIn).ToList();
+        return editable.Count > 0 && editable.All(_selectedCategories.Contains);
+    }
+    private void SetAllCategoriesSelected(bool selected)
+    {
+        _selectedCategories.Clear();
+        if (selected)
+        {
+            foreach (RigFeatureCategory category in _categories.Where(category => !category.IsBuiltIn))
+                _selectedCategories.Add(category);
+        }
+    }
+    private bool IsOptionSelected(RigFeatureOption option) => _selectedOptions.Contains(option);
+    private void SetOptionSelected(RigFeatureOption option, bool selected)
+    {
+        if (selected) _selectedOptions.Add(option);
+        else _selectedOptions.Remove(option);
+    }
+    private bool HasSelectedOptions(RigFeatureCategory category) => category.Options?.Any(_selectedOptions.Contains) == true;
+    private bool AreAllOptionsSelected(RigFeatureCategory category) => category.Options?.Count > 0 && category.Options.All(_selectedOptions.Contains);
+    private void SetAllOptionsSelected(RigFeatureCategory category, bool selected)
+    {
+        if (category.Options == null) return;
+        foreach (RigFeatureOption option in category.Options) SetOptionSelected(option, selected);
     }
 
     private static string CategoryTitle(RigFeatureCategory category) => category.IsBuiltIn ? $"{category.Name} (built-in)" : category.Name ?? "Custom category";

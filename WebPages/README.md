@@ -11,7 +11,7 @@ It contains the `RigMain`, `RigEdit`, `RigFeatures`, `RigBackupRestore`, and `St
 - Rig catalog page whose rows open directly in the editor
 - Single create/edit workflow for the complete rig model, including identification, operating envelope, marine/jack-up/station-keeping profiles, storage and equipment
 - Unit-aware fields for engineering quantities
-- Named feature-assignment editor and feature-category catalog page
+- Named feature-assignment editor and a feature-category catalog page using the common resource-service compact grid and actions; built-in definitions remain read-only while custom code, description, and deprecation metadata remain editable
 - Automatically displayed rig photo gallery with JPEG, PNG, and WebP upload, descriptive metadata, primary-photo selection, and a manual refresh/retry option
 - Unit-aware mud-pump liner performance table for adding and removing the supported liner sizes and their associated flow and pressure ratings
 - Batch backup/restore page for all rigs or a selected set, including dependency summaries, photographs, local feature-catalog mapping policy, UUID-conflict policy, atomic server validation, and JSON download/upload

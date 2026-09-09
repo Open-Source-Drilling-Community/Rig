@@ -90,6 +90,102 @@ namespace ServiceTest
         }
 
         [Test]
+        public void StartupMigration_RemovesObsoleteRigJsonProperties_AndPreservesCurrentData()
+        {
+            Guid id = Guid.NewGuid();
+            Rig rig = CreateRig(id, "legacy-contract-rig");
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
+            string expectedContractedJson;
+
+            using (SqliteConnection connection = _connectionManager.GetConnection()!)
+            using (SqliteCommand command = connection.CreateCommand())
+            {
+                command.CommandText = """
+                    UPDATE RigTable
+                    SET data = json_set(data,
+                        '$.DrillFloorElevation', 12.5,
+                        '$.IsFixedPlatform', 1)
+                    WHERE json_extract(MetaInfo, '$.ID') = $id;
+                    """;
+                command.Parameters.AddWithValue("$id", id.ToString());
+                Assert.That(command.ExecuteNonQuery(), Is.EqualTo(1));
+                command.CommandText = """
+                    SELECT json_remove(data, '$.DrillFloorElevation', '$.IsFixedPlatform')
+                    FROM RigTable
+                    WHERE json_extract(MetaInfo, '$.ID') = $id;
+                    """;
+                expectedContractedJson = (string)command.ExecuteScalar()!;
+            }
+
+            _ = new SqlConnectionManager(
+                $"Data Source={_databaseFilePath}",
+                _loggerFactory.CreateLogger<SqlConnectionManager>());
+
+            using (SqliteConnection connection = _connectionManager.GetConnection()!)
+            using (SqliteCommand command = connection.CreateCommand())
+            {
+                command.CommandText = """
+                    SELECT
+                        json_type(data, '$.DrillFloorElevation'),
+                        json_type(data, '$.IsFixedPlatform'),
+                        json_extract(data, '$.Name'),
+                        data
+                    FROM RigTable
+                    WHERE json_extract(MetaInfo, '$.ID') = $id;
+                    """;
+                command.Parameters.AddWithValue("$id", id.ToString());
+                using SqliteDataReader reader = command.ExecuteReader();
+                Assert.That(reader.Read(), Is.True);
+                Assert.That(reader.IsDBNull(0), Is.True);
+                Assert.That(reader.IsDBNull(1), Is.True);
+                Assert.That(reader.GetString(2), Is.EqualTo(rig.Name));
+                Assert.That(reader.GetString(3), Is.EqualTo(expectedContractedJson));
+            }
+
+            Assert.DoesNotThrow(() => _ = new SqlConnectionManager(
+                $"Data Source={_databaseFilePath}",
+                _loggerFactory.CreateLogger<SqlConnectionManager>()));
+        }
+
+        [Test]
+        public void StartupMigration_FailsClosed_WithoutChangingAnyRecord_WhenRigJsonIsMalformed()
+        {
+            Guid legacyId = Guid.NewGuid();
+            Guid malformedId = Guid.NewGuid();
+            Assert.That(_controller.PostRig(CreateRig(legacyId, "legacy-contract-rig")), Is.TypeOf<OkResult>());
+            Assert.That(_controller.PostRig(CreateRig(malformedId, "malformed-rig")), Is.TypeOf<OkResult>());
+
+            using (SqliteConnection connection = _connectionManager.GetConnection()!)
+            using (SqliteCommand command = connection.CreateCommand())
+            {
+                command.CommandText = """
+                    UPDATE RigTable SET data = json_set(data, '$.DrillFloorElevation', 12.5)
+                    WHERE json_extract(MetaInfo, '$.ID') = $legacyId;
+                    UPDATE RigTable SET data = '{malformed'
+                    WHERE json_extract(MetaInfo, '$.ID') = $malformedId;
+                    """;
+                command.Parameters.AddWithValue("$legacyId", legacyId.ToString());
+                command.Parameters.AddWithValue("$malformedId", malformedId.ToString());
+                Assert.That(command.ExecuteNonQuery(), Is.EqualTo(2));
+            }
+
+            Assert.Throws<InvalidDataException>(() => _ = new SqlConnectionManager(
+                $"Data Source={_databaseFilePath}",
+                _loggerFactory.CreateLogger<SqlConnectionManager>()));
+
+            using (SqliteConnection connection = _connectionManager.GetConnection()!)
+            using (SqliteCommand command = connection.CreateCommand())
+            {
+                command.CommandText = """
+                    SELECT json_extract(data, '$.DrillFloorElevation') FROM RigTable
+                    WHERE json_extract(MetaInfo, '$.ID') = $legacyId;
+                    """;
+                command.Parameters.AddWithValue("$legacyId", legacyId.ToString());
+                Assert.That(command.ExecuteScalar(), Is.EqualTo(12.5));
+            }
+        }
+
+        [Test]
         public void GetRigById_ReturnsBadRequest_ForEmptyGuid()
         {
             ActionResult<RigReadResponse?> actionResult = _controller.GetRigById(Guid.Empty);
@@ -243,25 +339,7 @@ namespace ServiceTest
         }
 
         [Test]
-        public void PostRig_MigratesLegacyDrillFloorDepthWithoutChangingSign()
-        {
-            Rig rig = CreateRig(Guid.NewGuid(), "legacy-drill-floor-depth");
-#pragma warning disable CS0618
-            rig.DrillFloorElevation = -24.5;
-#pragma warning restore CS0618
-
-            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
-
-            RigReadResponse stored = AssertOk<RigReadResponse>(_controller.GetRigById(rig.MetaInfo!.ID).Result);
-            Assert.Multiple(() =>
-            {
-                Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.Mean, Is.EqualTo(-24.5));
-                Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.StandardDeviation, Is.EqualTo(0.5));
-            });
-        }
-
-        [Test]
-        public void PostRig_DefaultsNewDrillFloorDepthUncertaintyAndMaintainsLegacyReaderValue()
+        public void PostRig_DefaultsNewDrillFloorDepthUncertainty()
         {
             Rig rig = CreateRig(Guid.NewGuid(), "new-drill-floor-depth");
             rig.FixedPlatformProperties = new FixedPlatformProperties
@@ -276,9 +354,6 @@ namespace ServiceTest
             {
                 Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.Mean, Is.EqualTo(-17.25));
                 Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.StandardDeviation, Is.EqualTo(0.5));
-#pragma warning disable CS0618
-                Assert.That(stored.DrillFloorElevation, Is.EqualTo(-17.25));
-#pragma warning restore CS0618
             });
         }
 

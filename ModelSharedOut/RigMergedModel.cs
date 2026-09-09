@@ -14814,14 +14814,6 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.Text.Json.Serialization.JsonPropertyName("FixedPlatformProperties")]
         public FixedPlatformProperties FixedPlatformProperties { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("DrillFloorElevation")]
-        [System.Obsolete]
-        public double? DrillFloorElevation { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsFixedPlatform")]
-        [System.Obsolete]
-        public bool IsFixedPlatform { get; set; }
-
         [System.Text.Json.Serialization.JsonPropertyName("ClusterID")]
         public System.Guid? ClusterID { get; set; }
 
@@ -15449,9 +15441,6 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
         public System.DateTimeOffset? LastModificationDate { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("IsFixedPlatform")]
-        public bool IsFixedPlatform { get; set; }
-
         [System.Text.Json.Serialization.JsonPropertyName("ClusterID")]
         public System.Guid? ClusterID { get; set; }
 
@@ -15922,14 +15911,6 @@ namespace OSDC.Drilling.Rig.ModelShared
 
         [System.Text.Json.Serialization.JsonPropertyName("FixedPlatformProperties")]
         public FixedPlatformProperties FixedPlatformProperties { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("DrillFloorElevation")]
-        [System.Obsolete]
-        public double? DrillFloorElevation { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsFixedPlatform")]
-        [System.Obsolete]
-        public bool IsFixedPlatform { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("ClusterID")]
         public System.Guid? ClusterID { get; set; }

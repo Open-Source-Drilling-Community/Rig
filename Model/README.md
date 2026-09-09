@@ -49,10 +49,9 @@ The model has been streamlined with four main rules:
 
 `RigType.PlatformRig` is the discriminator for `FixedPlatformProperties`; other
 rig types reject that object. The standard uncertainty for
-`DrillFloorDepth` defaults to 0.5 m. During the expand migration, deprecated
-`DrillFloorElevation` and `IsFixedPlatform` members remain readable for
-compatibility. Existing `DrillFloorElevation` numbers are depths despite their
-name and migrate to the Gaussian mean with no sign inversion.
+`DrillFloorDepth` defaults to 0.5 m. The obsolete `DrillFloorElevation` and
+Rig-level `IsFixedPlatform` members have been removed; migrated platform depths
+are represented only by `FixedPlatformProperties.DrillFloorDepth`.
 
 
 ### RigMast

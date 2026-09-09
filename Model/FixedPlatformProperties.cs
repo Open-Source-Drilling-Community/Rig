@@ -14,8 +14,7 @@ public sealed class FixedPlatformProperties
 {
     /// <summary>
     /// Vertical depth of the drill floor in SI metres relative to WGS84.
-    /// Historical DrillFloorElevation values already use this depth convention
-    /// and are migrated without changing their sign.
+    /// Migrated historical values use this depth convention without sign inversion.
     /// </summary>
     [AccessToVariable(CommonProperty.VariableAccessType.Assignable)]
     [Mandatory(CommonProperty.MandatoryType.General)]

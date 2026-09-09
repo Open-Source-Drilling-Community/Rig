@@ -3,6 +3,28 @@
 This runbook governs the staged replacement of the misnamed
 `DrillFloorElevation` and redundant `IsFixedPlatform` Rig properties.
 
+## Execution status
+
+The expand version and its consumers were deployed to development, production,
+and AWE. Independent application and SQLite backups were verified before the
+durable writes. Development contains one migrated Rig, production contains
+eight migrated Rigs and three preserved photos, and AWE contains no Rigs.
+
+Production migrated three platform depths without changing their IEEE-754
+values or signs and assigned 0.5 m standard deviation. `patterson 301` was
+reviewed as `ConventionalLandRig`; its inconsistent legacy 10 m value was
+discarded because the rotary-table reference belongs to its WellBore. Rig and
+photo UUIDs were preserved.
+
+The public-contract contraction is now implemented. The historical SQLite
+`IsFixedPlatform` column is intentionally retained in the deployed table shape
+to avoid a destructive table rebuild, but it is derived from `RigType` and is
+not exposed by any public model or contract. At startup, the contracted service
+validates all stored Rig JSON and transactionally removes only the obsolete
+`DrillFloorElevation` and Rig-level `IsFixedPlatform` keys. Malformed JSON fails
+the migration closed and rolls back the complete cleanup. The operation logs
+the examined and changed record counts and is idempotent.
+
 ## Invariants
 
 - Every historical `DrillFloorElevation` value is already a depth in SI metres
@@ -84,7 +106,12 @@ The old fields may be removed only after:
   the agreed compatibility window;
 - application exports and independent snapshots have passed restore checks.
 
-Then remove `DrillFloorElevation`, `IsFixedPlatform`, the dual-shape
-compatibility adapter, and (in a separately tested SQLite migration) the legacy
-projection column. Regenerate every dependent schema/client, rebuild and test
-all consumers, and deploy in the same environment order.
+Then remove `DrillFloorElevation`, the Rig-level `IsFixedPlatform`, and the
+dual-shape compatibility adapter. Regenerate every dependent schema/client,
+rebuild and test all consumers, and deploy in the same environment order. The
+legacy physical projection column may be removed only by a separately backed
+up and tested SQLite table migration; retaining it as an internal value derived
+from `RigType` does not retain either obsolete public property. The contracted
+startup migration removes both obsolete keys from persisted Rig JSON in one
+transaction after validating every row; it does not modify UUIDs, timestamps,
+the relational projection columns, photos, or other JSON values.

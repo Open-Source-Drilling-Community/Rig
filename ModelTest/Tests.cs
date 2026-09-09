@@ -419,7 +419,8 @@ namespace OSDC.Drilling.Rig.ModelTest
                 nameof(Model.Rig.FeatureAssignments)
             };
             foreach (string property in properties) Assert.That(typeof(Model.Rig).GetProperty(property), Is.Not.Null, property);
-            Assert.That(typeof(Model.Rig).GetProperty(nameof(Model.Rig.IsFixedPlatform)), Is.Not.Null);
+            Assert.That(typeof(Model.Rig).GetProperty("IsFixedPlatform"), Is.Null);
+            Assert.That(typeof(Model.Rig).GetProperty("DrillFloorElevation"), Is.Null);
         }
 
         [Test]
@@ -544,15 +545,15 @@ namespace OSDC.Drilling.Rig.ModelTest
             DateTimeOffset creationDate = new(2026, 3, 10, 12, 0, 0, TimeSpan.Zero);
             DateTimeOffset modificationDate = creationDate.AddHours(2);
 
-            RigLight rigLight = new(metaInfo, "Rig A", "Test rig", creationDate, modificationDate, true, clusterId);
+            RigLight rigLight = new(metaInfo, "Rig A", "Test rig", creationDate, modificationDate, clusterId, RigType.PlatformRig);
 
             Assert.That(rigLight.MetaInfo, Is.SameAs(metaInfo));
             Assert.That(rigLight.Name, Is.EqualTo("Rig A"));
             Assert.That(rigLight.Description, Is.EqualTo("Test rig"));
             Assert.That(rigLight.CreationDate, Is.EqualTo(creationDate));
             Assert.That(rigLight.LastModificationDate, Is.EqualTo(modificationDate));
-            Assert.That(rigLight.IsFixedPlatform, Is.True);
             Assert.That(rigLight.ClusterID, Is.EqualTo(clusterId));
+            Assert.That(rigLight.RigType, Is.EqualTo(RigType.PlatformRig));
         }
     }
 }

@@ -35,11 +35,6 @@ namespace OSDC.Drilling.Rig.Model
         /// </summary>
         public DateTimeOffset? LastModificationDate { get; set; }
         /// <summary>
-        /// true if it is a fixed platform
-        /// </summary>
-        public bool IsFixedPlatform { get; set; }
-
-        /// <summary>
         /// the ID of the cluster in the case of a fixed platform
         /// </summary>
         public Guid? ClusterID { get; set; }
@@ -64,7 +59,7 @@ namespace OSDC.Drilling.Rig.Model
         /// base constructor
         /// </summary>
         public RigLight(MetaInfo? metaInfo, string? name, string? descr, DateTimeOffset? creationDate, DateTimeOffset? modifDate,
-            bool isFixedPlatform, Guid? clusterID, RigType? rigType = null, RigEnvironment? operatingEnvironment = null,
+            Guid? clusterID, RigType? rigType = null, RigEnvironment? operatingEnvironment = null,
             RigMobilityType? mobilityType = null)
         {
             MetaInfo = metaInfo;
@@ -72,7 +67,6 @@ namespace OSDC.Drilling.Rig.Model
             Description = descr;
             CreationDate = creationDate;
             LastModificationDate = modifDate;
-            IsFixedPlatform = isFixedPlatform;
             ClusterID = clusterID;
             RigType = rigType;
             OperatingEnvironment = operatingEnvironment;

@@ -60,16 +60,6 @@ namespace OSDC.Drilling.Rig.Model
         public RiserHeaveCompensator? RiserHeaveCompensator { get; set; }
         /// <summary>Properties available only for a RigType.PlatformRig.</summary>
         public FixedPlatformProperties? FixedPlatformProperties { get; set; }
-        /// <summary>
-        /// Deprecated compatibility property. Despite its historical name, the
-        /// value is a depth in SI metres relative to WGS84 and is never sign-inverted
-        /// when migrated to FixedPlatformProperties.DrillFloorDepth.
-        /// </summary>
-        [Obsolete("Use FixedPlatformProperties.DrillFloorDepth. This property will be removed after all consumers and stored data are migrated.")]
-        public double? DrillFloorElevation { get; set; }
-        /// <summary>Deprecated compatibility flag. RigType is authoritative.</summary>
-        [Obsolete("Use RigType. This property will be removed after all consumers and stored data are migrated.")]
-        public bool IsFixedPlatform { get; set; }
         public Guid? ClusterID { get; set; }
 
         public Rig() : base()

@@ -6,14 +6,18 @@ namespace OSDC.Drilling.Rig.Service.Managers;
 
 internal static class RigDefinitionValidator
 {
+    internal const double DefaultDrillFloorDepthStandardDeviation = 0.5;
+
     public static List<string> Validate(Model.Rig rig)
     {
-        List<string> errors = RigContractCompatibility.Normalize(rig);
+        List<string> errors = [];
         bool isPlatformRig = rig.RigType == RigType.PlatformRig;
         if (isPlatformRig && (!rig.ClusterID.HasValue || rig.ClusterID == Guid.Empty))
             errors.Add("ClusterID must be a non-empty UUID when RigType is PlatformRig.");
         if (!isPlatformRig && rig.ClusterID.HasValue)
             errors.Add("ClusterID must be null when RigType is not PlatformRig.");
+        if (!isPlatformRig && rig.FixedPlatformProperties is not null)
+            errors.Add("FixedPlatformProperties is allowed only when RigType is PlatformRig.");
         ValidateFixedPlatformProperties(rig.FixedPlatformProperties, errors);
         ValidateIdentification(rig.Identification, errors);
         ValidateEnvelope(rig.OperatingEnvelope, errors);
@@ -40,6 +44,7 @@ internal static class RigDefinitionValidator
             errors.Add("FixedPlatformProperties.DrillFloorDepth is required when FixedPlatformProperties is defined.");
             return;
         }
+        value.DrillFloorDepth.StandardDeviation ??= DefaultDrillFloorDepthStandardDeviation;
         FiniteWhenDefined(value.DrillFloorDepth.Mean, "FixedPlatformProperties.DrillFloorDepth.Mean", errors);
         NonNegative(value.DrillFloorDepth.StandardDeviation, "FixedPlatformProperties.DrillFloorDepth.StandardDeviation", errors);
         if (value.DrillFloorDepth.Mean is null)

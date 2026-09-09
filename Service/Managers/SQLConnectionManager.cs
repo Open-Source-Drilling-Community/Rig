@@ -195,6 +195,74 @@ namespace OSDC.Drilling.Rig.Service.Managers
                 if (!DropTable(tableName) || !CreateTable(tableStructure) || !IndexTable(tableName))
                     throw new InvalidOperationException($"Unable to rebuild incompatible database table {tableName}.");
             }
+
+            RemoveObsoleteRigJsonProperties(connection);
+        }
+
+        /// <summary>
+        /// Completes the drill-floor contract migration after all deployed readers have moved to the
+        /// discriminated RigType shape. The relational IsFixedPlatform column remains an internal,
+        /// derived light-record index; only the obsolete public JSON properties are removed here.
+        /// </summary>
+        private void RemoveObsoleteRigJsonProperties(SqliteConnection connection)
+        {
+            using var transaction = connection.BeginTransaction();
+
+            using (var invalidJsonCommand = connection.CreateCommand())
+            {
+                invalidJsonCommand.Transaction = transaction;
+                invalidJsonCommand.CommandText = "SELECT COUNT(*) FROM RigTable WHERE json_valid(data) = 0;";
+                long invalidJsonCount = (long)(invalidJsonCommand.ExecuteScalar() ?? 0L);
+                if (invalidJsonCount != 0)
+                {
+                    throw new InvalidDataException(
+                        $"Cannot contract the Rig JSON contract because {invalidJsonCount} RigTable record(s) contain malformed JSON.");
+                }
+            }
+
+            long examinedCount;
+            using (var examinedCommand = connection.CreateCommand())
+            {
+                examinedCommand.Transaction = transaction;
+                examinedCommand.CommandText = "SELECT COUNT(*) FROM RigTable;";
+                examinedCount = (long)(examinedCommand.ExecuteScalar() ?? 0L);
+            }
+
+            long changedCount;
+            using (var changedCommand = connection.CreateCommand())
+            {
+                changedCommand.Transaction = transaction;
+                changedCommand.CommandText = """
+                    SELECT COUNT(*) FROM RigTable
+                    WHERE json_type(data, '$.DrillFloorElevation') IS NOT NULL
+                       OR json_type(data, '$.IsFixedPlatform') IS NOT NULL;
+                    """;
+                changedCount = (long)(changedCommand.ExecuteScalar() ?? 0L);
+            }
+
+            if (changedCount != 0)
+            {
+                using var updateCommand = connection.CreateCommand();
+                updateCommand.Transaction = transaction;
+                updateCommand.CommandText = """
+                    UPDATE RigTable
+                    SET data = json_remove(data, '$.DrillFloorElevation', '$.IsFixedPlatform')
+                    WHERE json_type(data, '$.DrillFloorElevation') IS NOT NULL
+                       OR json_type(data, '$.IsFixedPlatform') IS NOT NULL;
+                    """;
+                long updatedCount = updateCommand.ExecuteNonQuery();
+                if (updatedCount != changedCount)
+                {
+                    throw new InvalidOperationException(
+                        $"Rig JSON contract migration expected to change {changedCount} record(s), but changed {updatedCount}.");
+                }
+            }
+
+            transaction.Commit();
+            _logger.LogInformation(
+                "Rig JSON contract migration examined {ExaminedCount} records and removed obsolete properties from {ChangedCount} records",
+                examinedCount,
+                changedCount);
         }
 
         /// <summary>

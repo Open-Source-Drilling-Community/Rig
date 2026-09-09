@@ -324,10 +324,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
                 }
             }
 
-            Model.Rig? rig = root?.Deserialize<Model.Rig>(JsonSettings.Options);
-            if (rig is not null)
-                RigContractCompatibility.Normalize(rig);
-            return rig;
+            return root?.Deserialize<Model.Rig>(JsonSettings.Options);
         }
 
         private static void CopyIfDefined(JsonObject source, string sourceName, JsonObject target, string targetName)
@@ -352,7 +349,7 @@ namespace OSDC.Drilling.Rig.Service.Managers
             if (connection != null)
             {
                 var command = connection.CreateCommand();
-                command.CommandText = $"SELECT MetaInfo, Name, Description, CreationDate, LastModificationDate, IsFixedPlatform, ClusterID, " +
+                command.CommandText = $"SELECT MetaInfo, Name, Description, CreationDate, LastModificationDate, ClusterID, " +
                     $"json_extract(data, '$.RigType'), json_extract(data, '$.OperatingEnvironment'), json_extract(data, '$.MobilityType') FROM {RigTableName}";
                 try
                 {
@@ -366,9 +363,8 @@ namespace OSDC.Drilling.Rig.Service.Managers
                         DateTimeOffset? creationDate = TryReadDateTimeOffset(reader, 3);
                         DateTimeOffset? lastModificationDate = TryReadDateTimeOffset(reader, 4);
                         lastModificationDate ??= creationDate ?? DateTimeOffset.UnixEpoch;
-                        bool isFixedPlatform = !reader.IsDBNull(5) && reader.GetBoolean(5);
                         Guid? clusterID = null;
-                        if (!reader.IsDBNull(6) && Guid.TryParse(reader.GetString(6), out Guid id))
+                        if (!reader.IsDBNull(5) && Guid.TryParse(reader.GetString(5), out Guid id))
                         {
                             clusterID = id;
                         }
@@ -378,11 +374,10 @@ namespace OSDC.Drilling.Rig.Service.Managers
                                 string.IsNullOrEmpty(descr) ? null : descr,
                                 creationDate,
                                 lastModificationDate,
-                                isFixedPlatform,
                                 clusterID,
-                                TryReadEnum<RigType>(reader, 7),
-                                TryReadEnum<RigEnvironment>(reader, 8),
-                                TryReadEnum<RigMobilityType>(reader, 9)
+                                TryReadEnum<RigType>(reader, 6),
+                                TryReadEnum<RigEnvironment>(reader, 7),
+                                TryReadEnum<RigMobilityType>(reader, 8)
                                 ));
                     }
                     _logger.LogInformation("Returning the list of existing RigLight from RigTable");
@@ -677,7 +672,9 @@ namespace OSDC.Drilling.Rig.Service.Managers
             command.Parameters.AddWithValue("$description", (object?)rig.Description ?? DBNull.Value);
             command.Parameters.AddWithValue("$creationDate", (object?)creationDate ?? DBNull.Value);
             command.Parameters.AddWithValue("$lastModificationDate", (object?)lastModificationDate ?? DBNull.Value);
-            command.Parameters.AddWithValue("$isFixedPlatform", rig.IsFixedPlatform ? 1 : 0);
+            // Retain the historical SQL column without exposing it in the public model.
+            // Its value is now a denormalized projection of the authoritative discriminator.
+            command.Parameters.AddWithValue("$isFixedPlatform", rig.RigType == RigType.PlatformRig ? 1 : 0);
             command.Parameters.AddWithValue("$clusterId", rig.ClusterID?.ToString() ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("$data", data);
         }

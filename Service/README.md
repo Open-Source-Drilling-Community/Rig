@@ -56,8 +56,8 @@ The database contains three managed application tables:
 
 ### RigTable columns
 
-The columns are intentionally aligned with the `RigLight` projection plus one
-payload column containing the serialized `Rig` object:
+The columns contain the `RigLight` projection, one historical internal column,
+and the serialized `Rig` object:
 
 - `MetaInfo`
 - `Name`
@@ -68,10 +68,10 @@ payload column containing the serialized `Rig` object:
 - `ClusterID`
 - `data`
 
-`data` contains the JSON-serialized `Rig` instance. The
-`IsFixedPlatform` SQL column is retained only as an expand-phase compatibility
-projection for deployed databases; `RigType` in the serialized aggregate is
-authoritative.
+`data` contains the JSON-serialized `Rig` instance. The historical
+`IsFixedPlatform` SQL column remains only to preserve the deployed table shape;
+it is an internal denormalized projection derived from `RigType` and is not part
+of `Rig`, `RigLight`, REST, OpenAPI, MCP, or generated clients.
 
 The service does not store a separate physical `ID` column. Lookup uniqueness is
 enforced through an index on `json_extract(MetaInfo, '$.ID')`.
@@ -266,7 +266,7 @@ Rig creation ignores caller timestamp values, assigns CreationDate and LastModif
 
 The schema documents caller-owned `MetaInfo.ID` values, the update path/body ID match, the required `expectedModifiedUtc` concurrency token, and the `RigType`-discriminated platform relationship. A `PlatformRig` sets `ClusterID` to an existing Cluster UUID and may carry `FixedPlatformProperties.DrillFloorDepth`; other rig types must omit both fields. Create and replacement verify the external Cluster reference live; an unknown Cluster returns conflict and an unavailable Cluster dependency returns bad gateway without persisting the write. Equipment objects are embedded full definitions, not separate resource references. Physical numbers use SI values. `DrillFloorDepth` is Gaussian in SI metres relative to WGS84 and its standard uncertainty defaults to 0.5 m.
 
-During the expand phase, deprecated `DrillFloorElevation` and `IsFixedPlatform` remain in REST and persisted JSON for old clients. Reads normalize either shape, and writes maintain both representations. Existing `DrillFloorElevation` values are already depths, so migration copies the scalar directly into the Gaussian mean without negating it. The obsolete fields are removed only after all consumers and the three deployed data stores have been backed up, audited, and migrated.
+The drill-floor migration has entered its contraction phase. `DrillFloorElevation` and the Rig-level `IsFixedPlatform` property are absent from REST, persisted JSON, OpenAPI, MCP, and generated clients. On startup, the service validates every stored Rig JSON document and transactionally removes only those two obsolete JSON keys; malformed JSON aborts startup without changing any record. `FixedPlatformProperties.DrillFloorDepth` is the sole drill-floor value and `RigType` is the discriminator. The historical SQL column is retained internally to avoid a persistence-table rebuild and is always derived from `RigType`.
 
 Every MCP tool publishes a human-readable title, exact input and success-output JSON Schemas, and read-only/destructive/idempotent/open-world annotations. Successes return schema-conforming structured content plus a JSON text fallback. Failures set `isError=true`, return a stable `{error,message,errors}` JSON text envelope, and omit structured content so it cannot conflict with the success schema.
 Required resource bodies (`rig`, `category`, and batch requests) and single-resource success payloads use direct, non-null `$ref` schemas. Optional nested components retain their declared nullability.

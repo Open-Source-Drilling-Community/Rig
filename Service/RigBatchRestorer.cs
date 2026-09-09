@@ -268,7 +268,7 @@ public static class RigBatchRestorer
                 : "INSERT INTO RigTable (MetaInfo,Name,Description,CreationDate,LastModificationDate,IsFixedPlatform,ClusterID,data) VALUES ($meta,$name,$description,$created,$modified,$fixed,$cluster,$data)";
             command.Parameters.AddWithValue("$meta", JsonSerializer.Serialize(rig.MetaInfo, JsonSettings.Options)); command.Parameters.AddWithValue("$name", (object?)rig.Name ?? DBNull.Value);
             command.Parameters.AddWithValue("$description", (object?)rig.Description ?? DBNull.Value); command.Parameters.AddWithValue("$created", rig.CreationDate?.ToString("O") ?? (object)DBNull.Value);
-            command.Parameters.AddWithValue("$modified", rig.LastModificationDate?.ToString("O") ?? (object)DBNull.Value); command.Parameters.AddWithValue("$fixed", rig.IsFixedPlatform);
+            command.Parameters.AddWithValue("$modified", rig.LastModificationDate?.ToString("O") ?? (object)DBNull.Value); command.Parameters.AddWithValue("$fixed", rig.RigType == RigType.PlatformRig);
             command.Parameters.AddWithValue("$cluster", rig.ClusterID?.ToString() ?? (object)DBNull.Value); command.Parameters.AddWithValue("$data", JsonSerializer.Serialize(rig, JsonSettings.Options)); command.ExecuteNonQuery();
         }
     }

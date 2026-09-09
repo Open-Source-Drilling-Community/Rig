@@ -36,8 +36,10 @@ public sealed class RigBatchTransferTests
     {
         using SqliteConnection connection = OpenDatabase();
         RigModel rig = Rig(Guid.NewGuid(), "Imported rig");
+        RigBatchPhoto photo = Photo(rig.MetaInfo!.ID);
+        Guid photoId = photo.Metadata!.MetaInfo!.ID;
         RigBatchRestoreOutcome outcome = RigBatchRestorer.Restore(connection,
-            Request(rig, Photo(rig.MetaInfo!.ID)), DateTimeOffset.UtcNow, []);
+            Request(rig, photo), DateTimeOffset.UtcNow, []);
 
         Assert.Multiple(() =>
         {
@@ -46,6 +48,7 @@ public sealed class RigBatchTransferTests
             Assert.That(outcome.Response.RestoredPhotoCount, Is.EqualTo(1));
             Assert.That(Scalar(connection, "SELECT COUNT(*) FROM RigTable"), Is.EqualTo(1));
             Assert.That(Scalar(connection, "SELECT COUNT(*) FROM RigPhotoTable"), Is.EqualTo(1));
+            Assert.That(ReadPhotoId(connection), Is.EqualTo(photoId));
         });
     }
 
@@ -173,5 +176,12 @@ public sealed class RigBatchTransferTests
         command.CommandText = "SELECT data FROM RigTable WHERE json_extract(MetaInfo, '$.ID')=$id";
         command.Parameters.AddWithValue("$id", id.ToString());
         return JsonSerializer.Deserialize<RigModel>((string)command.ExecuteScalar()!, JsonSettings.Options)!;
+    }
+
+    private static Guid ReadPhotoId(SqliteConnection connection)
+    {
+        using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = "SELECT json_extract(MetaInfo, '$.ID') FROM RigPhotoTable";
+        return Guid.Parse((string)command.ExecuteScalar()!);
     }
 }

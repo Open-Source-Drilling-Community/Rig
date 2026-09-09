@@ -304,7 +304,9 @@ public static class RigBatchRestorer
             string? contentError = RigPhotoManager.ValidateContent(metadata.ContentType ?? string.Empty, content);
             if (contentError is not null)
             { errors.Add(Error(index++, "Document.Photos", contentError, "Photo content type or image signature is invalid.")); continue; }
-            metadata.MetaInfo = new MetaInfo { ID = Guid.NewGuid() }; metadata.ByteLength = content.LongLength; metadata.Sha256 = hash;
+            // Photo UUIDs are part of the portable identity of a backup. They
+            // were validated above and must survive restore unchanged.
+            metadata.MetaInfo = new MetaInfo { ID = sourcePhotoId }; metadata.ByteLength = content.LongLength; metadata.Sha256 = hash;
             metadata.FileName = Path.GetFileName(metadata.FileName ?? string.Empty);
             using SqliteCommand command = connection.CreateCommand(); command.Transaction = transaction;
             command.CommandText = "INSERT INTO RigPhotoTable(MetaInfo,RigID,DisplayOrder,IsPrimary,ContentType,FileName,ByteLength,Sha256,CreationDate,LastModificationDate,data,Content) VALUES($meta,$rig,$ord,$primary,$type,$file,$length,$sha,$created,$modified,$data,$content)";

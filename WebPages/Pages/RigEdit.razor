@@ -274,7 +274,7 @@
                                             <MudInputWithUnitAdornment QuantityLabel="Drill-floor depth standard uncertainty"
                                                                    VariantType="Variant.Text"
                                                                    QuantityName="DepthDrilling"
-                                                                   DrillingSignalReference="@DrillingSignalReferenceType.Depth"
+                                                                   DrillingSignalReference="@DrillingSignalReferenceType.Independent"
                                                                    SIValueNullable="@_currentRig.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.StandardDeviation"
                                                                    SIValueNullableChanged="@(EventCallback.Factory.Create<double?>(this, OnDrillFloorDepthUncertaintyChanged))" />
                                         </MudItem>
@@ -952,7 +952,7 @@
         await UpdateCurrentRigDepthReferenceSourceAsync();
     }
 
-    private async Task OnDrillFloorDepthChanged(double? value)
+    private Task OnDrillFloorDepthChanged(double? value)
     {
         if (_currentRig != null)
         {
@@ -969,7 +969,14 @@
             }
         }
 
-        await UpdateCurrentRigDepthReferenceSourceAsync();
+        // MudInputWithUnitAdornment currently invokes its value callback synchronously.
+        // Awaiting external work here deadlocks a Blazor Server circuit, so update only
+        // the reference that actually depends on the edited drill-floor depth.
+        DataUtils.UnitAndReferenceParameters.RotaryTableDepthReferenceSource.RotaryTableDepthReference =
+            _currentRig?.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.Mean is double drillFloorDepth
+                ? -drillFloorDepth
+                : 0;
+        return Task.CompletedTask;
     }
 
     private Task OnDrillFloorDepthUncertaintyChanged(double? value)

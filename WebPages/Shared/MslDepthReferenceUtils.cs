@@ -37,6 +37,16 @@ public static class MslDepthReferenceUtils
         };
         RigModel.MeanSeaLevelToWgs84Response response =
             await client.ConvertMeanSeaLevelToWgs84Async(request);
-        return response.Samples?.FirstOrDefault()?.Wgs84EllipsoidalDepth;
+        double? meanSeaLevelWgs84Depth =
+            response.Samples?.FirstOrDefault()?.Wgs84EllipsoidalDepth;
+
+        // MudUnitAndReferenceChoiceTag expects the translation that is added to a
+        // WGS84 depth to express it relative to the selected datum. The vertical
+        // datum service returns the WGS84 depth of the MSL surface itself, so the
+        // required translation has the opposite sign.
+        return ToMeanSeaLevelDepthReference(meanSeaLevelWgs84Depth);
     }
+
+    public static double? ToMeanSeaLevelDepthReference(double? meanSeaLevelWgs84Depth) =>
+        -meanSeaLevelWgs84Depth;
 }

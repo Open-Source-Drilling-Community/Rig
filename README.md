@@ -71,14 +71,16 @@ The current work has been funded by the [Research Council of Norway](https://www
 
 ## Current implementation
 
-- Core Rig identity, `IsFixedPlatform`, `ClusterID`, equipment objects, and every top-drive controller property and enum token are retained.
+- Core Rig identity, `RigType`, `ClusterID`, equipment objects, and every top-drive controller property and enum token are retained.
 - The master-data lift adds structured identification, rig/environment/mobility classification, rated operating envelope, marine, jack-up, station-keeping and storage profiles.
 - Physical and logical rig components can carry stable component UUIDs; equipment also carries asset, lifecycle, installation and certification metadata.
 - Rig features provide seven immutable built-in capability catalogs plus user-created catalogs. Assignments are validated atomically for category/option integrity, exclusivity, deprecation and validity periods.
 - Feature-category create generates server-owned UUIDs. Updates use optimistic concurrency; referenced definitions and built-ins cannot be deleted.
 - Full rig replacements use optimistic concurrency through `expectedModifiedUtc`; the service preserves `CreationDate`, assigns the new `LastModificationDate`, and rejects stale writes with HTTP 409.
 - Rig creation assigns both timestamps on the server, and MCP returns the created resource with its first concurrency token. Timestamp-less legacy records expose a deterministic effective token.
-- Rig writes enforce the platform relationship: fixed-platform rigs require a non-empty `ClusterID`, non-fixed rigs must omit it, and referenced Clusters are verified live before create or replacement. An unavailable Cluster service rejects the write without changing Rig data.
+- Rig writes enforce the platform relationship from the `RigType` discriminator: `PlatformRig` records require a non-empty `ClusterID`, other rig types must omit both `ClusterID` and `FixedPlatformProperties`, and referenced Clusters are verified live before create or replacement. `FixedPlatformProperties.DrillFloorDepth` is Gaussian in SI metres relative to WGS84 and defaults to 0.5 m standard uncertainty.
+- This is the expand phase of the contract migration. Deprecated `DrillFloorElevation` and `IsFixedPlatform` fields remain temporarily for deployed readers. Historical `DrillFloorElevation` values are already depths and are copied to the new Gaussian mean without changing their sign.
+- The backup, audit, three-deployment data migration, and final contract gates are defined in [DRILL-FLOOR-DEPTH-MIGRATION.md](DRILL-FLOOR-DEPTH-MIGRATION.md).
 - Lightweight rig discovery includes rig type, operating environment, and mobility classification so catalogs can be filtered without retrieving complete equipment trees.
 - The SQLite catalog migration is additive: adding `RigFeatureCategoryTable` does not rebuild or delete `RigTable`.
 - One or more JPEG, PNG, or WebP photographs can be attached to a rig. Photo metadata and binary content are persisted separately from the Rig JSON, normal reads remain lightweight, and `includePhotos=true` opts into metadata only.

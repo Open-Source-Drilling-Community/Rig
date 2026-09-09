@@ -49,7 +49,6 @@
                 <MudTh>Rig Type</MudTh>
                 <MudTh>Environment</MudTh>
                 <MudTh>Mobility</MudTh>
-                <MudTh>Fixed Platform</MudTh>
                 <MudTh>Cluster</MudTh>
                 <MudTh>Last Modified</MudTh>
                 <MudTh></MudTh>
@@ -60,7 +59,6 @@
                 <MudTd DataLabel="Rig Type">@Display(context.RigType)</MudTd>
                 <MudTd DataLabel="Environment">@Display(context.OperatingEnvironment)</MudTd>
                 <MudTd DataLabel="Mobility">@Display(context.MobilityType)</MudTd>
-                <MudTd DataLabel="Fixed Platform">@(context.IsFixedPlatform ? "Yes" : "No")</MudTd>
                 <MudTd DataLabel="Cluster">@GetClusterName(context.ClusterID)</MudTd>
                 <MudTd DataLabel="Last Modified">@context.LastModificationDate?.ToString("u")</MudTd>
                 <MudTd>

@@ -1,0 +1,44 @@
+@namespace OSDC.Drilling.Rig.WebPages.Components.RigEditors
+
+<MudInputWithUnitAdornment QuantityName="DepthDrilling"
+                           QuantityLabel="Drill-floor depth"
+                           DrillingSignalReference="@DrillingSignalReferenceType.Depth"
+                           SIValueNullable="Rig.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.Mean"
+                           SIValueNullableChanged="OnDepthChanged" />
+<MudInputWithUnitAdornment QuantityName="DepthDrilling"
+                           QuantityLabel="Drill-floor depth standard uncertainty"
+                           DrillingSignalReference="@DrillingSignalReferenceType.Depth"
+                           SIValueNullable="Rig.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.StandardDeviation"
+                           SIValueNullableChanged="OnUncertaintyChanged" />
+
+@code {
+    [Parameter, EditorRequired] public Rig Rig { get; set; } = default!;
+
+    private void OnDepthChanged(double? value)
+    {
+        if (value is null)
+        {
+            if (Rig.FixedPlatformProperties is not null)
+                Rig.FixedPlatformProperties.DrillFloorDepth = null;
+            return;
+        }
+
+        GaussianDistribution distribution = EnsureDistribution();
+        distribution.Mean = value;
+        distribution.StandardDeviation ??= 0.5;
+    }
+
+    private void OnUncertaintyChanged(double? value)
+    {
+        if (Rig.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.Mean is not null)
+            EnsureDistribution().StandardDeviation = value ?? 0.5;
+    }
+
+    private GaussianDistribution EnsureDistribution()
+    {
+        Rig.FixedPlatformProperties ??= new FixedPlatformProperties();
+        Rig.FixedPlatformProperties.DrillFloorDepth ??= new GaussianDrillingProperty();
+        Rig.FixedPlatformProperties.DrillFloorDepth.GaussianValue ??= new GaussianDistribution();
+        return Rig.FixedPlatformProperties.DrillFloorDepth.GaussianValue;
+    }
+}

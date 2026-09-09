@@ -61,7 +61,6 @@ public static class DataUtils
             ["MpdController.SecondaryChokeTrim"] = "DiameterPipeDrilling",
             ["MudPump.MaxLimitOperatingSpeed"] = "StrokeFrequency",
             ["CementPumpDisplacementPoint.StrokeRate"] = "StrokeFrequency",
-            ["Rig.DrillFloorElevation"] = "HeightDrilling",
             ["RigOperatingEnvelope.MaximumDrillingDepth"] = "DepthDrilling",
             ["RigOperatingEnvelope.MaximumWaterDepth"] = "DepthDrilling",
             ["RigOperatingEnvelope.MaximumOperatingWindSpeed"] = "Velocity",
@@ -121,9 +120,10 @@ public static class DataUtils
         UnitAndReferenceParameters.SeaWaterLevelDepthReferenceSource.SeaWaterLevelDepthReference = 0;
         if (rig != null)
         {
-            if (rig.DrillFloorElevation != null)
+            if (rig.RigType == RigModel.RigType.PlatformRig &&
+                rig.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.Mean is double drillFloorDepth)
             {
-                UnitAndReferenceParameters.RotaryTableDepthReferenceSource.RotaryTableDepthReference = -rig.DrillFloorElevation;
+                UnitAndReferenceParameters.RotaryTableDepthReferenceSource.RotaryTableDepthReference = -drillFloorDepth;
             }
             if (cluster != null)
             {

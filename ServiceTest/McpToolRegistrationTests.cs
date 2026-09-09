@@ -87,7 +87,16 @@ public sealed class McpToolRegistrationTests
         string json = schema.ToJsonString();
 
         Assert.That(definitions.Count, Is.GreaterThan(40));
-        Assert.That(json, Does.Contain("IsFixedPlatform"));
+        Assert.That(json, Does.Contain("RigType"));
+        Assert.That(json, Does.Contain("FixedPlatformProperties"));
+        Assert.That(json, Does.Contain("DrillFloorDepth"));
+        JsonObject gaussianProperties = (JsonObject)definitions["GaussianDrillingProperty"]!["properties"]!;
+        Assert.That(gaussianProperties.ContainsKey("GaussianValue"), Is.True);
+        Assert.That(gaussianProperties.ContainsKey("Mean"), Is.False);
+        Assert.That(gaussianProperties.ContainsKey("StandardDeviation"), Is.False);
+        Assert.That(gaussianProperties.ContainsKey("Value"), Is.False);
+        Assert.That(json, Does.Contain("\"if\""));
+        Assert.That(json, Does.Contain("\"not\""));
         Assert.That(json, Does.Contain("ClusterID"));
         Assert.That(json, Does.Contain("external reference to the Cluster microservice"));
         Assert.That(json, Does.Contain("MainRigMast"));
@@ -115,7 +124,8 @@ public sealed class McpToolRegistrationTests
         string createSchema = _tools["rig_create"].InputSchema!.ToJsonString();
         string updateSchema = _tools["rig_update_by_id"].InputSchema!.ToJsonString();
 
-        Assert.That(createSchema, Does.Contain("Drill-floor elevation in metres"));
+        Assert.That(createSchema, Does.Contain("Gaussian drill-floor depth in SI metres relative to WGS84"));
+        Assert.That(createSchema, Does.Contain("defaults to 0.5 m"));
         Assert.That(createSchema, Does.Contain("pascal (Pa)"));
         Assert.That(createSchema, Does.Contain("newton metre"));
         Assert.That(createSchema, Does.Contain("radian per second"));

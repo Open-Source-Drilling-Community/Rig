@@ -8,11 +8,13 @@ internal static class RigDefinitionValidator
 {
     public static List<string> Validate(Model.Rig rig)
     {
-        List<string> errors = [];
-        if (rig.IsFixedPlatform && (!rig.ClusterID.HasValue || rig.ClusterID == Guid.Empty))
-            errors.Add("ClusterID must be a non-empty UUID when IsFixedPlatform is true.");
-        if (!rig.IsFixedPlatform && rig.ClusterID.HasValue)
-            errors.Add("ClusterID must be null when IsFixedPlatform is false.");
+        List<string> errors = RigContractCompatibility.Normalize(rig);
+        bool isPlatformRig = rig.RigType == RigType.PlatformRig;
+        if (isPlatformRig && (!rig.ClusterID.HasValue || rig.ClusterID == Guid.Empty))
+            errors.Add("ClusterID must be a non-empty UUID when RigType is PlatformRig.");
+        if (!isPlatformRig && rig.ClusterID.HasValue)
+            errors.Add("ClusterID must be null when RigType is not PlatformRig.");
+        ValidateFixedPlatformProperties(rig.FixedPlatformProperties, errors);
         ValidateIdentification(rig.Identification, errors);
         ValidateEnvelope(rig.OperatingEnvelope, errors);
         ValidateMarine(rig.MarineUnitProfile, errors);
@@ -28,6 +30,20 @@ internal static class RigDefinitionValidator
                 errors.Add($"StorageCapacities[{index}] must define MaximumVolume or MaximumMass.");
         }
         return errors;
+    }
+
+    private static void ValidateFixedPlatformProperties(FixedPlatformProperties? value, List<string> errors)
+    {
+        if (value is null) return;
+        if (value.DrillFloorDepth is null)
+        {
+            errors.Add("FixedPlatformProperties.DrillFloorDepth is required when FixedPlatformProperties is defined.");
+            return;
+        }
+        FiniteWhenDefined(value.DrillFloorDepth.Mean, "FixedPlatformProperties.DrillFloorDepth.Mean", errors);
+        NonNegative(value.DrillFloorDepth.StandardDeviation, "FixedPlatformProperties.DrillFloorDepth.StandardDeviation", errors);
+        if (value.DrillFloorDepth.Mean is null)
+            errors.Add("FixedPlatformProperties.DrillFloorDepth.Mean is required when DrillFloorDepth is defined.");
     }
 
     private static void ValidateEquipmentMeasurements(Model.Rig rig, List<string> errors)

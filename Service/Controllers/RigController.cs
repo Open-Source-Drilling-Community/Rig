@@ -347,7 +347,7 @@ namespace OSDC.Drilling.Rig.Service.Controllers
 
         private async Task<ActionResult?> ValidateClusterReferenceAsync(Model.Rig rig, CancellationToken cancellationToken)
         {
-            if (!rig.IsFixedPlatform || !rig.ClusterID.HasValue) return null;
+            if (rig.RigType != RigType.PlatformRig || !rig.ClusterID.HasValue) return null;
             try
             {
                 if (await _externalReferenceResolver.ClusterExistsAsync(rig.ClusterID.Value, cancellationToken)) return null;

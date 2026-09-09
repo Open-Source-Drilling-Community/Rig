@@ -324,7 +324,10 @@ namespace OSDC.Drilling.Rig.Service.Managers
                 }
             }
 
-            return root?.Deserialize<Model.Rig>(JsonSettings.Options);
+            Model.Rig? rig = root?.Deserialize<Model.Rig>(JsonSettings.Options);
+            if (rig is not null)
+                RigContractCompatibility.Normalize(rig);
+            return rig;
         }
 
         private static void CopyIfDefined(JsonObject source, string sourceName, JsonObject target, string targetName)

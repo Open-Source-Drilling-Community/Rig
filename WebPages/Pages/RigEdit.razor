@@ -198,7 +198,11 @@
                                                       Disabled="true" />
                                     </MudItem>
                                     <MudItem xs="12" md="4">
-                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.RigType?" @bind-Value="_currentRig.RigType" Label="Rig type" Variant="Variant.Outlined">
+                                        <MudSelect T="OSDC.Drilling.Rig.ModelShared.RigType?"
+                                                   Value="@_currentRig.RigType"
+                                                   ValueChanged="@(EventCallback.Factory.Create<OSDC.Drilling.Rig.ModelShared.RigType?>(this, OnRigTypeChanged))"
+                                                   Label="Rig type"
+                                                   Variant="Variant.Outlined">
                                             @foreach (OSDC.Drilling.Rig.ModelShared.RigType value in Enum.GetValues<OSDC.Drilling.Rig.ModelShared.RigType>())
                                             {
                                                 <MudSelectItem T="OSDC.Drilling.Rig.ModelShared.RigType?" Value="@((OSDC.Drilling.Rig.ModelShared.RigType?)value)">@DataUtils.GetDisplayName(value.ToString())</MudSelectItem>
@@ -221,14 +225,7 @@
                                             }
                                         </MudSelect>
                                     </MudItem>
-                                    <MudItem xs="12">
-                                        <MudSwitch T="bool"
-                                                   Value="@_currentRig.IsFixedPlatform"
-                                                   ValueChanged="@(EventCallback.Factory.Create<bool>(this, OnFixedPlatformChanged))"
-                                                   Label="Fixed platform"
-                                                   Color="Color.Primary" />
-                                    </MudItem>
-                                    @if (_currentRig.IsFixedPlatform)
+                                    @if (_currentRig.RigType == OSDC.Drilling.Rig.ModelShared.RigType.PlatformRig)
                                     {
                                         <MudItem xs="12" md="6">
                                             <MudSelect T="OSDC.Drilling.Rig.ModelShared.Field"
@@ -265,15 +262,23 @@
                                                 }
                                             </MudSelect>
                                         </MudItem>
-                                    }
-                                    <MudItem xs="12" md="6">
-                                        <MudInputWithUnitAdornment QuantityLabel="Drill Floor Elevation"
+                                        <MudItem xs="12" md="6">
+                                            <MudInputWithUnitAdornment QuantityLabel="Drill-floor depth"
                                                                    VariantType="Variant.Text"
                                                                    QuantityName="DepthDrilling"
                                                                    DrillingSignalReference="@DrillingSignalReferenceType.Depth"
-                                                                   SIValueNullable="@_currentRig.DrillFloorElevation"
-                                                                   SIValueNullableChanged="@(EventCallback.Factory.Create<double?>(this, OnDrillFloorElevationChanged))" />
-                                    </MudItem>
+                                                                   SIValueNullable="@_currentRig.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.Mean"
+                                                                   SIValueNullableChanged="@(EventCallback.Factory.Create<double?>(this, OnDrillFloorDepthChanged))" />
+                                        </MudItem>
+                                        <MudItem xs="12" md="6">
+                                            <MudInputWithUnitAdornment QuantityLabel="Drill-floor depth standard uncertainty"
+                                                                   VariantType="Variant.Text"
+                                                                   QuantityName="DepthDrilling"
+                                                                   DrillingSignalReference="@DrillingSignalReferenceType.Depth"
+                                                                   SIValueNullable="@_currentRig.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.StandardDeviation"
+                                                                   SIValueNullableChanged="@(EventCallback.Factory.Create<double?>(this, OnDrillFloorDepthUncertaintyChanged))" />
+                                        </MudItem>
+                                    }
                                 </MudGrid>
                             }
                             else if (SelectedNode.Value is RigMast selectedRigMast)
@@ -665,7 +670,7 @@
 
     private void InitializeSelectedFieldAndCluster()
     {
-        if (_currentRig == null || !_currentRig.IsFixedPlatform)
+        if (_currentRig == null || _currentRig.RigType != OSDC.Drilling.Rig.ModelShared.RigType.PlatformRig)
         {
             _selectedField = null;
             _selectedCluster = null;
@@ -883,19 +888,24 @@
 
     private int GetListCount(RigTreeNode node) => node.Value is System.Collections.IList list ? list.Count : 0;
 
-    private async Task OnFixedPlatformChanged(bool value)
+    private async Task OnRigTypeChanged(OSDC.Drilling.Rig.ModelShared.RigType? value)
     {
         if (_currentRig == null)
         {
             return;
         }
 
-        _currentRig.IsFixedPlatform = value;
-        if (!value)
+        _currentRig.RigType = value;
+        if (value == OSDC.Drilling.Rig.ModelShared.RigType.PlatformRig)
+        {
+            _currentRig.FixedPlatformProperties ??= new FixedPlatformProperties();
+        }
+        else
         {
             _selectedField = null;
             _selectedCluster = null;
             _currentRig.ClusterID = null;
+            _currentRig.FixedPlatformProperties = null;
         }
 
         await UpdateCurrentRigDepthReferenceSourceAsync();
@@ -942,14 +952,39 @@
         await UpdateCurrentRigDepthReferenceSourceAsync();
     }
 
-    private async Task OnDrillFloorElevationChanged(double? value)
+    private async Task OnDrillFloorDepthChanged(double? value)
     {
         if (_currentRig != null)
         {
-            _currentRig.DrillFloorElevation = value;
+            if (value is null)
+            {
+                if (_currentRig.FixedPlatformProperties is not null)
+                    _currentRig.FixedPlatformProperties.DrillFloorDepth = null;
+            }
+            else
+            {
+                OSDC.Drilling.Rig.ModelShared.GaussianDistribution distribution = EnsureDrillFloorDepth();
+                distribution.Mean = value;
+                distribution.StandardDeviation ??= 0.5;
+            }
         }
 
         await UpdateCurrentRigDepthReferenceSourceAsync();
+    }
+
+    private Task OnDrillFloorDepthUncertaintyChanged(double? value)
+    {
+        if (_currentRig?.FixedPlatformProperties?.DrillFloorDepth?.GaussianValue?.Mean is not null)
+            EnsureDrillFloorDepth().StandardDeviation = value ?? 0.5;
+        return Task.CompletedTask;
+    }
+
+    private OSDC.Drilling.Rig.ModelShared.GaussianDistribution EnsureDrillFloorDepth()
+    {
+        _currentRig!.FixedPlatformProperties ??= new FixedPlatformProperties();
+        _currentRig.FixedPlatformProperties.DrillFloorDepth ??= new GaussianDrillingProperty();
+        _currentRig.FixedPlatformProperties.DrillFloorDepth.GaussianValue ??= new OSDC.Drilling.Rig.ModelShared.GaussianDistribution();
+        return _currentRig.FixedPlatformProperties.DrillFloorDepth.GaussianValue;
     }
 
     private async Task SaveRig()
@@ -960,7 +995,7 @@
             return;
         }
 
-        if (_currentRig.IsFixedPlatform)
+        if (_currentRig.RigType == OSDC.Drilling.Rig.ModelShared.RigType.PlatformRig)
         {
             if (_selectedField == null || _selectedCluster?.MetaInfo == null)
             {

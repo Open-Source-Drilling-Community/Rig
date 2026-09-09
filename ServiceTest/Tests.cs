@@ -5,6 +5,7 @@ using OSDC.Drilling.Rig.Model;
 using OSDC.Drilling.Rig.Service;
 using OSDC.Drilling.Rig.Service.Controllers;
 using OSDC.Drilling.Rig.Service.Managers;
+using OSDC.DotnetLibraries.Drilling.DrillingProperties;
 using OSDC.DotnetLibraries.General.DataManagement;
 using System.Reflection;
 using System.Text.Json;
@@ -159,7 +160,6 @@ namespace ServiceTest
             Assert.That(rigLight.Description, Is.EqualTo(rig.Description));
             Assert.That(rigLight.CreationDate, Is.EqualTo(rig.CreationDate));
             Assert.That(rigLight.LastModificationDate, Is.EqualTo(rig.LastModificationDate));
-            Assert.That(rigLight.IsFixedPlatform, Is.EqualTo(rig.IsFixedPlatform));
             Assert.That(rigLight.ClusterID, Is.EqualTo(rig.ClusterID));
             Assert.That(rigLight.RigType, Is.EqualTo(rig.RigType));
             Assert.That(rigLight.OperatingEnvironment, Is.EqualTo(rig.OperatingEnvironment));
@@ -208,8 +208,8 @@ namespace ServiceTest
             DateTimeOffset? originalLastModification = rig.LastModificationDate;
             rig.Name = "updated-rig";
             rig.Description = "updated-description";
-            rig.IsFixedPlatform = !rig.IsFixedPlatform;
-            rig.ClusterID = rig.IsFixedPlatform ? Guid.NewGuid() : null;
+            rig.RigType = RigType.Drillship;
+            rig.ClusterID = null;
 
             ActionResult<Rig> actionResult = _controller.PutRigById(id, originalLastModification!.Value, rig);
 
@@ -219,7 +219,7 @@ namespace ServiceTest
             RigReadResponse updatedRig = AssertOk<RigReadResponse>(_controller.GetRigById(id).Result);
             Assert.That(updatedRig.Name, Is.EqualTo("updated-rig"));
             Assert.That(updatedRig.Description, Is.EqualTo("updated-description"));
-            Assert.That(updatedRig.IsFixedPlatform, Is.EqualTo(rig.IsFixedPlatform));
+            Assert.That(updatedRig.RigType, Is.EqualTo(RigType.Drillship));
             Assert.That(updatedRig.LastModificationDate, Is.Not.Null);
             Assert.That(updatedRig.LastModificationDate, Is.GreaterThanOrEqualTo(originalLastModification));
         }
@@ -237,7 +237,70 @@ namespace ServiceTest
         public void PostRig_RejectsNonFixedRigWithClusterReference()
         {
             Rig rig = CreateRig(Guid.NewGuid(), "unexpected-cluster");
-            rig.IsFixedPlatform = false;
+            rig.RigType = RigType.Drillship;
+
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public void PostRig_MigratesLegacyDrillFloorDepthWithoutChangingSign()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "legacy-drill-floor-depth");
+#pragma warning disable CS0618
+            rig.DrillFloorElevation = -24.5;
+#pragma warning restore CS0618
+
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
+
+            RigReadResponse stored = AssertOk<RigReadResponse>(_controller.GetRigById(rig.MetaInfo!.ID).Result);
+            Assert.Multiple(() =>
+            {
+                Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.Mean, Is.EqualTo(-24.5));
+                Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.StandardDeviation, Is.EqualTo(0.5));
+            });
+        }
+
+        [Test]
+        public void PostRig_DefaultsNewDrillFloorDepthUncertaintyAndMaintainsLegacyReaderValue()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "new-drill-floor-depth");
+            rig.FixedPlatformProperties = new FixedPlatformProperties
+            {
+                DrillFloorDepth = new GaussianDrillingProperty { Mean = -17.25 }
+            };
+
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<OkResult>());
+
+            RigReadResponse stored = AssertOk<RigReadResponse>(_controller.GetRigById(rig.MetaInfo!.ID).Result);
+            Assert.Multiple(() =>
+            {
+                Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.Mean, Is.EqualTo(-17.25));
+                Assert.That(stored.FixedPlatformProperties?.DrillFloorDepth?.StandardDeviation, Is.EqualTo(0.5));
+#pragma warning disable CS0618
+                Assert.That(stored.DrillFloorElevation, Is.EqualTo(-17.25));
+#pragma warning restore CS0618
+            });
+        }
+
+        [Test]
+        public void PostRig_RejectsFixedPlatformPropertiesForAnotherRigType()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "movable-rig-with-fixed-properties");
+            rig.RigType = RigType.Drillship;
+            rig.ClusterID = null;
+            rig.FixedPlatformProperties = new FixedPlatformProperties
+            {
+                DrillFloorDepth = new GaussianDrillingProperty { Mean = -17.25, StandardDeviation = 0.5 }
+            };
+
+            Assert.That(_controller.PostRig(rig), Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public void PostRig_RejectsEmptyFixedPlatformProperties()
+        {
+            Rig rig = CreateRig(Guid.NewGuid(), "empty-fixed-platform-properties");
+            rig.FixedPlatformProperties = new FixedPlatformProperties();
 
             Assert.That(_controller.PostRig(rig), Is.TypeOf<BadRequestObjectResult>());
         }
@@ -522,7 +585,6 @@ namespace ServiceTest
                 Description = $"Description for {name}",
                 CreationDate = now,
                 LastModificationDate = now,
-                IsFixedPlatform = true,
                 ClusterID = Guid.NewGuid(),
                 RigType = RigType.PlatformRig,
                 OperatingEnvironment = RigEnvironment.Offshore,

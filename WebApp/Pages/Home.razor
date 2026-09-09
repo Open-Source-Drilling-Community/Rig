@@ -46,8 +46,8 @@
                 place for the life of the field.
             </MudText>
             <MudText Typo="Typo.body1">
-                The older <code>IsFixedPlatform</code> boolean is kept as a compatibility flag for existing clients;
-                <code>RigType</code> is authoritative for new records. Marine units, jack-ups, and station-keeping
+                <code>RigType</code> is authoritative. The older <code>IsFixedPlatform</code> boolean is retained
+                temporarily during the compatibility migration. Marine units, jack-ups, and station-keeping
                 systems carry their own dedicated profile objects rather than overloading the base rig fields.
             </MudText>
         </MudPaper>
@@ -71,18 +71,19 @@
     </MudItem>
     <MudItem xs="12" md="6">
         <MudPaper Class="pa-6 mt-4" Elevation="2">
-            <MudText Typo="Typo.h5" Class="mb-3">Drill floor elevation as a depth reference</MudText>
+            <MudText Typo="Typo.h5" Class="mb-3">Drill-floor depth reference</MudText>
             <MudText Typo="Typo.body1" Class="mb-2">
-                <code>DrillFloorElevation</code> records how high the rig's drill floor sits above the vertical
-                datum used at its location. Depths measured while drilling — measured depth, true vertical depth —
-                are naturally referenced to the drill floor, which is a moving target from one rig to the next; two
-                wells drilled from rigs with different drill floor elevations are not directly comparable on that
-                basis alone.
+                A <code>PlatformRig</code> may define
+                <code>FixedPlatformProperties.DrillFloorDepth</code> as a Gaussian depth in SI metres relative to
+                WGS84. Its standard uncertainty defaults to 0.5 m. Mobile rig types cannot carry this property
+                because their drill-floor depth is not a constant installation characteristic.
             </MudText>
             <MudText Typo="Typo.body1">
-                Combining a rig's drill floor elevation with its Cluster's location and the Earth Vertical Datum
+                Combining the Gaussian mean with the rig's Cluster location and the Earth Vertical Datum
                 service resolves a common <b>mean-sea-level depth reference</b>, so that Well and WellBore data tied
-                to this rig can be expressed on a consistent vertical datum regardless of which rig drilled them.
+                to this rig can be expressed consistently. The deprecated <code>DrillFloorElevation</code> name is
+                temporarily readable only for migration; its historic values are depths and are copied without a
+                sign change.
             </MudText>
         </MudPaper>
     </MudItem>

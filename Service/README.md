@@ -68,7 +68,10 @@ payload column containing the serialized `Rig` object:
 - `ClusterID`
 - `data`
 
-`data` contains the JSON-serialized `Rig` instance.
+`data` contains the JSON-serialized `Rig` instance. The
+`IsFixedPlatform` SQL column is retained only as an expand-phase compatibility
+projection for deployed databases; `RigType` in the serialized aggregate is
+authoritative.
 
 The service does not store a separate physical `ID` column. Lookup uniqueness is
 enforced through an index on `json_extract(MetaInfo, '$.ID')`.
@@ -261,7 +264,9 @@ Descriptions distinguish compact discovery (`rig_get_all_ids`, `rig_get_all_meta
 
 Rig creation ignores caller timestamp values, assigns CreationDate and LastModificationDate on the server, and returns the created Rig through MCP so the first concurrency token is immediately available. Reads expose CreationDate, or the Unix epoch when both timestamps are absent, as the effective token for legacy records.
 
-The schema documents caller-owned `MetaInfo.ID` values, the update path/body ID match, the required `expectedModifiedUtc` concurrency token, and the fixed-platform relationship: set `ClusterID` to an existing Cluster UUID when `IsFixedPlatform` is true and leave it null otherwise. Create and replacement verify this external reference live; an unknown Cluster returns conflict and an unavailable Cluster dependency returns bad gateway without persisting the write. Equipment objects are embedded full definitions, not separate resource references. Physical numbers use SI values (for example metres, pascals, kelvin, newtons, newton metres, watts, cubic metres per second, and radians). `DrillFloorElevation` is stored as a scalar in metres; because the payload has no vertical-datum field, callers must consistently apply their configured depth-reference convention.
+The schema documents caller-owned `MetaInfo.ID` values, the update path/body ID match, the required `expectedModifiedUtc` concurrency token, and the `RigType`-discriminated platform relationship. A `PlatformRig` sets `ClusterID` to an existing Cluster UUID and may carry `FixedPlatformProperties.DrillFloorDepth`; other rig types must omit both fields. Create and replacement verify the external Cluster reference live; an unknown Cluster returns conflict and an unavailable Cluster dependency returns bad gateway without persisting the write. Equipment objects are embedded full definitions, not separate resource references. Physical numbers use SI values. `DrillFloorDepth` is Gaussian in SI metres relative to WGS84 and its standard uncertainty defaults to 0.5 m.
+
+During the expand phase, deprecated `DrillFloorElevation` and `IsFixedPlatform` remain in REST and persisted JSON for old clients. Reads normalize either shape, and writes maintain both representations. Existing `DrillFloorElevation` values are already depths, so migration copies the scalar directly into the Gaussian mean without negating it. The obsolete fields are removed only after all consumers and the three deployed data stores have been backed up, audited, and migrated.
 
 Every MCP tool publishes a human-readable title, exact input and success-output JSON Schemas, and read-only/destructive/idempotent/open-world annotations. Successes return schema-conforming structured content plus a JSON text fallback. Failures set `isError=true`, return a stable `{error,message,errors}` JSON text envelope, and omit structured content so it cannot conflict with the success schema.
 Required resource bodies (`rig`, `category`, and batch requests) and single-resource success payloads use direct, non-null `$ref` schemas. Optional nested components retain their declared nullability.

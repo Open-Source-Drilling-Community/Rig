@@ -38,14 +38,21 @@ The model has been streamlined with four main rules:
 - Hoisting and rotary equipment through `MainRigMast` and `AuxiliaryRigMast`
 - Pressure-control and well-control equipment
 - MPD equipment and associated control devices
-- Platform-level metadata such as `DrillFloorElevation`, `IsFixedPlatform`,
-  and `ClusterID`
+- Platform-only `FixedPlatformProperties`, including Gaussian `DrillFloorDepth`
+  in SI metres relative to WGS84, together with `ClusterID`
 - Structured identity and provenance through `RigIdentification`
 - Explicit `RigType`, `RigEnvironment`, and `RigMobilityType` classifications
 - Certified or advertised limits through `RigOperatingEnvelope`
 - Optional `MarineUnitProfile`, `JackUpProfile`, and `StationKeepingSystem`
 - General storage capacities and extensible `RigFeatureAssignment` records
 - Optional `RigPhotoMetadata` in read responses when explicitly requested; binary image content is kept outside the core aggregate
+
+`RigType.PlatformRig` is the discriminator for `FixedPlatformProperties`; other
+rig types reject that object. The standard uncertainty for
+`DrillFloorDepth` defaults to 0.5 m. During the expand migration, deprecated
+`DrillFloorElevation` and `IsFixedPlatform` members remain readable for
+compatibility. Existing `DrillFloorElevation` numbers are depths despite their
+name and migrate to the Gaussian mean with no sign inversion.
 
 
 ### RigMast

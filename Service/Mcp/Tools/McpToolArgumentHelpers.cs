@@ -69,7 +69,7 @@ internal static class McpToolArgumentHelpers
             ["MpdController.SecondaryChokeTrim"] = "metre (m), physical quantity DiameterPipeDrilling",
             ["MudPump.MaxLimitOperatingSpeed"] = "hertz (Hz), physical quantity StrokeFrequency",
             ["CementPumpDisplacementPoint.StrokeRate"] = "hertz (Hz), physical quantity StrokeFrequency",
-            ["Rig.DrillFloorElevation"] = "metre (m), physical quantity HeightDrilling",
+            ["Rig.DrillFloorElevation"] = "metre (m), physical quantity DepthDrilling",
             ["RigOperatingEnvelope.MaximumDrillingDepth"] = "metre (m), physical quantity DepthDrilling",
             ["RigOperatingEnvelope.MaximumWaterDepth"] = "metre (m), physical quantity DepthDrilling",
             ["RigOperatingEnvelope.MaximumOperatingWindSpeed"] = "metre per second (m/s), physical quantity Velocity",
@@ -101,9 +101,12 @@ internal static class McpToolArgumentHelpers
             ["Description"] = "Human-readable description of the rig, component, capabilities, or intended use.",
             ["CreationDate"] = "Creation timestamp in ISO 8601 format. Use a UTC offset where possible.",
             ["LastModificationDate"] = "Server-assigned last-modification timestamp in ISO 8601 format. Use the latest returned value as expectedModifiedUtc when replacing a stored rig.",
-            ["IsFixedPlatform"] = "Whether this is a fixed-platform rig. When true, ClusterID should identify its Cluster; when false, ClusterID should be null.",
-            ["ClusterID"] = "UUID of the Cluster hosting a fixed-platform rig. This is an external reference to the Cluster microservice, not an embedded Cluster object; leave null for non-fixed rigs.",
-            ["DrillFloorElevation"] = "Drill-floor elevation in metres (m). The Rig payload stores only the SI scalar and no vertical-datum identifier, so callers must apply the configured depth-reference convention consistently.",
+            ["RigType"] = "Authoritative rig classification and discriminator. FixedPlatformProperties is allowed only for the exact PlatformRig value.",
+            ["IsFixedPlatform"] = "Deprecated compatibility flag derived by the service from RigType. New callers must use RigType.",
+            ["ClusterID"] = "UUID of the Cluster hosting a PlatformRig. This is an external reference to the Cluster microservice, not an embedded Cluster object; leave null for every other RigType.",
+            ["FixedPlatformProperties"] = "RigType-discriminated properties allowed only when RigType is PlatformRig.",
+            ["DrillFloorDepth"] = "Gaussian drill-floor depth in SI metres relative to WGS84. GaussianValue.Mean is the depth and GaussianValue.StandardDeviation is its uncertainty; omitted historical uncertainty defaults to 0.5 m.",
+            ["DrillFloorElevation"] = "Deprecated, misnamed compatibility depth in SI metres relative to WGS84. Its value is migrated without changing sign; new callers must use FixedPlatformProperties.DrillFloorDepth.",
             ["MainRigMast"] = "Primary rig-mast assembly and its hoisting, rotary, pipe-handling, standpipe, choke, and related equipment.",
             ["AuxiliaryRigMast"] = "Optional secondary rig-mast assembly with the same nested equipment structure as MainRigMast.",
             ["MudPumpList"] = "Mud-circulation pumps installed on the rig, including equipment identity, pump class, displacement curve, and operating limits.",
@@ -326,7 +329,9 @@ internal static class McpToolArgumentHelpers
         {
             definitions[definitionName] = new JsonObject();
             var properties = new JsonObject();
-            foreach (PropertyInfo property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(p => p.CanRead && p.CanWrite))
+            foreach (PropertyInfo property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                         .Where(p => p.CanRead && p.CanWrite &&
+                                     p.GetCustomAttribute<System.Text.Json.Serialization.JsonIgnoreAttribute>() is null))
             {
                 JsonObject propertySchema = TypeSchema(property.PropertyType, definitions, IsNullable(property));
                 propertySchema["description"] = DescribeProperty(property);
@@ -340,7 +345,25 @@ internal static class McpToolArgumentHelpers
                 ["properties"] = properties,
                 ["additionalProperties"] = false
             };
-            if (type == typeof(Model.Rig)) definition["required"] = new JsonArray("MetaInfo");
+            if (type == typeof(Model.Rig))
+            {
+                definition["required"] = new JsonArray("MetaInfo");
+                definition["allOf"] = new JsonArray
+                {
+                    new JsonObject
+                    {
+                        ["if"] = new JsonObject
+                        {
+                            ["properties"] = new JsonObject { ["RigType"] = new JsonObject { ["const"] = nameof(RigType.PlatformRig) } },
+                            ["required"] = new JsonArray("RigType")
+                        },
+                        ["else"] = new JsonObject
+                        {
+                            ["not"] = new JsonObject { ["required"] = new JsonArray("FixedPlatformProperties") }
+                        }
+                    }
+                };
+            }
             if (type.Name == "MetaInfo") definition["required"] = new JsonArray("ID");
             definitions[definitionName] = definition;
         }
@@ -376,7 +399,7 @@ internal static class McpToolArgumentHelpers
 
     private static string DescribeType(Type type)
     {
-        if (type == typeof(Model.Rig)) return "Complete rig configuration, containing identity, platform/cluster association, drill-floor elevation, mast assemblies, and installed drilling equipment.";
+        if (type == typeof(Model.Rig)) return "Complete rig configuration containing identity, RigType-discriminated platform/Cluster association, Gaussian drill-floor depth, mast assemblies, and installed drilling equipment.";
         if (type == typeof(RigFeatureCategory)) return "User-extensible rig capability category with stable options, exclusivity, provenance, and optional assignment validity periods.";
         if (type == typeof(RigFeatureOption)) return "One selectable option within a rig feature category.";
         if (type == typeof(RigFeatureAssignment)) return "Assignment of one stored rig feature option to a rig, optionally with validity and evidence.";

@@ -13095,6 +13095,24 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FixedPlatformProperties
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("DrillFloorDepth")]
+        public GaussianDrillingProperty DrillFloorDepth { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FloatValve
     {
 
@@ -14793,10 +14811,15 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.Text.Json.Serialization.JsonPropertyName("RiserHeaveCompensator")]
         public RiserHeaveCompensator RiserHeaveCompensator { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("FixedPlatformProperties")]
+        public FixedPlatformProperties FixedPlatformProperties { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("DrillFloorElevation")]
+        [System.Obsolete]
         public double? DrillFloorElevation { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("IsFixedPlatform")]
+        [System.Obsolete]
         public bool IsFixedPlatform { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("ClusterID")]
@@ -15897,10 +15920,15 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.Text.Json.Serialization.JsonPropertyName("RiserHeaveCompensator")]
         public RiserHeaveCompensator RiserHeaveCompensator { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("FixedPlatformProperties")]
+        public FixedPlatformProperties FixedPlatformProperties { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("DrillFloorElevation")]
+        [System.Obsolete]
         public double? DrillFloorElevation { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("IsFixedPlatform")]
+        [System.Obsolete]
         public bool IsFixedPlatform { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("ClusterID")]

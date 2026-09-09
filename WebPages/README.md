@@ -10,6 +10,7 @@ It contains the `RigMain`, `RigEdit`, `RigFeatures`, `RigBackupRestore`, and `St
 
 - Rig catalog page whose rows open directly in the editor
 - Single create/edit workflow for the complete rig model, including identification, operating envelope, marine/jack-up/station-keeping profiles, storage and equipment
+- `RigType`-discriminated fixed-platform editing with Gaussian drill-floor depth and a default 0.5 m standard uncertainty
 - Unit-aware fields for engineering quantities
 - Named feature-assignment editor and a feature-category catalog page using the common resource-service compact grid and actions; built-in definitions remain read-only while custom code, description, and deprecation metadata remain editable
 - Automatically displayed rig photo gallery with JPEG, PNG, and WebP upload, descriptive metadata, primary-photo selection, and a manual refresh/retry option

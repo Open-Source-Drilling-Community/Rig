@@ -54,7 +54,6 @@ builder.Services.AddRigRestMcpTools();
 var app = builder.Build();
 
 var basePath = "/rig/api";
-var scheme = "http";
 
 app.UsePathBase(basePath);
 
@@ -97,8 +96,8 @@ string relativeSwaggerPath = "/swagger/merged/swagger.json";
 string fullSwaggerPath = $"{basePath}{relativeSwaggerPath}";
 string customVersion = "Merged API Version 1";
 
-var mergedDoc = SwaggerMiddlewareExtensions.ReadOpenApiDocument("wwwroot/json-schema/RigMergedModel.json");
-app.UseCustomSwagger(mergedDoc, relativeSwaggerPath);
+var mergedDocumentJson = SwaggerMiddlewareExtensions.ReadOpenApiDocumentJson("wwwroot/json-schema/RigMergedModel.json");
+app.UseCustomSwagger(mergedDocumentJson, relativeSwaggerPath);
 app.UseSwaggerUI(c =>
 {
     //c.SwaggerEndpoint("v1/swagger.json", "API Version 1");

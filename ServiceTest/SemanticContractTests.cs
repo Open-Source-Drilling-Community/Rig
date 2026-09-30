@@ -130,4 +130,27 @@ public class SemanticContractTests
         Assert.That(merged["paths"]!["/Rig"]!["post"]!["requestBody"]!["content"]!["application/json"]!
             ["schema"]![Semantic]!["referenceProfileVersion"]!.GetValue<string>(), Is.EqualTo("1.1.0"));
     }
+
+    [Test]
+    public void RuntimeSwaggerRenderingPreservesSemanticProfileVersions()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory != null && !File.Exists(Path.Combine(directory.FullName, "Rig.sln")))
+            directory = directory.Parent;
+        string mergedJson = File.ReadAllText(Path.Combine(directory!.FullName,
+            "Service/wwwroot/json-schema/RigMergedModel.json"));
+
+        string renderedJson = SwaggerMiddlewareExtensions.RenderDocument(
+            mergedJson, "https://dev.digiwells.no/rig/api");
+        JsonNode rendered = JsonNode.Parse(renderedJson)!;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(rendered["servers"]![0]!["url"]!.GetValue<string>(),
+                Is.EqualTo("https://dev.digiwells.no/rig/api"));
+            Assert.That(rendered["paths"]!["/Rig"]!["post"]!["requestBody"]!["content"]!["application/json"]!
+                ["schema"]![Semantic]!["referenceProfileVersion"]!.GetValue<string>(), Is.EqualTo("1.1.0"));
+            Assert.That(renderedJson, Does.Not.Contain("\"referenceProfileVersion\": \"2000-01-01\""));
+        });
+    }
 }

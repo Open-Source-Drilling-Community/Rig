@@ -1,22 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.OpenApi;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 public static class SwaggerMiddlewareExtensions
 {
-    public static void UseCustomSwagger(this IApplicationBuilder app, OpenApiDocument mergedDoc, string relativePath)
+    public static void UseCustomSwagger(this IApplicationBuilder app, string mergedDocumentJson, string relativePath)
     {
         app.Map(relativePath, builder =>
         {
             builder.Run(async context =>
             {
-                // Dynamically compute scheme and host from request or reverse proxy headers
+                // Dynamically compute scheme and host from request or reverse proxy headers.
                 var req = context.Request;
 
                 var scheme = req.Headers.ContainsKey("X-Forwarded-Host")
@@ -29,28 +27,31 @@ public static class SwaggerMiddlewareExtensions
 
                 var pathBase = req.PathBase.HasValue ? req.PathBase.Value : string.Empty;
 
-                // Update the servers list on-the-fly (like PreSerializeFilters would)
-                mergedDoc.Servers = new List<OpenApiServer>
-                {
-                    new OpenApiServer { Url = $"{scheme}://{host}{pathBase}" }
-                };
-
                 context.Response.ContentType = "application/json";
-                var outputString = mergedDoc.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json);
-                // temporary fix waiting for swaggerUI tooling to actually implement latest OpenApi 3.0.4 patch, which is limited to 3.0.3 so far (June 2025)
-                // same fix applied in ModelSharedIn/Program.cs and ModelSharedOut/Program.cs
-                outputString = outputString.Replace("\"openapi\": \"3.0.4\"", "\"openapi\": \"3.0.3\"");
+                string outputString = RenderDocument(mergedDocumentJson, $"{scheme}://{host}{pathBase}");
                 await context.Response.WriteAsync(outputString);
             });
         });
     }
 
-    public static OpenApiDocument ReadOpenApiDocument(string filePath)
+    internal static string RenderDocument(string mergedDocumentJson, string serverUrl)
     {
+        // Microsoft.OpenApi interprets profile versions such as "1.1.0" as dates
+        // while round-tripping extensions. Edit the raw JSON tree so extension values
+        // remain equivalent JSON values.
+        if (JsonNode.Parse(mergedDocumentJson) is not JsonObject document)
+            throw new InvalidDataException("The merged OpenAPI document is not a JSON object.");
+        document["servers"] = new JsonArray(new JsonObject { ["url"] = serverUrl });
+        return document.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+    }
+
+    public static string ReadOpenApiDocumentJson(string filePath)
+    {
+        // Keep the previous startup validation, but serve the original JSON rather
+        // than the lossy object-model serialization.
         using var stream = File.OpenRead(filePath);
         var reader = new OpenApiStreamReader();
-        var document = reader.Read(stream, out var diagnostic);
-
+        _ = reader.Read(stream, out var diagnostic);
         if (diagnostic.Errors.Count > 0)
         {
             Console.WriteLine("Warnings or errors while reading OpenAPI document:");
@@ -58,6 +59,6 @@ public static class SwaggerMiddlewareExtensions
                 Console.WriteLine($"- {error.Message}");
         }
 
-        return document;
+        return File.ReadAllText(filePath);
     }
 }

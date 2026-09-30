@@ -119,3 +119,5 @@ This project is provided under the MIT License. See [`LICENSE`](C:\OSDC\Rig\Mode
 ## Current schema inputs
 
 `json-schemas/VerticalDatumModel.json` supplies the generated Vertical Datum contract used by the Rig user interface. Regenerate the shared output after changing this schema so the consuming pages remain type-compatible.
+
+`json-schemas/RigFullName.json` is generated from the service and carries SemanticCatalogue 0.11.0 `x-osdc-semantic` extensions. The merge step preserves those extensions in `Service/wwwroot/json-schema/RigMergedModel.json`; generated C# DTO serialization remains unchanged.

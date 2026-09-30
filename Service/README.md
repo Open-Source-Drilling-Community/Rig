@@ -276,3 +276,7 @@ Nullable reference strings are also emitted as `string | null` in MCP schemas, m
 - WebSocket: `/rig/api/mcp/ws`
 - Utility tool: `ping`
 - Optional external MCP-hub registration: configured in `appsettings.json`, disabled by default
+
+## Semantic contract
+
+REST/OpenAPI and MCP schemas publish the Rig catalogue 0.11.0 bindings as `x-osdc-semantic`; contextual Gaussian drill-floor bindings use `x-osdc-semantic-bindings`. Both transports read the same provider registry. Pressure ratings are absolute and vacuum-referenced, while AutoDriller differential pressure is not. Drill-floor depth uses WGS84 and positive downward; standpipe elevations use the drill-floor origin and positive upward. Measurement range and absolute-accuracy fields retain the dynamic quantity declared by their sibling `PhysicalQuantity`.

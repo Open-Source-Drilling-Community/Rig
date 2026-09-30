@@ -319,6 +319,10 @@ The following streamlining decisions are intentional:
 - individual `*.cs` files: equipment-specific classes
 - `UsageStatisticsRig.cs`: usage and statistics-related support model
 
+## Semantic vocabulary
+
+The model consumes `OSDC.DotnetLibraries.Drilling.SemanticCatalogue` 0.11.0. The provider-owned registry in `Semantic/ProviderSemantics.cs` binds declaring types and properties to reviewed catalogue concepts, roles, references and authoritative physical quantities without changing persisted JSON. The registry is also compiled by WebPages so REST, MCP and UI unit selection share the same decisions.
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE).

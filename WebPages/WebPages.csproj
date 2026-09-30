@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DefineConstants>$(DefineConstants);RIG_WEBPAGES</DefineConstants>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 	<AssemblyName>OSDC.Drilling.Rig.WebPages</AssemblyName>
     <RootNamespace>OSDC.Drilling.Rig.WebPages</RootNamespace>
@@ -24,6 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="9.9.0" />
+    <PackageReference Include="OSDC.DotnetLibraries.Drilling.SemanticCatalogue" Version="0.11.0" />
     <PackageReference Include="OSDC.DotnetLibraries.Drilling.WebAppUtils" Version="1.1.5" />
     <PackageReference Include="OSDC.UnitConversion.DrillingRazorMudComponents" Version="3.4.2" />
     <PackageReference Include="Plotly.Blazor" Version="6.0.2" />
@@ -31,6 +33,10 @@
 
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\Semantic\ProviderSemantics.cs" Link="Semantic\ProviderSemantics.cs" />
 	</ItemGroup>
 
 	<!-- Include generated DTO source files directly from ModelSharedOut -->

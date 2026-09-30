@@ -2,95 +2,14 @@ using System.Collections;
 using System.Reflection;
 using System.Text.Json.Nodes;
 using OSDC.Drilling.Rig.Model;
+using OSDC.Drilling.Rig.Semantics;
+using OSDC.DotnetLibraries.Drilling.SemanticCatalogue;
 
 namespace OSDC.Drilling.Rig.Service.Mcp.Tools;
 
 internal static class McpToolArgumentHelpers
 {
     private static readonly NullabilityInfoContext Nullability = new();
-
-    private static readonly IReadOnlyDictionary<string, string> ScalarUnits =
-        new Dictionary<string, string>(StringComparer.Ordinal)
-        {
-            ["AutoDriller.MaxLimitRop"] = "metre per second (m/s), physical quantity RateOfPenetrationDrilling",
-            ["AutoDriller.MinLimitRop"] = "metre per second (m/s), physical quantity RateOfPenetrationDrilling",
-            ["AutoDriller.MaxLimitWob"] = "newton (N), physical quantity WeightOnBitDrilling",
-            ["AutoDriller.MinLimitWob"] = "newton (N), physical quantity WeightOnBitDrilling",
-            ["AutoDriller.MaxLimitTrq"] = "newton metre (N·m), physical quantity TorqueDrilling",
-            ["AutoDriller.MinLimitTrq"] = "newton metre (N·m), physical quantity TorqueDrilling",
-            ["BopLineDefinition.LineId"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["BopLineDefinition.LineOd"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["CasingDriveSystem.HoistingCapacity"] = "newton (N), physical quantity HookLoadDrilling",
-            ["CasingDriveSystem.MaxLimitPushDown"] = "newton (N), physical quantity ForceDrilling",
-            ["CoilDriveSystem.ReelPayloadCapacity"] = "newton (N), physical quantity ForceDrilling",
-            ["CoilDriveSystem.ReelPayloadLength"] = "metre (m), physical quantity LengthStandard",
-            ["CoilDriveSystem.InjectorHeadMinTubingOd"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["CoilDriveSystem.InjHeadDesignPullCapacity"] = "newton (N), physical quantity ForceDrilling",
-            ["CoilDriveSystem.InjHeadDesignSnubCapacity"] = "newton (N), physical quantity ForceDrilling",
-            ["CoilDriveSystem.InjHeadPullCapacity"] = "newton (N), physical quantity ForceDrilling",
-            ["CoilDriveSystem.InjHeadSnubCapacity"] = "newton (N), physical quantity ForceDrilling",
-            ["CoilDriveSystem.InjHeadMaxSpeed"] = "metre per second (m/s), physical quantity AxialVelocityDrilling",
-            ["ContinuousCirculationDevice.MaxLimitMudWeight"] = "kilogram per cubic metre (kg/m³), physical quantity MassDensityDrilling",
-            ["ContinuousCirculationDevice.MaxLimitRotationRate"] = "radian per second (rad/s), physical quantity AngularVelocityDrilling",
-            ["CrownBlock.GrooveDiameter"] = "metre (m), physical quantity CableDiameterDrilling",
-            ["CrownBlock.MaxLimitCompensatorStroke"] = "metre (m), physical quantity LengthStandard",
-            ["Derrick.MaxLimitWindSpeed"] = "metre per second (m/s), physical quantity Velocity",
-            ["DrillingChokeManifold.MaxLimitOpeningSpeed"] = "proportion per second (1/s), physical quantity ChokeOpeningRateDrilling",
-            ["DrillingChokeManifold.TrimSize"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["DrillingChokeManifold.FlowMeterSize"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["DrillingMarineRiser.JointWeight"] = "kilogram per metre (kg/m), physical quantity MassGradientPerLengthDrilling",
-            ["DrillLine.Diameter"] = "metre (m), physical quantity CableDiameterDrilling",
-            ["DrillLine.LinearWeight"] = "kilogram per metre (kg/m), physical quantity MassGradientPerLengthDrilling",
-            ["DrillstringHeaveCompensator.MaxLimitCompensatorStroke"] = "metre (m), physical quantity LengthStandard",
-            ["FlowRoutingManifold.FlangeSize"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["FlowRoutingManifold.PressureReliefValveTrim"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["Generator.PowerFactor"] = "dimensionless SI ratio, physical quantity ProportionStandard",
-            ["Generator.StartupTimeCold"] = "second (s), physical quantity DurationDrilling",
-            ["Generator.StartupTimeWarm"] = "second (s), physical quantity DurationDrilling",
-            ["Generator.Voltage"] = "volt (V), physical quantity ElectricTension",
-            ["Generator.MaxLimitVoltage"] = "volt (V), physical quantity ElectricTension",
-            ["Generator.MinLimitVoltage"] = "volt (V), physical quantity ElectricTension",
-            ["Generator.MaxLimitPowerIncrease"] = "watt per second (W/s), physical quantity PowerRateOfChangeDrilling",
-            ["Generator.MaxLimitSpeedIncrease"] = "hertz per second (Hz/s), physical quantity RotationalFrequencyRateOfChangeDrilling",
-            ["Generator.MaxLimitFrequency"] = "hertz (Hz), physical quantity Frequency",
-            ["Generator.MinLimitFrequency"] = "hertz (Hz), physical quantity Frequency",
-            ["MarineMpdEquipment.Weight"] = "kilogram (kg), physical quantity MassDrilling",
-            ["MarineUnitProfile.HullLength"] = "metre (m), physical quantity LengthStandard",
-            ["MarineUnitProfile.HullWidth"] = "metre (m), physical quantity LengthStandard",
-            ["MarineUnitProfile.HullDepth"] = "metre (m), physical quantity LengthStandard",
-            ["MarineUnitProfile.OperatingDraft"] = "metre (m), physical quantity LengthStandard",
-            ["MarineUnitProfile.TransitDraft"] = "metre (m), physical quantity LengthStandard",
-            ["MarineUnitProfile.OperatingDisplacement"] = "kilogram (kg), physical quantity MassDrilling",
-            ["MarineUnitProfile.VariableDeckLoad"] = "newton (N), physical quantity ForceDrilling",
-            ["MarineUnitProfile.MaximumTransitSpeed"] = "metre per second (m/s), physical quantity Velocity",
-            ["MeasurementAfm.UpdateRate"] = "hertz (Hz), physical quantity Frequency",
-            ["MpdControlDevice.NominalSize"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["MpdController.PrimaryChokeTrim"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["MpdController.SecondaryChokeTrim"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["MudPump.MaxLimitOperatingSpeed"] = "hertz (Hz), physical quantity StrokeFrequency",
-            ["CementPumpDisplacementPoint.StrokeRate"] = "hertz (Hz), physical quantity StrokeFrequency",
-            ["RigOperatingEnvelope.MaximumDrillingDepth"] = "metre (m), physical quantity DepthDrilling",
-            ["RigOperatingEnvelope.MaximumWaterDepth"] = "metre (m), physical quantity DepthDrilling",
-            ["RigOperatingEnvelope.MaximumOperatingWindSpeed"] = "metre per second (m/s), physical quantity Velocity",
-            ["RigOperatingEnvelope.MaximumSurvivalWindSpeed"] = "metre per second (m/s), physical quantity Velocity",
-            ["RiserHeaveCompensator.MaxLimitCompensatorStroke"] = "metre (m), physical quantity LengthStandard",
-            ["ShaleShaker.MaxLimitOperatingCapacity"] = "cubic metre per second (m³/s), physical quantity VolumetricFlowrateDrilling",
-            ["SurfaceMpdEquipment.MinimumBoreholeSize"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["SurfaceMpdEquipment.MaximumBoreholeSize"] = "metre (m), physical quantity DiameterPipeDrilling",
-            ["SurfaceMpdEquipment.MaxLimitMudWeight"] = "kilogram per cubic metre (kg/m³), physical quantity MassDensityDrilling",
-            ["TopDrive.Weight"] = "kilogram (kg), physical quantity MassDrilling",
-            ["TopDrive.TorqueHighPassFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
-            ["TopDrive.TorqueLowPassFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
-            ["TopDrive.VFDFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
-            ["TopDrive.EncoderTimeConstant"] = "second (s), physical quantity DurationDrilling",
-            ["TopDrive.AccelerationFilterTimeConstant"] = "second (s), physical quantity DurationDrilling",
-            ["TorqueTurnSub.Weight"] = "kilogram (kg), physical quantity MassDrilling",
-            ["TorqueTurnSub.BatteryLife"] = "second (s), physical quantity DurationDrilling",
-            ["TravellingBlock.GrooveDiameter"] = "metre (m), physical quantity CableDiameterDrilling",
-            ["TravellingBlock.MaxLimitBlockTravel"] = "metre (m), physical quantity LengthStandard",
-            ["EquipmentMeasurementCapability.RelativeAccuracy"] = "dimensionless SI ratio, physical quantity ProportionStandard",
-            ["EquipmentMeasurementCapability.UpdateFrequency"] = "hertz (Hz), physical quantity Frequency"
-        };
 
     private static readonly IReadOnlyDictionary<string, string> PropertyDescriptions =
         new Dictionary<string, string>(StringComparer.Ordinal)
@@ -332,6 +251,10 @@ internal static class McpToolArgumentHelpers
             {
                 JsonObject propertySchema = TypeSchema(property.PropertyType, definitions, IsNullable(property));
                 propertySchema["description"] = DescribeProperty(property);
+                if (ProviderSemantics.ForProperty(property) is JsonObject metadata)
+                    propertySchema[SemanticMetadata.ExtensionName] = metadata;
+                if (ProviderSemantics.NestedBindings(property) is JsonObject nested)
+                    propertySchema[ProviderSemantics.NestedBindingsExtension] = nested;
                 properties[property.Name] = propertySchema;
             }
 
@@ -342,6 +265,8 @@ internal static class McpToolArgumentHelpers
                 ["properties"] = properties,
                 ["additionalProperties"] = false
             };
+            if (ProviderSemantics.ForType(type) is JsonObject typeMetadata)
+                definition[SemanticMetadata.ExtensionName] = typeMetadata;
             if (type == typeof(Model.Rig))
             {
                 definition["required"] = new JsonArray("MetaInfo");
@@ -422,40 +347,8 @@ internal static class McpToolArgumentHelpers
         return $"{label} value for this rig component.";
     }
 
-    private static string NumericDescription(PropertyInfo property, string label)
-    {
-        string propertyKey = $"{property.DeclaringType?.Name}.{property.Name}";
-        if (ScalarUnits.TryGetValue(propertyKey, out string? scalarUnit))
-        {
-            return $"{label} in {scalarUnit}; do not send a display-unit value.";
-        }
-
-        string name = property.Name;
-        string key = name.ToLowerInvariant();
-        string? unit = key switch
-        {
-            _ when key.Contains("temperature") => "kelvin (K)",
-            _ when key.Contains("pressure") || key.Contains("shearstress") => "pascal (Pa)",
-            _ when key.Contains("torque") || key.EndsWith("trq") => "newton metre (N·m)",
-            _ when key.Contains("power") => "watt (W)",
-            _ when key.Contains("density") || key.Contains("mudweight") => "kilogram per cubic metre (kg/m³)",
-            _ when key.Contains("flow") || key.Contains("pumprate") => "cubic metre per second (m³/s)",
-            _ when key.Contains("volume") => "cubic metre (m³)",
-            _ when key.Contains("angle") || key.Contains("orientation") || key.Contains("azimuth") => "radian (rad)",
-            _ when key.Contains("rotation") || key.Contains("angular") || key.Contains("frequency") || key.Contains("strokera") => "radian per second (rad/s)",
-            _ when key.Contains("acceleration") => "metre per second squared (m/s²)",
-            _ when key.Contains("velocity") || key.Contains("windspeed") || key.Contains("coilspeed") || key.Contains("maxspeed") => "metre per second (m/s)",
-            _ when key.Contains("time") || key.Contains("batterylife") => "second (s)",
-            _ when key.Contains("diameter") || key.EndsWith("od") || key.EndsWith("id") || key.Contains("radius") || key.Contains("height") || key.Contains("length") || key.Contains("elevation") || key.Contains("position") || key.Contains("clearance") || key.Contains("stroke") => "metre (m)",
-            _ when key.Contains("mass") => "kilogram (kg)",
-            _ when key.Contains("load") || key.Contains("hook") || key.Contains("tension") || key.Contains("force") || key == "weight" => "newton (N)",
-            _ when key.Contains("efficiency") || key.Contains("factor") || key.Contains("gain") || key.Contains("cvvalue") || key.Contains("clogging") => "dimensionless SI ratio",
-            _ => null
-        };
-        return unit is null
-            ? $"{label} numeric value in the SI unit appropriate to this equipment property; do not send a display-unit value."
-            : $"{label} in {unit}; do not send a display-unit value.";
-    }
+    private static string NumericDescription(PropertyInfo property, string label) =>
+        ProviderSemantics.NumericDescription(property, label);
 
     private static string SplitName(string value) => System.Text.RegularExpressions.Regex.Replace(value, "(?<=[a-z0-9])([A-Z])", " $1");
 

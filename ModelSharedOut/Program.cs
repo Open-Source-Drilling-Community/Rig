@@ -5,6 +5,8 @@ using NJsonSchema;
 using NJsonSchema.CodeGeneration.CSharp;
 using NSwag.CodeGeneration.CSharp;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 
 /// <summary>
@@ -146,11 +148,14 @@ class Program
                         };
 
                         // Reading locally stored dependencies
+                        var semanticExtensions = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
                         IEnumerable<string> files = Directory.EnumerateFiles(jsonInputsDirectory, "*.json");
                         foreach (string file in files)
                         {
                             PrettyPrint(file, "Processing Open Api doc into API client...");
-                            var stream = File.OpenRead(file);
+                            string sourceJson = File.ReadAllText(file);
+                            CaptureSemanticExtensions(JsonNode.Parse(sourceJson), semanticExtensions);
+                            var stream = new MemoryStream(Encoding.UTF8.GetBytes(sourceJson));
                             var doc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                             // Merge paths
@@ -168,6 +173,10 @@ class Program
                         }
 
                         var outputString = document.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json);
+                        JsonNode mergedJson = JsonNode.Parse(outputString)
+                            ?? throw new InvalidDataException("The merged OpenAPI document is empty.");
+                        RestoreSemanticExtensions(mergedJson, semanticExtensions);
+                        outputString = mergedJson.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
                         // temporary fix waiting for swaggerUI tooling to actually implement latest OpenApi 3.0.4 patch, which is limited to 3.0.3 so far (June 2025)
                         // same fix applied in ModelSharedIn/Program.cs and Service/SwaggerMiddlewareExtensions.cs
                         outputString = outputString.Replace("\"openapi\": \"3.0.4\"", "\"openapi\": \"3.0.3\"");
@@ -199,6 +208,8 @@ class Program
                         };
                         var generator = new CSharpClientGenerator(nswDocument, settings);
                         var code = generator.GenerateFile();
+                        code = string.Join(Environment.NewLine,
+                            code.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None).Select(line => line.TrimEnd()));
                         using (StreamWriter writer = new StreamWriter(modelSharedDir + Path.DirectorySeparatorChar + CSHARP_MODEL))
                         {
                             writer.WriteLine(code);
@@ -239,6 +250,62 @@ class Program
 
         return error;
     }
+
+    private static void CaptureSemanticExtensions(JsonNode? document, Dictionary<string, JsonNode> captured)
+    {
+        if (document?["paths"] is JsonNode paths)
+            CaptureNode(paths, "@document", "/paths", captured);
+        if (document?["components"]?["schemas"] is not JsonObject schemas) return;
+        foreach (var schema in schemas)
+        {
+            if (schema.Value is not JsonObject schemaObject) continue;
+            string shortName = schema.Key.Split('.').Last();
+            CaptureNode(schemaObject, shortName, string.Empty, captured);
+        }
+    }
+
+    private static void CaptureNode(JsonNode node, string schemaName, string path, Dictionary<string, JsonNode> captured)
+    {
+        if (node is JsonObject obj)
+        {
+            foreach (var property in obj)
+            {
+                string childPath = path + "/" + EscapePointer(property.Key);
+                if (property.Key.StartsWith("x-osdc-", StringComparison.Ordinal) && property.Value != null)
+                    captured[$"{schemaName}|{childPath}"] = property.Value.DeepClone();
+                else if (property.Value != null)
+                    CaptureNode(property.Value, schemaName, childPath, captured);
+            }
+        }
+        else if (node is JsonArray array)
+        {
+            for (int index = 0; index < array.Count; index++)
+                if (array[index] != null) CaptureNode(array[index]!, schemaName, path + "/" + index, captured);
+        }
+    }
+
+    private static void RestoreSemanticExtensions(JsonNode document, Dictionary<string, JsonNode> captured)
+    {
+        if (document["components"]?["schemas"] is not JsonObject schemas) return;
+        foreach (var entry in captured)
+        {
+            int separator = entry.Key.IndexOf('|');
+            string schemaName = entry.Key[..separator];
+            JsonNode? current = schemaName == "@document" ? document : schemas[schemaName];
+            if (current == null) continue;
+            string[] parts = entry.Key[(separator + 2)..].Split('/');
+            for (int index = 0; index < parts.Length - 1; index++)
+            {
+                string part = UnescapePointer(parts[index]);
+                current = current is JsonArray array ? array[int.Parse(part)]! : current[part]!;
+            }
+            if (current is JsonObject target)
+                target[UnescapePointer(parts[^1])] = entry.Value.DeepClone();
+        }
+    }
+
+    private static string EscapePointer(string value) => value.Replace("~", "~0").Replace("/", "~1");
+    private static string UnescapePointer(string value) => value.Replace("~1", "/").Replace("~0", "~");
 
     static HttpClient SetHttpClient(string host, string hostBasePath)
     {

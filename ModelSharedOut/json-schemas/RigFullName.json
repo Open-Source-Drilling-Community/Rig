@@ -44,7 +44,7 @@
                 ],
                 "x-osdc-semantic": {
                   "catalogue": "urn:osdc:semantic-catalogue",
-                  "catalogueVersion": "0.11.0",
+                  "catalogueVersion": "0.15.0",
                   "concept": "urn:osdc:semantic:rig",
                   "curationStatus": "Reviewed",
                   "assertionSource": "rig-provider-binding-registry",
@@ -70,7 +70,7 @@
                 ],
                 "x-osdc-semantic": {
                   "catalogue": "urn:osdc:semantic-catalogue",
-                  "catalogueVersion": "0.11.0",
+                  "catalogueVersion": "0.15.0",
                   "concept": "urn:osdc:semantic:rig",
                   "curationStatus": "Reviewed",
                   "assertionSource": "rig-provider-binding-registry",
@@ -96,7 +96,7 @@
                 ],
                 "x-osdc-semantic": {
                   "catalogue": "urn:osdc:semantic-catalogue",
-                  "catalogueVersion": "0.11.0",
+                  "catalogueVersion": "0.15.0",
                   "concept": "urn:osdc:semantic:rig",
                   "curationStatus": "Reviewed",
                   "assertionSource": "rig-provider-binding-registry",
@@ -249,7 +249,7 @@
                 ],
                 "x-osdc-semantic": {
                   "catalogue": "urn:osdc:semantic-catalogue",
-                  "catalogueVersion": "0.11.0",
+                  "catalogueVersion": "0.15.0",
                   "concept": "urn:osdc:semantic:rig",
                   "curationStatus": "Reviewed",
                   "assertionSource": "rig-provider-binding-registry",
@@ -275,7 +275,7 @@
                 ],
                 "x-osdc-semantic": {
                   "catalogue": "urn:osdc:semantic-catalogue",
-                  "catalogueVersion": "0.11.0",
+                  "catalogueVersion": "0.15.0",
                   "concept": "urn:osdc:semantic:rig",
                   "curationStatus": "Reviewed",
                   "assertionSource": "rig-provider-binding-registry",
@@ -301,7 +301,7 @@
                 ],
                 "x-osdc-semantic": {
                   "catalogue": "urn:osdc:semantic-catalogue",
-                  "catalogueVersion": "0.11.0",
+                  "catalogueVersion": "0.15.0",
                   "concept": "urn:osdc:semantic:rig",
                   "curationStatus": "Reviewed",
                   "assertionSource": "rig-provider-binding-registry",
@@ -1320,7 +1320,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1365,7 +1365,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1401,7 +1401,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1499,7 +1499,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1559,7 +1559,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:pressure-difference",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1590,7 +1590,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:pressure-difference",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1693,7 +1693,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1837,7 +1837,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1902,7 +1902,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-mass",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1944,7 +1944,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -1980,7 +1980,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2016,7 +2016,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2052,7 +2052,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2088,7 +2088,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2121,7 +2121,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:blowout-preventer-stack",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -2229,7 +2229,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2284,7 +2284,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2320,7 +2320,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2354,7 +2354,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2390,7 +2390,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2533,7 +2533,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2590,7 +2590,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2626,7 +2626,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2653,7 +2653,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:cement-pump",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -2679,7 +2679,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2707,7 +2707,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2794,7 +2794,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2871,7 +2871,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2906,7 +2906,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -2993,7 +2993,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3033,7 +3033,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3069,7 +3069,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3105,7 +3105,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3141,7 +3141,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3247,7 +3247,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3384,7 +3384,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3424,7 +3424,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3459,7 +3459,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3495,7 +3495,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3531,7 +3531,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3669,7 +3669,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -3840,7 +3840,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4003,7 +4003,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4053,7 +4053,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4085,7 +4085,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:drawworks",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -4163,7 +4163,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4205,7 +4205,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:linear-mass-density",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4297,7 +4297,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4341,7 +4341,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4369,7 +4369,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4397,7 +4397,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4441,7 +4441,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4469,7 +4469,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4527,7 +4527,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4563,7 +4563,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4614,7 +4614,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4650,7 +4650,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4679,7 +4679,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4848,7 +4848,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4888,7 +4888,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:linear-mass-density",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4948,7 +4948,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -4984,7 +4984,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5020,7 +5020,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5056,7 +5056,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5105,7 +5105,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:drilling-marine-riser",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -5172,7 +5172,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5212,7 +5212,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:force-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5244,7 +5244,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:heave-compensator",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -5311,7 +5311,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5387,7 +5387,7 @@
         "type": "string",
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:equipment-lifecycle-status",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -5462,7 +5462,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:measurement-range-value",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5485,7 +5485,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:measurement-range-value",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5508,7 +5508,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-measurement-accuracy",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5531,7 +5531,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:relative-measurement-accuracy",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5559,7 +5559,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:signal-frequency",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5585,7 +5585,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:equipment-measurement-capability",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -5610,7 +5610,7 @@
             "x-osdc-semantic-bindings": {
               "/GaussianValue/Mean": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.11.0",
+                "catalogueVersion": "0.15.0",
                 "concept": "urn:osdc:semantic:drill-floor-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "rig-provider-binding-registry",
@@ -5647,7 +5647,7 @@
               },
               "/GaussianValue/StandardDeviation": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.11.0",
+                "catalogueVersion": "0.15.0",
                 "concept": "urn:osdc:semantic:linear-standard-uncertainty",
                 "curationStatus": "Reviewed",
                 "assertionSource": "rig-provider-binding-registry",
@@ -5675,7 +5675,7 @@
               },
               "/GaussianValue/MinValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.11.0",
+                "catalogueVersion": "0.15.0",
                 "concept": "urn:osdc:semantic:drill-floor-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "rig-provider-binding-registry",
@@ -5712,7 +5712,7 @@
               },
               "/GaussianValue/MaxValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.11.0",
+                "catalogueVersion": "0.15.0",
                 "concept": "urn:osdc:semantic:drill-floor-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "rig-provider-binding-registry",
@@ -5807,7 +5807,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5857,7 +5857,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5893,7 +5893,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -5990,7 +5990,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6045,7 +6045,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6083,7 +6083,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6113,7 +6113,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6141,7 +6141,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6177,7 +6177,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6223,7 +6223,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6250,7 +6250,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:flow-routing-manifold",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -6317,7 +6317,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6352,7 +6352,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6379,7 +6379,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6467,7 +6467,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6507,7 +6507,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6536,7 +6536,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6564,7 +6564,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:electrical-potential",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6593,7 +6593,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-efficiency",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6638,7 +6638,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6666,7 +6666,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6694,7 +6694,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-duration",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6723,7 +6723,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-duration",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6768,7 +6768,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6797,7 +6797,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6831,7 +6831,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -6878,7 +6878,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:generator",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -6977,7 +6977,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:drawworks",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7017,7 +7017,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:hoisting-system",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -7098,7 +7098,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:jack-up-profile",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -7165,7 +7165,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7210,7 +7210,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7244,7 +7244,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7280,7 +7280,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7397,7 +7397,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7442,7 +7442,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-mass",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7482,7 +7482,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7518,7 +7518,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7554,7 +7554,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7590,7 +7590,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7617,7 +7617,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:managed-pressure-drilling-equipment",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -7663,7 +7663,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-mass",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7713,7 +7713,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:marine-unit-profile",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -7780,7 +7780,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7888,7 +7888,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7947,7 +7947,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -7983,7 +7983,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8019,7 +8019,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8048,7 +8048,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8143,7 +8143,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8193,7 +8193,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8229,7 +8229,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8338,7 +8338,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8407,7 +8407,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8442,7 +8442,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volume-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8470,7 +8470,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8506,7 +8506,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8535,7 +8535,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:stroke-frequency",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8562,7 +8562,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:mud-pump",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -8593,7 +8593,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8622,7 +8622,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8656,7 +8656,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:mud-pump-liner-configuration",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -8730,7 +8730,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8778,7 +8778,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volume-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8805,7 +8805,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:mud-tank",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -8872,7 +8872,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8912,7 +8912,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8948,7 +8948,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -8990,7 +8990,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9026,7 +9026,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9062,7 +9062,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9203,7 +9203,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-identification",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9228,7 +9228,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-type",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9249,7 +9249,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-operating-environment",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9270,7 +9270,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-mobility-type",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9291,7 +9291,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-operating-envelope",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9312,7 +9312,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:marine-unit-profile",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9333,7 +9333,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:jack-up-profile",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9354,7 +9354,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:station-keeping-system",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9419,7 +9419,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-mast",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9440,7 +9440,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-mast",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9498,7 +9498,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9537,7 +9537,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9634,7 +9634,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:blowout-preventer-stack",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9703,7 +9703,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:managed-pressure-drilling-equipment",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9724,7 +9724,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:managed-pressure-drilling-equipment",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9753,7 +9753,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9784,7 +9784,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:heave-compensator",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9805,7 +9805,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:drilling-marine-riser",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9826,7 +9826,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:heave-compensator",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -9855,7 +9855,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -10223,7 +10223,7 @@
         "type": "string",
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig-operating-environment",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -10445,7 +10445,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig-identification",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -10547,7 +10547,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:hoisting-system",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -10616,7 +10616,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotary-table",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -10637,7 +10637,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:top-drive",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -10732,7 +10732,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig-mast",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -10755,7 +10755,7 @@
         "type": "string",
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig-mobility-type",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -10830,7 +10830,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:drilling-depth-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -10861,7 +10861,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:water-depth-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -10907,7 +10907,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -10961,7 +10961,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig-operating-envelope",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -11086,7 +11086,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-identification",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11111,7 +11111,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-type",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11132,7 +11132,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-operating-environment",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11153,7 +11153,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-mobility-type",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11174,7 +11174,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-operating-envelope",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11195,7 +11195,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:marine-unit-profile",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11216,7 +11216,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:jack-up-profile",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11237,7 +11237,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:station-keeping-system",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11302,7 +11302,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-mast",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11323,7 +11323,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rig-mast",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11381,7 +11381,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11420,7 +11420,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11517,7 +11517,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:blowout-preventer-stack",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11586,7 +11586,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:managed-pressure-drilling-equipment",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11607,7 +11607,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:managed-pressure-drilling-equipment",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11636,7 +11636,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11667,7 +11667,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:heave-compensator",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11688,7 +11688,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:drilling-marine-riser",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11709,7 +11709,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:heave-compensator",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11764,7 +11764,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volume-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11796,7 +11796,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig-storage-capacity",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -11840,7 +11840,7 @@
         "type": "string",
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rig-type",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -11923,7 +11923,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11963,7 +11963,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:force-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -11995,7 +11995,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:heave-compensator",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -12081,7 +12081,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12144,7 +12144,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-mass",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12202,7 +12202,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12234,7 +12234,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:rotary-table",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -12272,7 +12272,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12307,7 +12307,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12426,7 +12426,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12476,7 +12476,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:shale-shaker",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -12546,7 +12546,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:elevation",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12585,7 +12585,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:elevation",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12676,7 +12676,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12721,7 +12721,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12757,7 +12757,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12855,7 +12855,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:station-keeping-system",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -12929,7 +12929,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -12979,7 +12979,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-measurement-accuracy",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13002,7 +13002,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13038,7 +13038,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13074,7 +13074,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13110,7 +13110,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13144,7 +13144,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13180,7 +13180,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:volumetric-flow-capacity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13207,7 +13207,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:managed-pressure-drilling-equipment",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -13294,7 +13294,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13346,7 +13346,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-mass",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13374,7 +13374,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13410,7 +13410,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:rotational-angular-velocity",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13469,7 +13469,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:power-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13530,7 +13530,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:controller-gain",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13560,7 +13560,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:controller-gain",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13628,7 +13628,7 @@
         "additionalProperties": false,
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.11.0",
+          "catalogueVersion": "0.15.0",
           "concept": "urn:osdc:semantic:top-drive",
           "curationStatus": "Reviewed",
           "assertionSource": "rig-provider-binding-registry",
@@ -13712,7 +13712,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13759,7 +13759,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-mass",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13802,7 +13802,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13848,7 +13848,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:absolute-pressure-rating",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13946,7 +13946,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-lifecycle-status",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",
@@ -13978,7 +13978,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.11.0",
+              "catalogueVersion": "0.15.0",
               "concept": "urn:osdc:semantic:equipment-mass",
               "curationStatus": "Reviewed",
               "assertionSource": "rig-provider-binding-registry",

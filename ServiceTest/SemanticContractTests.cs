@@ -34,7 +34,7 @@ public class SemanticContractTests
     [Test]
     public void PublishedCatalogueVersionIsTheProviderSourceOfTruth()
     {
-        Assert.That(SemanticCatalogue.Default.Document.Version, Is.EqualTo("0.11.0"));
+        Assert.That(SemanticCatalogue.Default.Document.Version, Is.EqualTo("0.15.0"));
         Assert.That(SemanticCatalogue.Default.Get(Concepts.Elevation).Status, Is.EqualTo(CurationStatus.Reviewed));
         Assert.That(SemanticCatalogue.Default.Get(Concepts.AbsolutePressureRating).Status, Is.EqualTo(CurationStatus.Reviewed));
     }
@@ -51,7 +51,7 @@ public class SemanticContractTests
             Assert.That(JsonNode.DeepEquals(restMetadata, mcpMetadata), Is.True, property);
             Assert.That(restMetadata["concept"]!.GetValue<string>(), Is.EqualTo(Concepts.Elevation));
             Assert.That(restMetadata["reference"]!.GetValue<string>(), Is.EqualTo(Concepts.DrillFloorUpward));
-            Assert.That(restMetadata["catalogueVersion"]!.GetValue<string>(), Is.EqualTo("0.11.0"));
+            Assert.That(restMetadata["catalogueVersion"]!.GetValue<string>(), Is.EqualTo("0.15.0"));
             Assert.That(DataUtils.InferQuantity(typeof(StandPipe), property), Is.EqualTo("LengthStandard"));
         }
     }

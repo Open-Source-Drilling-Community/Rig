@@ -321,7 +321,7 @@ The following streamlining decisions are intentional:
 
 ## Semantic vocabulary
 
-The model consumes `OSDC.DotnetLibraries.Drilling.SemanticCatalogue` 0.11.0. The provider-owned registry in `Semantic/ProviderSemantics.cs` binds declaring types and properties to reviewed catalogue concepts, roles, references and authoritative physical quantities without changing persisted JSON. The registry is also compiled by WebPages so REST, MCP and UI unit selection share the same decisions.
+The model consumes `OSDC.DotnetLibraries.Drilling.SemanticCatalogue` 0.15.0. The provider-owned registry in `Semantic/ProviderSemantics.cs` binds declaring types and properties to reviewed catalogue concepts, roles, references and authoritative physical quantities without changing persisted JSON. The registry is also compiled by WebPages so REST, MCP and UI unit selection share the same decisions.
 
 ## License
 

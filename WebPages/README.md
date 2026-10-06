@@ -51,4 +51,4 @@ The Rig editor retrieves Vertical Datum data and resolves display labels through
 
 ## Semantic quantities
 
-The reflection-driven editors use the shared Rig provider registry backed by SemanticCatalogue 0.11.0. Explicit bindings take precedence for ambiguous legacy names: equipment `Weight` displays as mass, generator speed as angular velocity, compensator capacity as force, controller gains as dimensionless, and standpipe elevations as length relative to the drill floor. Display conversion never changes the canonical SI value submitted to the service.
+The reflection-driven editors use the shared Rig provider registry backed by SemanticCatalogue 0.15.0. Explicit bindings take precedence for ambiguous legacy names: equipment `Weight` displays as mass, generator speed as angular velocity, compensator capacity as force, controller gains as dimensionless, and standpipe elevations as length relative to the drill floor. Display conversion never changes the canonical SI value submitted to the service.

@@ -113,3 +113,5 @@ This project is provided under the MIT License. See [`LICENSE`](C:\OSDC\Rig\Serv
 - `McpServerHttpTests.cs` verifies MCP initialization, tool listing, and representative calls against a live service.
 
 The HTTP tests require the Rig service to be running at the configured test URL.
+
+Semantic contract tests also verify typed rig UUID lookup arguments, managed read/light projection semantics and resource identity metadata. These bindings support generic reference-origin lookup without altering serialized values.

@@ -25,6 +25,9 @@ public static class ProviderSemantics
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["Rig"] = Concepts.Rig,
+            ["RigLight"] = Concepts.Rig,
+            ["RigReadResponse"] = Concepts.Rig,
+            ["MetaInfo"] = Concepts.ResourceMetadata,
             ["RigIdentification"] = Concepts.RigIdentification,
             ["RigComponentBase"] = Concepts.RigComponent,
             ["RigEquipmentBase"] = Concepts.RigEquipment,
@@ -200,6 +203,14 @@ public static class ProviderSemantics
 
     public static JsonObject? ForProperty(Type declaringType, string propertyName)
     {
+        if(declaringType.Name is "Rig" or "RigLight" or "RigReadResponse" or "MetaInfo") {
+            var common=propertyName switch{
+                "MetaInfo"=>Metadata(Concepts.ResourceMetadata),"ID"=>Metadata(Concepts.ResourceIdentifier),
+                "Name"=>Metadata(Concepts.ResourceName),"Description"=>Metadata(Concepts.ResourceDescription),
+                "CreationDate"=>Metadata(Concepts.Instant,Concepts.CreationTime,Concepts.Utc),
+                "LastModificationDate"=>Metadata(Concepts.Instant,Concepts.LastModificationTime,Concepts.Utc),_=>null};
+            if(common is not null)return common;
+        }
         Binding? binding = BindingFor(declaringType.Name, propertyName);
         return binding is null ? null : Metadata(binding.Concept, binding.Role, binding.Reference);
     }

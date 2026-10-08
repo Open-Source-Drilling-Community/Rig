@@ -38,6 +38,14 @@ public class SemanticContractTests
         Assert.That(SemanticCatalogue.Default.Get(Concepts.Elevation).Status, Is.EqualTo(CurationStatus.Reviewed));
         Assert.That(SemanticCatalogue.Default.Get(Concepts.AbsolutePressureRating).Status, Is.EqualTo(CurationStatus.Reviewed));
     }
+    [Test] public void RigLookupAndReadProjectionDeclareResourceIdentity()
+    {
+        var schema=McpToolArgumentHelpers.CreateRigReadSchema(true);
+        Assert.That(schema["properties"]!["id"]![Semantic]!["concept"]!.ToString(),Is.EqualTo(Concepts.ResourceIdentifier));
+        Assert.That(schema["properties"]!["id"]![Semantic]!["resourceType"]!.ToString(),Is.EqualTo(Concepts.Rig));
+        Assert.That(ProviderSemantics.ForType(typeof(RigReadResponse))!["concept"]!.ToString(),Is.EqualTo(Concepts.Rig));
+        Assert.That(ProviderSemantics.ForProperty(typeof(RigLight),"Name")!["concept"]!.ToString(),Is.EqualTo(Concepts.ResourceName));
+    }
 
     [Test]
     public void StandpipeElevationsHaveTheSameRestMcpAndWebBinding()

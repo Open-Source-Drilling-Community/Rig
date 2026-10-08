@@ -91,7 +91,10 @@ internal static class McpToolArgumentHelpers
         };
         if (includeId)
         {
-            properties["id"] = new JsonObject { ["type"] = "string", ["format"] = "uuid", ["description"] = "UUID of the rig to retrieve." };
+            var identity=ProviderSemantics.Metadata(Concepts.ResourceIdentifier);
+            identity["resourceType"]=Concepts.Rig;
+            properties["id"] = new JsonObject { ["type"] = "string", ["format"] = "uuid", ["description"] = "UUID of the rig to retrieve.",
+                [SemanticMetadata.ExtensionName]=identity };
             schema["required"] = new JsonArray("id");
         }
         return schema;

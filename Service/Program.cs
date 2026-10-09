@@ -97,7 +97,8 @@ string relativeSwaggerPath = "/swagger/merged/swagger.json";
 string fullSwaggerPath = $"{basePath}{relativeSwaggerPath}";
 string customVersion = "Merged API Version 1";
 
-var mergedDocumentJson = SwaggerMiddlewareExtensions.ReadOpenApiDocumentJson("wwwroot/json-schema/RigMergedModel.json");
+var mergedDocumentJson = SwaggerMiddlewareExtensions.ReadOpenApiDocumentJson(
+    System.IO.Path.Combine(app.Environment.ContentRootPath, "wwwroot", "json-schema", "RigMergedModel.json"));
 app.UseCustomSwagger(mergedDocumentJson, relativeSwaggerPath);
 app.UseSwaggerUI(c =>
 {
@@ -118,3 +119,5 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
+
+public partial class Program { }

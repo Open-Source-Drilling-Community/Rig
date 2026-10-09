@@ -20,7 +20,9 @@ public static class McpServiceCollectionExtensions
     public static IServiceCollection AddLegacyMcpTool(this IServiceCollection services, string name, string description, JsonNode? inputSchema,
         Func<IServiceProvider, JsonObject?, CancellationToken, Task<JsonNode?>> invokeAsync)
     {
-        services.AddSingleton<IMcpTool>(sp => new DelegateMcpTool(name, description, inputSchema ?? McpToolArgumentHelpers.CreateEmptySchema(),
+        inputSchema ??= McpToolArgumentHelpers.CreateEmptySchema();
+        McpOperationSemantics.Apply(name, inputSchema);
+        services.AddSingleton<IMcpTool>(sp => new DelegateMcpTool(name, description, inputSchema,
             OutputSchema(name), Behavior(name), (args, ct) => invokeAsync(sp, args, ct)));
         services.AddSingleton<McpServerTool>(sp => new LegacyMcpServerToolAdapter(
             sp.GetServices<IMcpTool>().Last(tool => tool.Name == name), sp.GetRequiredService<ILoggerFactory>()));

@@ -110,8 +110,8 @@ This project is provided under the MIT License. See [`LICENSE`](C:\OSDC\Rig\Serv
 
 - `McpToolRegistrationTests.cs` verifies the published Rig tool set and confirms that statistics operations are absent.
 - The registration tests also guard the detailed descriptions, explicit nested Rig schema, platform-to-Cluster relationship, enum publication, SI-unit guidance, and update ID-matching rule.
-- `McpServerHttpTests.cs` verifies MCP initialization, tool listing, and representative calls against a live service.
+- `McpServerHttpTests.cs` verifies MCP initialization, tool listing, and representative calls against the in-process service.
 
-The HTTP tests require the Rig service to be running at the configured test URL.
+The HTTP fixture uses `WebApplicationFactory`; no external service or listening port is required.
 
 Semantic contract tests also verify typed rig UUID lookup arguments, managed read/light projection semantics and resource identity metadata. These bindings support generic reference-origin lookup without altering serialized values.

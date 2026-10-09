@@ -5,6 +5,7 @@ using ModelContextProtocol.Server;
 using OSDC.Drilling.Rig.Service.Controllers;
 using OSDC.Drilling.Rig.Service.Mcp;
 using OSDC.Drilling.Rig.Service.Mcp.Tools;
+using OSDC.DotnetLibraries.Drilling.SemanticCatalogue;
 
 namespace ServiceTest;
 
@@ -66,6 +67,17 @@ public sealed class McpToolRegistrationTests
 
     [Test]
     public void Usage_statistics_are_not_exposed() => Assert.That(_tools.Keys, Has.None.Contains("statistics"));
+
+    [Test]
+    public void Inputs_declare_generic_resource_operation_roles()
+    {
+        string Role(string name) => _tools[name].InputSchema![SemanticMetadata.ExtensionName]!["role"]!.GetValue<string>();
+        Assert.That(Role("rig_get_all"), Is.EqualTo(Concepts.ResourceCollectionRetrieval));
+        Assert.That(Role("rig_get_by_id"), Is.EqualTo(Concepts.ResourceRetrieval));
+        Assert.That(Role("rig_create"), Is.EqualTo(Concepts.ResourceCreation));
+        Assert.That(Role("rig_update_by_id"), Is.EqualTo(Concepts.ResourceReplacement));
+        Assert.That(Role("rig_delete_by_id"), Is.EqualTo(Concepts.ResourceDeletion));
+    }
 
     [Test]
     public void Domain_tools_have_detailed_descriptions_and_explicit_object_schemas()

@@ -26,7 +26,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="MudBlazor" Version="9.9.0" />
-    <PackageReference Include="OSDC.DotnetLibraries.General.DataManagement" Version="2.1.0" />
+    <PackageReference Include="OSDC.DotnetLibraries.General.DataManagement" Version="2.2.0" />
     <PackageReference Include="OSDC.DotnetLibraries.General.Statistics" Version="3.2.0" />
     <PackageReference Include="Plotly.Blazor" Version="6.0.2" />
   </ItemGroup>

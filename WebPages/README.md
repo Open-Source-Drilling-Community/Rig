@@ -83,4 +83,4 @@ On nuget.org, the package owner must configure a trusted-publishing policy for `
 
 ## Package release 2.0.1
 
-Requires OSDC.UnitConversion.DrillingRazorMudComponents 3.4.8 so embedded unit selectors consume bounded UnitSystem discovery pages. Rebuild consuming WebApps after upgrading this package.
+Requires OSDC.UnitConversion.DrillingRazorMudComponents 3.4.9 so embedded unit selectors consume bounded UnitSystem discovery pages. Rebuild consuming WebApps after upgrading this package.

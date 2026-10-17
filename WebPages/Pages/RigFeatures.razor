@@ -30,7 +30,10 @@ else
 
     @foreach (RigFeatureCategory category in _categories)
     {
-        <MudGrid Class="mt-2" @key="category">
+        <MudButton Class="mt-2" Variant="Variant.Outlined" OnClick="@(() => LoadDefinitionAsync(category))" Disabled="@(_loadedDefinitionIds.Contains(category.MetaInfo!.ID))">Load @category.Name details</MudButton>
+        @if (category.LastModificationDate == null || _loadedDefinitionIds.Contains(category.MetaInfo!.ID))
+        {
+            <MudGrid Class="mt-2" @key="category">
             <MudItem xs="2" md="1" Class="d-flex align-center">
                 <MudCheckBox T="bool" Disabled="@category.IsBuiltIn" Value="@IsCategorySelected(category)" ValueChanged="@((bool selected) => SetCategorySelected(category, selected))" />
             </MudItem>
@@ -91,6 +94,7 @@ else
                 }
             </MudItem>
         </MudGrid>
+        }
     }
 
     <MudContainer Class="d-flex flex-row pa-0 mt-4">
@@ -100,6 +104,16 @@ else
 }
 
 @code {
+
+    private readonly HashSet<Guid> _loadedDefinitionIds = [];
+    private async Task LoadDefinitionAsync(RigFeatureCategory category)
+    {
+        var full = await RigApiClient.GetRigFeatureCategoryAsync(category.MetaInfo!.ID);
+        foreach (var property in typeof(RigFeatureCategory).GetProperties().Where(property => property.CanWrite))
+            property.SetValue(category, property.GetValue(full));
+        _loadedDefinitionIds.Add(category.MetaInfo!.ID);
+    }
+
     private List<RigFeatureCategory> _categories = [];
     private bool _loading = true;
     private readonly HashSet<RigFeatureCategory> _selectedCategories = [];
@@ -109,6 +123,7 @@ else
 
     private async Task LoadAsync()
     {
+        _loadedDefinitionIds.Clear();
         try
         {
             _loading = true;
@@ -154,6 +169,7 @@ else
     {
         foreach (RigFeatureCategory category in _categories.Where(category => !category.IsBuiltIn).ToList())
         {
+                if (category.LastModificationDate != null && !_loadedDefinitionIds.Contains(category.MetaInfo!.ID)) continue;
             await SaveCategoryAsync(category);
         }
         await LoadAsync();

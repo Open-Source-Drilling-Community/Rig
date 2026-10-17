@@ -115,11 +115,12 @@
             return;
         }
 
+        AddEntry("GET", "Light discovery (all resources)", _statistics.DiscoveryRequestsPerDay);
         AddEntry("GET", "/Rig", _statistics.GetAllRigIdPerDay);
         AddEntry("GET", "/Rig/MetaInfo", _statistics.GetAllRigMetaInfoPerDay);
         AddEntry("GET", "/Rig/{id}", _statistics.GetRigByIdPerDay);
         AddEntry("GET", "/Rig/LightData", _statistics.GetAllRigLightPerDay);
-        AddEntry("GET", "/Rig/HeavyData", _statistics.GetAllRigPerDay);
+        AddEntry("GET", "/Rig full collection (retired API/internal use)", _statistics.GetAllRigPerDay);
         AddEntry("POST", "/Rig", _statistics.PostRigPerDay);
         AddEntry("PUT", "/Rig/{id}", _statistics.PutRigByIdPerDay);
         AddEntry("DELETE", "/Rig/{id}", _statistics.DeleteRigByIdPerDay);

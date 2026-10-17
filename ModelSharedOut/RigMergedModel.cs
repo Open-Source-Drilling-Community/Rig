@@ -75,6 +75,197 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<SlotDiscoveryPage> DiscoverClusterSlotsAsync(System.Guid clusterId, int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            if (clusterId == null)
+                throw new System.ArgumentNullException("clusterId");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+                    // Operation Path: "Cluster/{clusterId}/Slots/LightData"
+                    urlBuilder_.Append("Cluster/");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(clusterId, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append("/Slots/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<SlotDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<ClusterDiscoveryPage> DiscoverClusterAsync(int? offset = null, int? limit = null, string name = null, System.Guid? fieldId = null, System.Guid? rigId = null, bool? isSingleWell = null, bool? isFixedPlatform = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+                    // Operation Path: "Cluster/LightData"
+                    urlBuilder_.Append("Cluster/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (fieldId != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("fieldId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(fieldId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (rigId != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("rigId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(rigId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (isSingleWell != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("isSingleWell")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(isSingleWell, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (isFixedPlatform != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("isFixedPlatform")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(isFixedPlatform, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ClusterDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<System.Guid>> GetAllClusterIdAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -521,77 +712,6 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Cluster>> GetAllClusterAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Cluster/HeavyData"
-                    urlBuilder_.Append("Cluster/HeavyData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Cluster>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<ClusterBatchExportDocument> BatchExportClustersAsync(ClusterBatchExportRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -832,7 +952,7 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ClusterLight>> GetAllClusterLightAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<ClusterFeatureCategoryDiscoveryPage> DiscoverClusterFeatureCategoryAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -845,83 +965,20 @@ namespace OSDC.Drilling.Rig.ModelShared
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Cluster/LightData"
-                    urlBuilder_.Append("Cluster/LightData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ClusterLight>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Cluster>> GetAllClusterByFieldIdAsync(System.Guid? guid = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Cluster/ByFieldId"
-                    urlBuilder_.Append("Cluster/ByFieldId");
+                    // Operation Path: "ClusterFeatureCategory/LightData"
+                    urlBuilder_.Append("ClusterFeatureCategory/LightData");
                     urlBuilder_.Append('?');
-                    if (guid != null)
+                    if (offset != null)
                     {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("guid")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
                     }
                     urlBuilder_.Length--;
 
@@ -950,238 +1007,7 @@ namespace OSDC.Drilling.Rig.ModelShared
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Cluster>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Cluster>> GetAllClusterByRigIdAsync(System.Guid? guid = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Cluster/ByRigId"
-                    urlBuilder_.Append("Cluster/ByRigId");
-                    urlBuilder_.Append('?');
-                    if (guid != null)
-                    {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("guid")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(guid, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
-                    }
-                    urlBuilder_.Length--;
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Cluster>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Cluster>> GetAllSingleWellClusterAsync(bool? isSingleWellNullable = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Cluster/SingleWell"
-                    urlBuilder_.Append("Cluster/SingleWell");
-                    urlBuilder_.Append('?');
-                    if (isSingleWellNullable != null)
-                    {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("IsSingleWellNullable")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(isSingleWellNullable, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
-                    }
-                    urlBuilder_.Length--;
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Cluster>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Cluster>> GetAllFixedPlatformClusterAsync(bool? fixedBool = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Cluster/FixedPlatform"
-                    urlBuilder_.Append("Cluster/FixedPlatform");
-                    urlBuilder_.Append('?');
-                    if (fixedBool != null)
-                    {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("fixedBool")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(fixedBool, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
-                    }
-                    urlBuilder_.Length--;
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Cluster>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<ClusterFeatureCategoryDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1651,7 +1477,7 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ClusterFeatureCategory>> GetAllClusterFeatureCategoryAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<ClusterIdentityDiscoveryPage> DiscoverClusterIdentityAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1664,8 +1490,22 @@ namespace OSDC.Drilling.Rig.ModelShared
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "ClusterFeatureCategory/HeavyData"
-                    urlBuilder_.Append("ClusterFeatureCategory/HeavyData");
+                    // Operation Path: "ClusterIdentity/LightData"
+                    urlBuilder_.Append("ClusterIdentity/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -1692,7 +1532,7 @@ namespace OSDC.Drilling.Rig.ModelShared
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ClusterFeatureCategory>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<ClusterIdentityDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -2162,77 +2002,6 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ClusterIdentity>> GetAllClusterIdentityAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "ClusterIdentity/HeavyData"
-                    urlBuilder_.Append("ClusterIdentity/HeavyData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ClusterIdentity>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<UsageStatisticsCluster> GetClusterUsageStatisticsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -2275,6 +2044,91 @@ namespace OSDC.Drilling.Rig.ModelShared
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<UsageStatisticsCluster>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<SlotFeatureCategoryDiscoveryPage> DiscoverSlotFeatureCategoryAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+                    // Operation Path: "SlotFeatureCategory/LightData"
+                    urlBuilder_.Append("SlotFeatureCategory/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<SlotFeatureCategoryDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -2744,7 +2598,7 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<SlotFeatureCategory>> GetAllSlotFeatureCategoryAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<FieldDiscoveryPage> DiscoverFieldAsync(int? offset = null, int? limit = null, string name = null, System.Guid? projectionDefinitionId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2757,8 +2611,26 @@ namespace OSDC.Drilling.Rig.ModelShared
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "SlotFeatureCategory/HeavyData"
-                    urlBuilder_.Append("SlotFeatureCategory/HeavyData");
+                    // Operation Path: "Field/LightData"
+                    urlBuilder_.Append("Field/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (projectionDefinitionId != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("projectionDefinitionId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(projectionDefinitionId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -2785,7 +2657,7 @@ namespace OSDC.Drilling.Rig.ModelShared
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<SlotFeatureCategory>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -3331,77 +3203,6 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<Field>> GetAllFieldAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Field/HeavyData"
-                    urlBuilder_.Append("Field/HeavyData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<Field>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<FieldBatchExportDocument> BatchExportFieldsAsync(FieldBatchExportRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -3588,77 +3389,6 @@ namespace OSDC.Drilling.Rig.ModelShared
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FieldBatchErrorEnvelope>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FieldLight>> GetAllFieldLightAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Field/LightData"
-                    urlBuilder_.Append("Field/LightData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FieldLight>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
                         }
                         else
                         {
@@ -3889,6 +3619,91 @@ namespace OSDC.Drilling.Rig.ModelShared
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new ApiException<FieldConversionErrorEnvelope>("Bad Gateway", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<FieldDelineationLineTypeDiscoveryPage> DiscoverFieldDelineationLineTypeAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+                    // Operation Path: "FieldDelineationLineType/LightData"
+                    urlBuilder_.Append("FieldDelineationLineType/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldDelineationLineTypeDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
                         }
                         else
                         {
@@ -4369,7 +4184,7 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FieldDelineationLineType>> GetAllFieldDelineationLineTypeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<FieldFeatureCategoryDiscoveryPage> DiscoverFieldFeatureCategoryAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -4382,8 +4197,22 @@ namespace OSDC.Drilling.Rig.ModelShared
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "FieldDelineationLineType/HeavyData"
-                    urlBuilder_.Append("FieldDelineationLineType/HeavyData");
+                    // Operation Path: "FieldFeatureCategory/LightData"
+                    urlBuilder_.Append("FieldFeatureCategory/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -4410,7 +4239,7 @@ namespace OSDC.Drilling.Rig.ModelShared
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FieldDelineationLineType>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldFeatureCategoryDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -4896,7 +4725,7 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FieldFeatureCategory>> GetAllFieldFeatureCategoryAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<FieldIdentityDiscoveryPage> DiscoverFieldIdentityAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -4909,8 +4738,22 @@ namespace OSDC.Drilling.Rig.ModelShared
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "FieldFeatureCategory/HeavyData"
-                    urlBuilder_.Append("FieldFeatureCategory/HeavyData");
+                    // Operation Path: "FieldIdentity/LightData"
+                    urlBuilder_.Append("FieldIdentity/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -4937,7 +4780,7 @@ namespace OSDC.Drilling.Rig.ModelShared
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FieldFeatureCategory>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldIdentityDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -5423,7 +5266,7 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FieldIdentity>> GetAllFieldIdentityAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<FieldMembershipCategoryDiscoveryPage> DiscoverFieldMembershipCategoryAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -5436,8 +5279,22 @@ namespace OSDC.Drilling.Rig.ModelShared
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "FieldIdentity/HeavyData"
-                    urlBuilder_.Append("FieldIdentity/HeavyData");
+                    // Operation Path: "FieldMembershipCategory/LightData"
+                    urlBuilder_.Append("FieldMembershipCategory/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -5464,7 +5321,7 @@ namespace OSDC.Drilling.Rig.ModelShared
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FieldIdentity>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<FieldMembershipCategoryDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -5950,77 +5807,6 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<FieldMembershipCategory>> GetAllFieldMembershipCategoryAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "FieldMembershipCategory/HeavyData"
-                    urlBuilder_.Append("FieldMembershipCategory/HeavyData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<FieldMembershipCategory>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<UsageStatisticsField> GetFieldUsageStatisticsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -6063,6 +5849,95 @@ namespace OSDC.Drilling.Rig.ModelShared
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<UsageStatisticsField>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<RigDiscoveryPage> DiscoverRigAsync(int? offset = null, int? limit = null, string name = null, System.Guid? clusterId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+                    // Operation Path: "Rig/LightData"
+                    urlBuilder_.Append("Rig/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (clusterId != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("clusterId")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(clusterId, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<RigDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -6618,154 +6493,6 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RigLight>> GetAllRigLightAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Rig/LightData"
-                    urlBuilder_.Append("Rig/LightData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<RigLight>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RigReadResponse>> GetAllRigAsync(bool? includePhotos = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "Rig/HeavyData"
-                    urlBuilder_.Append("Rig/HeavyData");
-                    urlBuilder_.Append('?');
-                    if (includePhotos != null)
-                    {
-                        urlBuilder_.Append(System.Uri.EscapeDataString("includePhotos")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(includePhotos, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
-                    }
-                    urlBuilder_.Length--;
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<RigReadResponse>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<RigBatchExportDocument> BatchExportRigsAsync(RigBatchExportRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -6986,6 +6713,91 @@ namespace OSDC.Drilling.Rig.ModelShared
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<RigFeatureCategoryDiscoveryPage> DiscoverRigFeatureCategoryAsync(int? offset = null, int? limit = null, string name = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+                    // Operation Path: "RigFeatureCategory/LightData"
+                    urlBuilder_.Append("RigFeatureCategory/LightData");
+                    urlBuilder_.Append('?');
+                    if (offset != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("offset")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(offset, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (limit != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("limit")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(limit, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    if (name != null)
+                    {
+                        urlBuilder_.Append(System.Uri.EscapeDataString("name")).Append('=').Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture))).Append('&');
+                    }
+                    urlBuilder_.Length--;
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<RigFeatureCategoryDiscoveryPage>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<System.Guid>> GetAllRigFeatureCategoryIdAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var client_ = _httpClient;
@@ -7174,77 +6986,6 @@ namespace OSDC.Drilling.Rig.ModelShared
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<MetaInfo>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<RigFeatureCategory>> GetAllRigFeatureCategoryAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "RigFeatureCategory/HeavyData"
-                    urlBuilder_.Append("RigFeatureCategory/HeavyData");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
-                        foreach (var item_ in response_.Headers)
-                            headers_[item_.Key] = item_.Value;
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<RigFeatureCategory>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -8597,27 +8338,58 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Point3DGlobalCoordinates
     {
+        /// <summary>
+        /// Signed meridian arc length from the equator to a point latitude on the reference ellipsoid; north positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("X")]
         public double? X { get; set; }
 
+        /// <summary>
+        /// Signed arc length along the latitude parallel from the reference meridian to a point longitude; east positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Y")]
         public double? Y { get; set; }
+
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Z")]
         public double? Z { get; set; }
 
+        /// <summary>
+        /// Signed meridian arc length from the equator to a point latitude on the reference ellipsoid; north positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("RiemannianNorth")]
         public double? RiemannianNorth { get; set; }
+
+        /// <summary>
+        /// Signed arc length along the latitude parallel from the reference meridian to a point longitude; east positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("RiemannianEast")]
         public double? RiemannianEast { get; set; }
 
+        /// <summary>
+        /// Angle between the ellipsoid normal and the equatorial plane; north positive. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad). Reference: WGS84 ellipsoid convention.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Latitude")]
         public double? Latitude { get; set; }
 
+        /// <summary>
+        /// Angular position eastward from the reference meridian. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad). Reference: WGS84 ellipsoid convention.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Longitude")]
         public double? Longitude { get; set; }
+
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("TVD")]
         public double? TVD { get; set; }
@@ -9141,6 +8913,36 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ClusterDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<ClusterLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ClusterFeatureAssignment
     {
         /// <summary>
@@ -9249,6 +9051,69 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ClusterFeatureCategoryDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<ClusterFeatureCategoryLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ClusterFeatureCategoryLight
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsExclusive")]
+        public bool IsExclusive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("HasValidityPeriod")]
+        public bool HasValidityPeriod { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ClusterFeatureOption
     {
         /// <summary>
@@ -9341,6 +9206,63 @@ namespace OSDC.Drilling.Rig.ModelShared
 
         [System.Text.Json.Serialization.JsonPropertyName("Value")]
         public string Value { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ClusterIdentityDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<ClusterIdentityLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ClusterIdentityLight
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
 
@@ -9557,6 +9479,36 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SlotDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<SlotLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class SlotFeatureAssignment
     {
         /// <summary>
@@ -9665,6 +9617,69 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SlotFeatureCategoryDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<SlotFeatureCategoryLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SlotFeatureCategoryLight
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsExclusive")]
+        public bool IsExclusive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("HasValidityPeriod")]
+        public bool HasValidityPeriod { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class SlotFeatureOption
     {
         /// <summary>
@@ -9693,8 +9708,47 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SlotLight
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("ID")]
+        public System.Guid ID { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Latitude")]
+        public GaussianDrillingProperty Latitude { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Longitude")]
+        public GaussianDrillingProperty Longitude { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UsageStatisticsCluster
     {
+
+        [System.Text.Json.Serialization.JsonPropertyName("DiscoveryRequestsPerDay")]
+        public History DiscoveryRequestsPerDay { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("LastSaved")]
         public System.DateTimeOffset LastSaved { get; set; }
@@ -9824,24 +9878,51 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Field
     {
+        /// <summary>
+        /// Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
         public MetaInfo MetaInfo { get; set; }
 
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Human-readable descriptive text about a resource.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Description")]
         public string Description { get; set; }
 
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
         public System.DateTimeOffset? CreationDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
         public System.DateTimeOffset? LastModificationDate { get; set; }
 
+        /// <summary>
+        /// UUID of the definition owned by EarthCartographicProjection, not an EPSG code.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("ProjectionDefinitionID")]
         public System.Guid? ProjectionDefinitionID { get; set; }
+
+        /// <summary>
+        /// Position specified by geodetic latitude, longitude and ellipsoidal depth. Geographic angles use SI radians; linear coordinates and ellipsoidal depth use SI metres. X/Y are Riemannian north/east arc coordinates, not projected easting/northing. Reference: WGS84 ellipsoid convention.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ReferencePoint")]
         public Point3DGlobalCoordinates ReferencePoint { get; set; }
@@ -9915,11 +9996,23 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.Text.Json.Serialization.JsonPropertyName("Catalog")]
         public string Catalog { get; set; }
 
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("SourceID")]
         public System.Guid SourceID { get; set; }
+
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("LocalID")]
         public System.Guid LocalID { get; set; }
@@ -10042,6 +10135,10 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         public FieldBatchExportScope Scope { get; set; }
 
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("FieldIDs")]
         public System.Collections.Generic.ICollection<System.Guid> FieldIDs { get; set; }
 
@@ -10134,6 +10231,10 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.Text.Json.Serialization.JsonPropertyName("CatalogMappings")]
         public System.Collections.Generic.ICollection<FieldBatchCatalogMapping> CatalogMappings { get; set; }
 
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("FieldIDs")]
         public System.Collections.Generic.ICollection<System.Guid> FieldIDs { get; set; }
 
@@ -10151,9 +10252,16 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldCatalogReference
     {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ID")]
         public System.Guid ID { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
@@ -10265,14 +10373,30 @@ namespace OSDC.Drilling.Rig.ModelShared
         [System.ComponentModel.DataAnnotations.Required]
         public FieldProjectedCoordinate ProjectedCoordinate { get; set; } = new FieldProjectedCoordinate();
 
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m).
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("ProjectionDatumVerticalDepth")]
         public double ProjectionDatumVerticalDepth { get; set; }
+
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Wgs84VerticalDepth")]
         public double? Wgs84VerticalDepth { get; set; }
 
+        /// <summary>
+        /// Epoch to which the coordinates of a position refer. Reference: Coordinated Universal Time.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("CoordinateEpochUtc")]
         public System.DateTimeOffset? CoordinateEpochUtc { get; set; }
+
+        /// <summary>
+        /// Signed angular relation between geodetic north and grid north at a specified position in a specified projection; explicit sign convention required. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad). Reference: Grid convergence true to grid clockwise.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("GridConvergence")]
         public double? GridConvergence { get; set; }
@@ -10291,6 +10415,9 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldCoordinateConversionResponse
     {
+        /// <summary>
+        /// UUID of the referenced resource owned by the Field service.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("FieldID")]
         public System.Guid FieldID { get; set; }
@@ -10309,6 +10436,10 @@ namespace OSDC.Drilling.Rig.ModelShared
 
         [System.Text.Json.Serialization.JsonPropertyName("ApiAxisConvention")]
         public string ApiAxisConvention { get; set; }
+
+        /// <summary>
+        /// Position specified by geodetic latitude, longitude and ellipsoidal depth.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Positions")]
         public System.Collections.Generic.ICollection<FieldCoordinateConversionPositionResult> Positions { get; set; }
@@ -10330,12 +10461,23 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldDelineationBoundaryLine
     {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ID")]
         public System.Guid ID { get; set; }
 
+        /// <summary>
+        /// Boolean declaration that a derived boundary represents the interior side of a closed source delineation line.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("IsInteriorBoundary")]
         public bool IsInteriorBoundary { get; set; }
+
+        /// <summary>
+        /// Boolean declaration that a line is geometrically closed according to the provider closure rule.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("IsClosed")]
         public bool IsClosed { get; set; }
@@ -10357,24 +10499,51 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldDelineationLine
     {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ID")]
         public System.Guid ID { get; set; }
 
+        /// <summary>
+        /// UUID of a line-type definition owned by the Field service.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("DelineationLineTypeID")]
         public System.Guid? DelineationLineTypeID { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Human-readable descriptive text about a resource.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Description")]
         public string Description { get; set; }
+
+        /// <summary>
+        /// Horizontal offset distance used to derive a boundary from a delineation line under a declared geometric algorithm. Physical quantity: LengthStandard; SI unit: metres (m).
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Margin")]
         public double? Margin { get; set; }
 
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("TopDepth")]
         public double? TopDepth { get; set; }
+
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("BottomDepth")]
         public double? BottomDepth { get; set; }
@@ -10398,6 +10567,78 @@ namespace OSDC.Drilling.Rig.ModelShared
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldDelineationLineType
+    {
+        /// <summary>
+        /// Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldDelineationLineTypeDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FieldDelineationLineTypeLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldDelineationLineTypeLight
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
@@ -10436,20 +10677,69 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FieldLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldFeatureAssignment
     {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ID")]
         public System.Guid ID { get; set; }
 
+        /// <summary>
+        /// UUID of the selected category in the owning service catalogue.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("FeatureCategoryID")]
         public System.Guid? FeatureCategoryID { get; set; }
+
+        /// <summary>
+        /// UUID of an option belonging to the selected category.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("FeatureOptionID")]
         public System.Guid? FeatureOptionID { get; set; }
 
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("FromDate")]
         public System.DateTimeOffset? FromDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ToDate")]
         public System.DateTimeOffset? ToDate { get; set; }
@@ -10468,6 +10758,95 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldFeatureCategory
     {
+        /// <summary>
+        /// Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Boolean rule declaring that at most one category assignment may be active on a resource at the same instant.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsExclusive")]
+        public bool IsExclusive { get; set; }
+
+        /// <summary>
+        /// Boolean rule indicating whether assignments in a category may carry validity bounds.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("HasValidityPeriod")]
+        public bool HasValidityPeriod { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Options")]
+        public System.Collections.Generic.ICollection<FieldFeatureOption> Options { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldFeatureCategoryDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FieldFeatureCategoryLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldFeatureCategoryLight
+    {
 
         [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
         public MetaInfo MetaInfo { get; set; }
@@ -10480,9 +10859,6 @@ namespace OSDC.Drilling.Rig.ModelShared
 
         [System.Text.Json.Serialization.JsonPropertyName("HasValidityPeriod")]
         public bool HasValidityPeriod { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Options")]
-        public System.Collections.Generic.ICollection<FieldFeatureOption> Options { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
         public System.DateTimeOffset? CreationDate { get; set; }
@@ -10504,9 +10880,16 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldFeatureOption
     {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ID")]
         public System.Guid ID { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
@@ -10525,15 +10908,30 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldForwardConversionPosition
     {
+        /// <summary>
+        /// Angle between the ellipsoid normal and the equatorial plane; north positive. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Latitude")]
         public double Latitude { get; set; }
 
+        /// <summary>
+        /// Angular position eastward from the reference meridian. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Longitude")]
         public double Longitude { get; set; }
 
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m).
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("VerticalDepth")]
         public double VerticalDepth { get; set; }
+
+        /// <summary>
+        /// Epoch to which the coordinates of a position refer. Reference: Coordinated Universal Time.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("CoordinateEpochUtc")]
         public System.DateTimeOffset? CoordinateEpochUtc { get; set; }
@@ -10552,6 +10950,9 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldForwardConversionRequest
     {
+        /// <summary>
+        /// UUID of the referenced resource owned by the Field service.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("FieldID")]
         public System.Guid FieldID { get; set; }
@@ -10566,6 +10967,10 @@ namespace OSDC.Drilling.Rig.ModelShared
 
         [System.Text.Json.Serialization.JsonPropertyName("Transformation")]
         public FieldTransformationOptions Transformation { get; set; }
+
+        /// <summary>
+        /// Position specified by geodetic latitude, longitude and ellipsoidal depth.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Positions")]
         [System.ComponentModel.DataAnnotations.Required]
@@ -10586,9 +10991,16 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldGeographicCoordinate
     {
+        /// <summary>
+        /// Angle between the ellipsoid normal and the equatorial plane; north positive. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Latitude")]
         public double Latitude { get; set; }
+
+        /// <summary>
+        /// Angular position eastward from the reference meridian. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Longitude")]
         public double Longitude { get; set; }
@@ -10619,6 +11031,113 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldIdentity
     {
+        /// <summary>
+        /// Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldIdentityAssignment
+    {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("ID")]
+        public System.Guid ID { get; set; }
+
+        /// <summary>
+        /// UUID of the selected identity definition in the owning service catalogue.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("IdentityID")]
+        public System.Guid? IdentityID { get; set; }
+
+        /// <summary>
+        /// Value identifying a resource within a selected identification scheme; its interpretation and uniqueness depend on that scheme.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Value")]
+        public string Value { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldIdentityDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FieldIdentityLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldIdentityLight
+    {
 
         [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
         public MetaInfo MetaInfo { get; set; }
@@ -10644,41 +11163,32 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FieldIdentityAssignment
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("ID")]
-        public System.Guid ID { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IdentityID")]
-        public System.Guid? IdentityID { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Value")]
-        public string Value { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldInverseConversionPosition
     {
+        /// <summary>
+        /// Projected coordinate positive in the declared grid-east direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Easting")]
         public double Easting { get; set; }
 
+        /// <summary>
+        /// Projected coordinate positive in the declared grid-north direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Northing")]
         public double Northing { get; set; }
 
+        /// <summary>
+        /// Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m).
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("VerticalDepth")]
         public double VerticalDepth { get; set; }
+
+        /// <summary>
+        /// Epoch to which the coordinates of a position refer. Reference: Coordinated Universal Time.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("CoordinateEpochUtc")]
         public System.DateTimeOffset? CoordinateEpochUtc { get; set; }
@@ -10697,6 +11207,9 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldInverseConversionRequest
     {
+        /// <summary>
+        /// UUID of the referenced resource owned by the Field service.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("FieldID")]
         public System.Guid FieldID { get; set; }
@@ -10707,6 +11220,10 @@ namespace OSDC.Drilling.Rig.ModelShared
 
         [System.Text.Json.Serialization.JsonPropertyName("Transformation")]
         public FieldTransformationOptions Transformation { get; set; }
+
+        /// <summary>
+        /// Position specified by geodetic latitude, longitude and ellipsoidal depth.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Positions")]
         [System.ComponentModel.DataAnnotations.Required]
@@ -10727,18 +11244,51 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldLight
     {
+        /// <summary>
+        /// UUID of the definition owned by EarthCartographicProjection, not an EPSG code.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("ProjectionDefinitionID")]
+        public System.Guid? ProjectionDefinitionID { get; set; }
+
+        /// <summary>
+        /// Position specified by geodetic latitude, longitude and ellipsoidal depth. Geographic angles use SI radians; linear coordinates and ellipsoidal depth use SI metres. X/Y are Riemannian north/east arc coordinates, not projected easting/northing. Reference: WGS84 ellipsoid convention.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReferencePoint")]
+        public Point3DGlobalCoordinates ReferencePoint { get; set; }
+
+        /// <summary>
+        /// Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
         public MetaInfo MetaInfo { get; set; }
 
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Human-readable descriptive text about a resource.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Description")]
         public string Description { get; set; }
 
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
         public System.DateTimeOffset? CreationDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
         public System.DateTimeOffset? LastModificationDate { get; set; }
@@ -10757,18 +11307,37 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldMembershipAssignment
     {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ID")]
         public System.Guid ID { get; set; }
 
+        /// <summary>
+        /// UUID of the selected category in the owning service catalogue.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("MembershipCategoryID")]
         public System.Guid? MembershipCategoryID { get; set; }
+
+        /// <summary>
+        /// UUID of an option belonging to the selected category.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("MembershipOptionID")]
         public System.Guid? MembershipOptionID { get; set; }
 
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
         [System.Text.Json.Serialization.JsonPropertyName("FromDate")]
         public System.DateTimeOffset? FromDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ToDate")]
         public System.DateTimeOffset? ToDate { get; set; }
@@ -10787,6 +11356,95 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldMembershipCategory
     {
+        /// <summary>
+        /// Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Boolean rule declaring that at most one category assignment may be active on a resource at the same instant.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsExclusive")]
+        public bool IsExclusive { get; set; }
+
+        /// <summary>
+        /// Boolean rule indicating whether assignments in a category may carry validity bounds.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("HasValidityPeriod")]
+        public bool HasValidityPeriod { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Options")]
+        public System.Collections.Generic.ICollection<FieldMembershipOption> Options { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        /// <summary>
+        /// A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.
+        /// </summary>
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldMembershipCategoryDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FieldMembershipCategoryLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FieldMembershipCategoryLight
+    {
 
         [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
         public MetaInfo MetaInfo { get; set; }
@@ -10799,9 +11457,6 @@ namespace OSDC.Drilling.Rig.ModelShared
 
         [System.Text.Json.Serialization.JsonPropertyName("HasValidityPeriod")]
         public bool HasValidityPeriod { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Options")]
-        public System.Collections.Generic.ICollection<FieldMembershipOption> Options { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
         public System.DateTimeOffset? CreationDate { get; set; }
@@ -10823,9 +11478,16 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldMembershipOption
     {
+        /// <summary>
+        /// A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("ID")]
         public System.Guid ID { get; set; }
+
+        /// <summary>
+        /// Human-readable name of a resource, definition or option; not necessarily unique or stable.
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
@@ -10895,9 +11557,16 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FieldProjectedCoordinate
     {
+        /// <summary>
+        /// Projected coordinate positive in the declared grid-east direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Easting")]
         public double Easting { get; set; }
+
+        /// <summary>
+        /// Projected coordinate positive in the declared grid-north direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).
+        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("Northing")]
         public double Northing { get; set; }
@@ -10964,6 +11633,9 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UsageStatisticsField
     {
+
+        [System.Text.Json.Serialization.JsonPropertyName("DiscoveryRequestsPerDay")]
+        public History DiscoveryRequestsPerDay { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("LastSaved")]
         public System.DateTimeOffset LastSaved { get; set; }
@@ -15486,6 +16158,36 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class RigDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<RigLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum RigEnvironment
     {
 
@@ -15609,6 +16311,81 @@ namespace OSDC.Drilling.Rig.ModelShared
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class RigFeatureCategoryDiscoveryPage
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<RigFeatureCategoryLight> Items { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Offset")]
+        public int Offset { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Limit")]
+        public int Limit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TotalCount")]
+        public int TotalCount { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NextOffset")]
+        public int? NextOffset { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class RigFeatureCategoryLight
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
+        public MetaInfo MetaInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsExclusive")]
+        public bool IsExclusive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("HasValidityPeriod")]
+        public bool HasValidityPeriod { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsBuiltIn")]
+        public bool IsBuiltIn { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsDeprecated")]
+        public bool IsDeprecated { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreationDate")]
+        public System.DateTimeOffset? CreationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastModificationDate")]
+        public System.DateTimeOffset? LastModificationDate { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class RigFeatureOption
     {
 
@@ -15701,6 +16478,9 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class RigLight
     {
+
+        [System.Text.Json.Serialization.JsonPropertyName("FixedPlatformProperties")]
+        public FixedPlatformProperties FixedPlatformProperties { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("MetaInfo")]
         public MetaInfo MetaInfo { get; set; }
@@ -17434,6 +18214,9 @@ namespace OSDC.Drilling.Rig.ModelShared
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UsageStatisticsRig
     {
+
+        [System.Text.Json.Serialization.JsonPropertyName("DiscoveryRequestsPerDay")]
+        public History DiscoveryRequestsPerDay { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("LastSaved")]
         public System.DateTimeOffset LastSaved { get; set; }

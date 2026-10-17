@@ -260,7 +260,7 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE).
 
 The service publishes all non-statistics Rig and Rig Feature Category operations as 18 underscore-only MCP tools, including `ping`, and deliberately omits access-statistics endpoints.
 
-Descriptions distinguish compact discovery (`rig_get_all_ids`, `rig_get_all_meta_info`, and `rig_get_all_light`) from complete retrieval. The create and update tools expose an explicit schema generated from the service's Rig model, including every nested mast/equipment object, collection, enum value, rating, limit, and instrumentation capability. Live telemetry is outside the Rig master-data contract. This keeps the MCP contract synchronized as the Rig model evolves.
+Descriptions distinguish compact discovery (`rig_get_all_ids`, `rig_get_all_meta_info`, and `rig_discover`) from complete retrieval. The create and update tools expose an explicit schema generated from the service's Rig model, including every nested mast/equipment object, collection, enum value, rating, limit, and instrumentation capability. Live telemetry is outside the Rig master-data contract. This keeps the MCP contract synchronized as the Rig model evolves.
 
 Rig creation ignores caller timestamp values, assigns CreationDate and LastModificationDate on the server, and returns the created Rig through MCP so the first concurrency token is immediately available. Reads expose CreationDate, or the Unix epoch when both timestamps are absent, as the effective token for legacy records.
 
@@ -285,3 +285,18 @@ The merged Swagger endpoint updates its request-specific `servers` entry directl
 
 
 Read UUID arguments declare the Rig resource target in both REST and MCP. Read/light projections also expose their managed-resource noun, name and identity metadata; Gaussian drill-floor depth remains canonical WGS84 metres. These annotations support verified generic reference lookup without changing stored values.
+
+## Bounded light discovery
+
+Resource and catalog discovery returns light pages, with `offset` defaulting to 0 and `limit` defaulting to 50 (allowed range 1–200). Names and relevant resource-reference filters are evaluated on the server. Unbounded full-object `HeavyData` routes and tools, including filtered full-object lists, have been removed. Existing UUID and HTTP-metadata listings remain available; use named light pages for routine discovery.
+
+REST routes and MCP tool names (relative to the service's existing API path base):
+
+- `/Rig/LightData` / `rig_discover`
+- `/RigFeatureCategory/LightData` / `rig_feature_category_discover`
+
+Pages contain `Items`, `Offset`, `Limit`, `TotalCount`, and `NextOffset`; `NextOffset` is null on the final page. Offset pages are individually consistent reads, not a snapshot spanning requests: concurrent inserts/deletes can change later pages. Refresh discovery when the underlying collection changes. EarthGeodesy's existing search pages instead expose `Items[].Value`, `Offset`, `Limit`, and `TotalCount`.
+
+Single-record reads, result/chunk reads, and deliberate backup/export/restore operations are preserved. Backups can still contain complete resources and should be treated as explicit bulk operations.
+
+This is a breaking REST/MCP contract change: update generated clients, UIs, and external integrations together with the service release. Removed heavy-list names are not compatibility aliases. No persisted engineering shapes, database names, or storage volumes are changed. Historical usage counters are retained; bounded discovery has a separate additive `DiscoveryRequestsPerDay` history in resource services.

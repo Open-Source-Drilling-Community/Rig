@@ -5,6 +5,61 @@
     "version": "1.0"
   },
   "paths": {
+    "/Rig/LightData": {
+      "get": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "DiscoverRig",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clusterId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigDiscoveryPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Rig": {
       "get": {
         "tags": [
@@ -426,62 +481,6 @@
         }
       }
     },
-    "/Rig/LightData": {
-      "get": {
-        "tags": [
-          "Rig"
-        ],
-        "operationId": "GetAllRigLight",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigLight"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Rig/HeavyData": {
-      "get": {
-        "tags": [
-          "Rig"
-        ],
-        "operationId": "GetAllRig",
-        "parameters": [
-          {
-            "name": "includePhotos",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigReadResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/Rig/BatchExport": {
       "post": {
         "tags": [
@@ -654,6 +653,53 @@
         }
       }
     },
+    "/RigFeatureCategory/LightData": {
+      "get": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "DiscoverRigFeatureCategory",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategoryDiscoveryPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/RigFeatureCategory": {
       "get": {
         "tags": [
@@ -742,29 +788,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/RigFeatureCategory/HeavyData": {
-      "get": {
-        "tags": [
-          "RigFeatureCategory"
-        ],
-        "operationId": "GetAllRigFeatureCategory",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategory"
                   }
                 }
               }
@@ -10344,6 +10367,36 @@
         },
         "additionalProperties": false
       },
+      "OSDC.Drilling.Rig.Model.RigDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.RigEnvironment": {
         "enum": [
           "Unknown",
@@ -10484,6 +10537,97 @@
         },
         "additionalProperties": false
       },
+      "OSDC.Drilling.Rig.Model.RigFeatureCategoryDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.RigFeatureCategoryLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OSDC.Drilling.Rig.Model.RigFeatureCategoryLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.DotnetLibraries.General.DataManagement.MetaInfo"
+              }
+            ],
+            "nullable": true,
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "rig-provider-binding-registry",
+              "referenceProfile": "urn:osdc:reference-profile:canonical-drilling",
+              "referenceProfileVersion": "1.1.0",
+              "referenceScope": "canonical-storage-and-api",
+              "presentationReferencesAllowed": true,
+              "requiredContext": [ ],
+              "constraints": [ ]
+            }
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsExclusive": {
+            "type": "boolean"
+          },
+          "HasValidityPeriod": {
+            "type": "boolean"
+          },
+          "IsBuiltIn": {
+            "type": "boolean"
+          },
+          "IsDeprecated": {
+            "type": "boolean"
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "OSDC.Drilling.Rig.Model.RigFeatureOption": {
         "type": "object",
         "properties": {
@@ -10608,6 +10752,14 @@
       "OSDC.Drilling.Rig.Model.RigLight": {
         "type": "object",
         "properties": {
+          "FixedPlatformProperties": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.FixedPlatformProperties"
+              }
+            ],
+            "nullable": true
+          },
           "MetaInfo": {
             "allOf": [
               {
@@ -14380,6 +14532,14 @@
       "OSDC.Drilling.Rig.Model.UsageStatisticsRig": {
         "type": "object",
         "properties": {
+          "DiscoveryRequestsPerDay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OSDC.Drilling.Rig.Model.History"
+              }
+            ],
+            "nullable": true
+          },
           "LastSaved": {
             "type": "string",
             "format": "date-time"

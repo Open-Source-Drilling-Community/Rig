@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OSDC.Drilling.Rig.ModelShared;
 using RigShared = OSDC.Drilling.Rig.ModelShared;
 
 namespace OSDC.Drilling.Rig.WebPages.Shared;
@@ -24,10 +25,10 @@ public sealed class FieldClusterApiClient
     }
 
     public async Task<List<RigShared.Field>> GetFieldsAsync() =>
-        await GetAsync<List<RigShared.Field>>(_fieldHttpClient, "Field/HeavyData") ?? new List<RigShared.Field>();
+        await new RigShared.Client(_fieldHttpClient.BaseAddress!.ToString(), _fieldHttpClient).ListFieldReferencesAsync();
 
     public async Task<List<RigShared.Cluster>> GetClustersAsync() =>
-        await GetAsync<List<RigShared.Cluster>>(_clusterHttpClient, "Cluster/HeavyData") ?? new List<RigShared.Cluster>();
+        await new RigShared.Client(_clusterHttpClient.BaseAddress!.ToString(), _clusterHttpClient).ListClusterReferencesAsync();
 
     private static async Task<T?> GetAsync<T>(HttpClient httpClient, string relativeUrl)
     {

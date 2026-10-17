@@ -1,3 +1,5 @@
+@inject OSDC.Drilling.Rig.WebPages.Shared.RigApiClient RigApiClient
+
 <MudStack Spacing="3">
     <MudAlert Severity="Severity.Info" Dense="true">
         Features describe configurable rig capabilities. Engineering limits and installed equipment remain in their dedicated sections.
@@ -72,6 +74,20 @@
     [Parameter] public IReadOnlyCollection<RigFeatureCategory> Categories { get; set; } = Array.Empty<RigFeatureCategory>();
 
     private Guid? _selectedCategoryId;
+    private readonly HashSet<Guid> _loadedCategoryIds = [];
+    private object? _loadedCatalog;
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!ReferenceEquals(_loadedCatalog, Categories)) { _loadedCategoryIds.Clear(); _loadedCatalog = Categories; }
+        foreach (Guid id in Rig.FeatureAssignments?.Select(value => value.FeatureCategoryID).Distinct() ?? [])
+        {
+            if (_loadedCategoryIds.Contains(id) || FindCategory(id) is not { } category) continue;
+            var full = await RigApiClient.GetRigFeatureCategoryAsync(id);
+            foreach (var property in typeof(RigFeatureCategory).GetProperties().Where(property => property.CanWrite))
+                property.SetValue(category, property.GetValue(full));
+            _loadedCategoryIds.Add(id);
+        }
+    }
     private Guid? _selectedOptionId;
     private List<RigFeatureAssignment> Assignments => Rig.FeatureAssignments?.ToList() ?? [];
     private IEnumerable<RigFeatureCategory> AvailableCategories => Categories
@@ -81,11 +97,16 @@
         .Where(option => option.ID != Guid.Empty && !option.IsDeprecated)
         .OrderBy(option => option.Name, StringComparer.OrdinalIgnoreCase);
 
-    private Task SelectCategory(Guid? id)
+    private async Task SelectCategory(Guid? id)
     {
+        if (id is Guid categoryId && FindCategory(id) is { } category)
+        {
+            var full = await RigApiClient.GetRigFeatureCategoryAsync(categoryId);
+            foreach (var property in typeof(RigFeatureCategory).GetProperties().Where(property => property.CanWrite))
+                property.SetValue(category, property.GetValue(full));
+        }
         _selectedCategoryId = id;
         _selectedOptionId = null;
-        return Task.CompletedTask;
     }
 
     private void AddAssignment()

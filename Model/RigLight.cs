@@ -10,6 +10,8 @@ namespace OSDC.Drilling.Rig.Model
     /// </summary>
     public class RigLight
     {
+        /// <summary>Finite platform reference context; engineering equipment and assignment collections are omitted.</summary>
+        public FixedPlatformProperties? FixedPlatformProperties { get; set; }
         /// <summary>
         /// a MetaInfo for the RigLight
         /// </summary>

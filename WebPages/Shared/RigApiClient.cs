@@ -29,10 +29,15 @@ public sealed class RigApiClient
         await GetAsync<List<RigModel.MetaInfo?>>("Rig/MetaInfo") ?? new List<RigModel.MetaInfo?>();
 
     public async Task<List<RigModel.RigLight>> GetRigLightsAsync() =>
-        await GetAsync<List<RigModel.RigLight>>("Rig/LightData") ?? new List<RigModel.RigLight>();
+        await DiscoverAsync<RigModel.RigLight>("Rig/LightData");
 
     public async Task<List<RigModel.Rig?>> GetRigsAsync() =>
-        await GetAsync<List<RigModel.Rig?>>("Rig/HeavyData") ?? new List<RigModel.Rig?>();
+        (await GetRigLightsAsync()).Select(value => (RigModel.Rig?)new RigModel.Rig
+        {
+            MetaInfo = value.MetaInfo, Name = value.Name, Description = value.Description,
+            CreationDate = value.CreationDate, LastModificationDate = value.LastModificationDate,
+            RigType = value.RigType, FixedPlatformProperties = value.FixedPlatformProperties
+        }).ToList();
 
     public Task<RigModel.Rig?> GetRigAsync(Guid id) => GetAsync<RigModel.Rig>($"Rig/{id}");
 
@@ -69,7 +74,33 @@ public sealed class RigApiClient
     { using HttpResponseMessage response = await _httpClient.DeleteAsync($"Rig/{rigId}/Photos/{photoId}"); return response.StatusCode; }
 
     public async Task<List<RigModel.RigFeatureCategory>> GetRigFeatureCategoriesAsync() =>
-        await GetAsync<List<RigModel.RigFeatureCategory>>("RigFeatureCategory/HeavyData") ?? new List<RigModel.RigFeatureCategory>();
+        (await DiscoverAsync<RigModel.RigFeatureCategoryLight>("RigFeatureCategory/LightData"))
+            .Select(value => JsonSerializer.Deserialize<RigModel.RigFeatureCategory>(JsonSerializer.Serialize(value, JsonOptions), JsonOptions)!).ToList();
+
+    public async Task<RigModel.RigFeatureCategory> GetRigFeatureCategoryAsync(Guid id) =>
+        await GetAsync<RigModel.RigFeatureCategory>($"RigFeatureCategory/{id}")
+        ?? throw new InvalidOperationException("The selected feature category no longer exists.");
+
+    private sealed class DiscoveryPage<T>
+    {
+        public List<T> Items { get; set; } = [];
+        public int? NextOffset { get; set; }
+    }
+
+    private async Task<List<T>> DiscoverAsync<T>(string route)
+    {
+        List<T> items = [];
+        int offset = 0;
+        while (true)
+        {
+            var page = await GetAsync<DiscoveryPage<T>>($"{route}?offset={offset}&limit=200")
+                ?? throw new InvalidOperationException("Discovery returned no page.");
+            items.AddRange(page.Items);
+            if (page.NextOffset is not int next) return items;
+            if (next <= offset) throw new InvalidOperationException("Discovery pagination did not advance.");
+            offset = next;
+        }
+    }
 
     public async Task<RigModel.RigFeatureCategory> CreateRigFeatureCategoryAsync(RigModel.RigFeatureCategory category)
     {

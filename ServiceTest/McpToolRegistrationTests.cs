@@ -17,8 +17,8 @@ public sealed class McpToolRegistrationTests
         ["GetAllRigId"] = "rig_get_all_ids",
         ["GetAllRigMetaInfo"] = "rig_get_all_meta_info",
         ["GetRigById"] = "rig_get_by_id",
-        ["GetAllRigLight"] = "rig_get_all_light",
-        ["GetAllRig"] = "rig_get_all",
+        ["DiscoverRig"] = "rig_discover",
+
         ["PostRig"] = "rig_create",
         ["PutRigById"] = "rig_update_by_id",
         ["DeleteRigById"] = "rig_delete_by_id",
@@ -26,11 +26,11 @@ public sealed class McpToolRegistrationTests
         ["BatchRestoreRigs"] = "rig_batch_restore",
         ["GetAllIds"] = "rig_feature_category_get_all_ids",
         ["GetAllMetaInfo"] = "rig_feature_category_get_all_meta_info",
-        ["GetAll"] = "rig_feature_category_get_all",
+        ["DiscoverRigFeatureCategory"] = "rig_feature_category_discover",
         ["GetById"] = "rig_feature_category_get_by_id",
         ["Create"] = "rig_feature_category_create",
         ["Update"] = "rig_feature_category_update_by_id",
-        ["Delete"] = "rig_feature_category_delete_by_id"
+        ["Delete"] = "rig_feature_category_delete_by_id",
     };
 
     private ServiceProvider _provider = null!;
@@ -72,7 +72,7 @@ public sealed class McpToolRegistrationTests
     public void Inputs_declare_generic_resource_operation_roles()
     {
         string Role(string name) => _tools[name].InputSchema![SemanticMetadata.ExtensionName]!["role"]!.GetValue<string>();
-        Assert.That(Role("rig_get_all"), Is.EqualTo(Concepts.ResourceCollectionRetrieval));
+        Assert.That(Role("rig_discover"), Is.EqualTo(Concepts.ResourceCollectionRetrieval));
         Assert.That(Role("rig_get_by_id"), Is.EqualTo(Concepts.ResourceRetrieval));
         Assert.That(Role("rig_create"), Is.EqualTo(Concepts.ResourceCreation));
         Assert.That(Role("rig_update_by_id"), Is.EqualTo(Concepts.ResourceReplacement));
@@ -223,12 +223,14 @@ public sealed class McpToolRegistrationTests
     [Test]
     public void Rig_reads_make_photo_metadata_explicit_and_opt_in()
     {
-        foreach (string toolName in new[] { "rig_get_by_id", "rig_get_all" })
+        foreach (string toolName in new[] { "rig_get_by_id" })
         {
             string schema = _tools[toolName].InputSchema!.ToJsonString();
             Assert.That(schema, Does.Contain("includePhotos"));
             Assert.That(schema, Does.Contain("Image bytes are never returned by MCP"));
             Assert.That(_tools[toolName].Description, Does.Contain("image bytes are never"));
         }
+        Assert.That(_tools["rig_discover"].InputSchema.ToJsonString(), Does.Not.Contain("includePhotos"));
+        Assert.That(_tools["rig_discover"].OutputSchema.ToJsonString(), Does.Not.Contain("Photos"));
     }
 }

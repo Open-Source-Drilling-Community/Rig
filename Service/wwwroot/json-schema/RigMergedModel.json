@@ -6,6 +6,139 @@
     "version": "1.0"
   },
   "paths": {
+    "/Cluster/{clusterId}/Slots/LightData": {
+      "get": {
+        "tags": [
+          "Cluster"
+        ],
+        "operationId": "DiscoverClusterSlots",
+        "parameters": [
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlotDiscoveryPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Cluster/LightData": {
+      "get": {
+        "tags": [
+          "Cluster"
+        ],
+        "operationId": "DiscoverCluster",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fieldId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "rigId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "isSingleWell",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isFixedPlatform",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClusterDiscoveryPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Cluster": {
       "get": {
         "tags": [
@@ -103,7 +236,19 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "uuid"
+              "format": "uuid",
+              "x-osdc-semantic": {
+                "catalogue": "urn:osdc:semantic-catalogue",
+                "catalogueVersion": "0.18.0",
+                "concept": "urn:osdc:semantic:resource-identifier",
+                "curationStatus": "Reviewed",
+                "assertionSource": "provider-binding-registry",
+                "requiredContext": [
+                  "identified object type",
+                  "owning service or containing resource"
+                ],
+                "resourceType": "urn:osdc:semantic:well-cluster"
+              }
             }
           }
         ],
@@ -196,29 +341,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/Cluster/HeavyData": {
-      "get": {
-        "tags": [
-          "Cluster"
-        ],
-        "operationId": "GetAllCluster",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Cluster"
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -391,107 +513,36 @@
         }
       }
     },
-    "/Cluster/LightData": {
+    "/ClusterFeatureCategory/LightData": {
       "get": {
         "tags": [
-          "Cluster"
+          "ClusterFeatureCategory"
         ],
-        "operationId": "GetAllClusterLight",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClusterLight"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Cluster/ByFieldId": {
-      "get": {
-        "tags": [
-          "Cluster"
-        ],
-        "operationId": "GetAllClusterByFieldId",
+        "operationId": "DiscoverClusterFeatureCategory",
         "parameters": [
           {
-            "name": "guid",
+            "name": "offset",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32",
+              "default": 0
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Cluster"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Cluster/ByRigId": {
-      "get": {
-        "tags": [
-          "Cluster"
-        ],
-        "operationId": "GetAllClusterByRigId",
-        "parameters": [
+          },
           {
-            "name": "guid",
+            "name": "limit",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32",
+              "default": 50
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Cluster"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Cluster/SingleWell": {
-      "get": {
-        "tags": [
-          "Cluster"
-        ],
-        "operationId": "GetAllSingleWellCluster",
-        "parameters": [
+          },
           {
-            "name": "IsSingleWellNullable",
+            "name": "name",
             "in": "query",
             "schema": {
-              "type": "boolean"
+              "type": "string"
             }
           }
         ],
@@ -501,42 +552,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Cluster"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Cluster/FixedPlatform": {
-      "get": {
-        "tags": [
-          "Cluster"
-        ],
-        "operationId": "GetAllFixedPlatformCluster",
-        "parameters": [
-          {
-            "name": "fixedBool",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Cluster"
-                  }
+                  "$ref": "#/components/schemas/ClusterFeatureCategoryDiscoveryPage"
                 }
               }
             }
@@ -731,22 +747,46 @@
         }
       }
     },
-    "/ClusterFeatureCategory/HeavyData": {
+    "/ClusterIdentity/LightData": {
       "get": {
         "tags": [
-          "ClusterFeatureCategory"
+          "ClusterIdentity"
         ],
-        "operationId": "GetAllClusterFeatureCategory",
+        "operationId": "DiscoverClusterIdentity",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClusterFeatureCategory"
-                  }
+                  "$ref": "#/components/schemas/ClusterIdentityDiscoveryPage"
                 }
               }
             }
@@ -941,29 +981,6 @@
         }
       }
     },
-    "/ClusterIdentity/HeavyData": {
-      "get": {
-        "tags": [
-          "ClusterIdentity"
-        ],
-        "operationId": "GetAllClusterIdentity",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClusterIdentity"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/ClusterUsageStatistics": {
       "get": {
         "tags": [
@@ -977,6 +994,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UsageStatisticsCluster"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SlotFeatureCategory/LightData": {
+      "get": {
+        "tags": [
+          "SlotFeatureCategory"
+        ],
+        "operationId": "DiscoverSlotFeatureCategory",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlotFeatureCategoryDiscoveryPage"
                 }
               }
             }
@@ -1171,22 +1235,54 @@
         }
       }
     },
-    "/SlotFeatureCategory/HeavyData": {
+    "/Field/LightData": {
       "get": {
         "tags": [
-          "SlotFeatureCategory"
+          "Field"
         ],
-        "operationId": "GetAllSlotFeatureCategory",
+        "operationId": "DiscoverField",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectionDefinitionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SlotFeatureCategory"
-                  }
+                  "$ref": "#/components/schemas/FieldDiscoveryPage"
                 }
               }
             }
@@ -1458,29 +1554,6 @@
         }
       }
     },
-    "/Field/HeavyData": {
-      "get": {
-        "tags": [
-          "Field"
-        ],
-        "operationId": "GetAllField",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Field"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/Field/BatchExport": {
       "post": {
         "tags": [
@@ -1612,29 +1685,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FieldBatchErrorEnvelope"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Field/LightData": {
-      "get": {
-        "tags": [
-          "Field"
-        ],
-        "operationId": "GetAllFieldLight",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FieldLight"
-                  }
                 }
               }
             }
@@ -1793,6 +1843,53 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FieldConversionErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/FieldDelineationLineType/LightData": {
+      "get": {
+        "tags": [
+          "FieldDelineationLineType"
+        ],
+        "operationId": "DiscoverFieldDelineationLineType",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldDelineationLineTypeDiscoveryPage"
                 }
               }
             }
@@ -2004,22 +2101,46 @@
         }
       }
     },
-    "/FieldDelineationLineType/HeavyData": {
+    "/FieldFeatureCategory/LightData": {
       "get": {
         "tags": [
-          "FieldDelineationLineType"
+          "FieldFeatureCategory"
         ],
-        "operationId": "GetAllFieldDelineationLineType",
+        "operationId": "DiscoverFieldFeatureCategory",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FieldDelineationLineType"
-                  }
+                  "$ref": "#/components/schemas/FieldFeatureCategoryDiscoveryPage"
                 }
               }
             }
@@ -2231,22 +2352,46 @@
         }
       }
     },
-    "/FieldFeatureCategory/HeavyData": {
+    "/FieldIdentity/LightData": {
       "get": {
         "tags": [
-          "FieldFeatureCategory"
+          "FieldIdentity"
         ],
-        "operationId": "GetAllFieldFeatureCategory",
+        "operationId": "DiscoverFieldIdentity",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FieldFeatureCategory"
-                  }
+                  "$ref": "#/components/schemas/FieldIdentityDiscoveryPage"
                 }
               }
             }
@@ -2458,22 +2603,46 @@
         }
       }
     },
-    "/FieldIdentity/HeavyData": {
+    "/FieldMembershipCategory/LightData": {
       "get": {
         "tags": [
-          "FieldIdentity"
+          "FieldMembershipCategory"
         ],
-        "operationId": "GetAllFieldIdentity",
+        "operationId": "DiscoverFieldMembershipCategory",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FieldIdentity"
-                  }
+                  "$ref": "#/components/schemas/FieldMembershipCategoryDiscoveryPage"
                 }
               }
             }
@@ -2685,29 +2854,6 @@
         }
       }
     },
-    "/FieldMembershipCategory/HeavyData": {
-      "get": {
-        "tags": [
-          "FieldMembershipCategory"
-        ],
-        "operationId": "GetAllFieldMembershipCategory",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FieldMembershipCategory"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/FieldUsageStatistics": {
       "get": {
         "tags": [
@@ -2721,6 +2867,61 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UsageStatisticsField"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Rig/LightData": {
+      "get": {
+        "tags": [
+          "Rig"
+        ],
+        "operationId": "DiscoverRig",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clusterId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigDiscoveryPage"
                 }
               }
             }
@@ -3149,62 +3350,6 @@
         }
       }
     },
-    "/Rig/LightData": {
-      "get": {
-        "tags": [
-          "Rig"
-        ],
-        "operationId": "GetAllRigLight",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RigLight"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Rig/HeavyData": {
-      "get": {
-        "tags": [
-          "Rig"
-        ],
-        "operationId": "GetAllRig",
-        "parameters": [
-          {
-            "name": "includePhotos",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RigReadResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/Rig/BatchExport": {
       "post": {
         "tags": [
@@ -3377,6 +3522,53 @@
         }
       }
     },
+    "/RigFeatureCategory/LightData": {
+      "get": {
+        "tags": [
+          "RigFeatureCategory"
+        ],
+        "operationId": "DiscoverRigFeatureCategory",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RigFeatureCategoryDiscoveryPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/RigFeatureCategory": {
       "get": {
         "tags": [
@@ -3465,29 +3657,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/MetaInfo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/RigFeatureCategory/HeavyData": {
-      "get": {
-        "tags": [
-          "RigFeatureCategory"
-        ],
-        "operationId": "GetAllRigFeatureCategory",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RigFeatureCategory"
                   }
                 }
               }
@@ -4185,11 +4354,12 @@
         "properties": {
           "X": {
             "type": "number",
+            "description": "Signed meridian arc length from the equator to a point latitude on the reference ellipsoid; north positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:riemannian-north",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4211,11 +4381,12 @@
           },
           "Y": {
             "type": "number",
+            "description": "Signed arc length along the latitude parallel from the reference meridian to a point longitude; east positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:riemannian-east",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4240,11 +4411,12 @@
           },
           "Z": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4265,11 +4437,12 @@
           },
           "RiemannianNorth": {
             "type": "number",
+            "description": "Signed meridian arc length from the equator to a point latitude on the reference ellipsoid; north positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:riemannian-north",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4291,11 +4464,12 @@
           },
           "RiemannianEast": {
             "type": "number",
+            "description": "Signed arc length along the latitude parallel from the reference meridian to a point longitude; east positive. Physical quantity: PositionDrilling; SI unit: metres (m). Reference: WGS84 Riemannian coordinate convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:riemannian-east",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4320,11 +4494,12 @@
           },
           "Latitude": {
             "type": "number",
+            "description": "Angle between the ellipsoid normal and the equatorial plane; north positive. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad). Reference: WGS84 ellipsoid convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-latitude",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4345,11 +4520,12 @@
           },
           "Longitude": {
             "type": "number",
+            "description": "Angular position eastward from the reference meridian. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad). Reference: WGS84 ellipsoid convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-longitude",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4370,11 +4546,12 @@
           },
           "TVD": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -4396,7 +4573,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:geodetic-position",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-binding-registry",
@@ -4445,7 +4622,7 @@
             "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-metadata",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4459,7 +4636,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4473,7 +4650,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-description",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4488,7 +4665,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4510,7 +4687,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4532,18 +4709,15 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
-              "assertionSource": "provider-model-attribute",
+              "assertionSource": "provider-binding-registry",
               "requiredContext": [
                 "identified object type",
                 "owning service or containing resource"
               ],
-              "constraints": [
-                "A display name or assigned external identity value is not this UUID.",
-                "Null means absent where permitted by the provider; an empty UUID does not identify a resource."
-              ]
+              "resourceType": "urn:osdc:semantic:drilling-field"
             }
           },
           "IsSingleWell": {
@@ -4551,7 +4725,7 @@
             "description": "Boolean declaration that a cluster represents a single-well site rather than a multi-well grouping.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:single-well-cluster-flag",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4566,18 +4740,15 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
-              "assertionSource": "provider-model-attribute",
+              "assertionSource": "provider-binding-registry",
               "requiredContext": [
                 "identified object type",
                 "owning service or containing resource"
               ],
-              "constraints": [
-                "A display name or assigned external identity value is not this UUID.",
-                "Null means absent where permitted by the provider; an empty UUID does not identify a resource."
-              ]
+              "resourceType": "urn:osdc:semantic:rig"
             }
           },
           "IsFixedPlatform": {
@@ -4585,7 +4756,7 @@
             "description": "Boolean declaration that a cluster is associated with a fixed platform rather than a floating or moveable rig.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:fixed-platform-flag",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4618,7 +4789,7 @@
             "description": "Position specified by geodetic latitude, longitude and ellipsoidal depth. Geographic angles use SI radians; linear coordinates and ellipsoidal depth use SI metres. X/Y are Riemannian north/east arc coordinates, not projected easting/northing. Reference: WGS84 ellipsoid convention.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-position",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4645,7 +4816,7 @@
             "description": "Ellipsoidal depth of the ground surface or mud line at the cluster site, with the actual surface identified by site context. GaussianValue.Mean is the expected value in SI metres (m), referenced to the WGS84 ellipsoid. StandardDeviation is a non-negative standard uncertainty in SI metres (m); it has no coordinate origin. MinValue and MaxValue are provider domain-limit metadata in the mean\u0027s unit and reference, not confidence limits or instructions to truncate the Gaussian distribution.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:gaussian-uncertain-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4663,7 +4834,7 @@
             "x-osdc-semantic-bindings": {
               "/GaussianValue/Mean": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:ground-mud-line-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4686,7 +4857,7 @@
               },
               "/GaussianValue/StandardDeviation": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:linear-standard-uncertainty",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4706,7 +4877,7 @@
               },
               "/GaussianValue/MinValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:ground-mud-line-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4729,7 +4900,7 @@
               },
               "/GaussianValue/MaxValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:ground-mud-line-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4761,7 +4932,7 @@
             "description": "Ellipsoidal depth of the upper water surface at a site; distinct from water-column thickness and the depth of the seabed. GaussianValue.Mean is the expected value in SI metres (m), referenced to the WGS84 ellipsoid. StandardDeviation is a non-negative standard uncertainty in SI metres (m); it has no coordinate origin. MinValue and MaxValue are provider domain-limit metadata in the mean\u0027s unit and reference, not confidence limits or instructions to truncate the Gaussian distribution.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:gaussian-uncertain-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4779,7 +4950,7 @@
             "x-osdc-semantic-bindings": {
               "/GaussianValue/Mean": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:water-surface-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4802,7 +4973,7 @@
               },
               "/GaussianValue/StandardDeviation": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:linear-standard-uncertainty",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4822,7 +4993,7 @@
               },
               "/GaussianValue/MinValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:water-surface-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4845,7 +5016,7 @@
               },
               "/GaussianValue/MaxValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:water-surface-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -4878,7 +5049,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:well-cluster",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -4930,7 +5101,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4944,7 +5115,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -4964,7 +5135,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5097,7 +5268,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5117,7 +5288,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5140,7 +5311,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5154,7 +5325,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5174,7 +5345,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5282,6 +5453,35 @@
           }
         }
       },
+      "ClusterDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClusterLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "ClusterFeatureAssignment": {
         "type": "object",
         "properties": {
@@ -5291,7 +5491,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5308,7 +5508,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5325,7 +5525,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5342,7 +5542,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5361,7 +5561,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5376,7 +5576,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-assignment",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -5403,7 +5603,7 @@
             "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-metadata",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5416,7 +5616,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5428,7 +5628,7 @@
             "description": "Boolean rule declaring that at most one category assignment may be active on a resource at the same instant.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-exclusivity",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5443,7 +5643,7 @@
             "description": "Boolean rule indicating whether assignments in a category may carry validity bounds.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-validity-period-enabled",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5464,7 +5664,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5483,7 +5683,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5498,7 +5698,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-category",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -5507,6 +5707,63 @@
             "resource type"
           ],
           "constraints": []
+        }
+      },
+      "ClusterFeatureCategoryDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClusterFeatureCategoryLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "ClusterFeatureCategoryLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsExclusive": {
+            "type": "boolean"
+          },
+          "HasValidityPeriod": {
+            "type": "boolean"
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
         }
       },
       "ClusterFeatureOption": {
@@ -5518,7 +5775,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5534,7 +5791,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5544,7 +5801,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-option",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -5566,7 +5823,7 @@
             "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-metadata",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5579,7 +5836,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5593,7 +5850,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5612,7 +5869,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5627,7 +5884,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:resource-identity-definition",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -5649,7 +5906,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5666,7 +5923,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5682,7 +5939,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identity-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -5695,7 +5952,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:resource-identity-assignment",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -5706,6 +5963,57 @@
           "constraints": [
             "The assignment UUID is distinct from the definition UUID and the identified resource UUID."
           ]
+        }
+      },
+      "ClusterIdentityDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClusterIdentityLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "ClusterIdentityLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
         }
       },
       "ClusterLight": {
@@ -5720,7 +6028,7 @@
             "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-metadata",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5734,7 +6042,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5748,7 +6056,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-description",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5763,7 +6071,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5785,7 +6093,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5807,7 +6115,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5826,7 +6134,7 @@
             "description": "Boolean declaration that a cluster represents a single-well site rather than a multi-well grouping.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:single-well-cluster-flag",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5841,7 +6149,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5860,7 +6168,7 @@
             "description": "Boolean declaration that a cluster is associated with a fixed platform rather than a floating or moveable rig.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:fixed-platform-flag",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5879,7 +6187,7 @@
             "description": "Position specified by geodetic latitude, longitude and ellipsoidal depth. Geographic angles use SI radians; linear coordinates and ellipsoidal depth use SI metres. X/Y are Riemannian north/east arc coordinates, not projected easting/northing. Reference: WGS84 ellipsoid convention.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-position",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5906,7 +6214,7 @@
             "description": "Ellipsoidal depth of the ground surface or mud line at the cluster site, with the actual surface identified by site context. GaussianValue.Mean is the expected value in SI metres (m), referenced to the WGS84 ellipsoid. StandardDeviation is a non-negative standard uncertainty in SI metres (m); it has no coordinate origin. MinValue and MaxValue are provider domain-limit metadata in the mean\u0027s unit and reference, not confidence limits or instructions to truncate the Gaussian distribution.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:gaussian-uncertain-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -5924,7 +6232,7 @@
             "x-osdc-semantic-bindings": {
               "/GaussianValue/Mean": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:ground-mud-line-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -5947,7 +6255,7 @@
               },
               "/GaussianValue/StandardDeviation": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:linear-standard-uncertainty",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -5967,7 +6275,7 @@
               },
               "/GaussianValue/MinValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:ground-mud-line-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -5990,7 +6298,7 @@
               },
               "/GaussianValue/MaxValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:ground-mud-line-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6022,7 +6330,7 @@
             "description": "Ellipsoidal depth of the upper water surface at a site; distinct from water-column thickness and the depth of the seabed. GaussianValue.Mean is the expected value in SI metres (m), referenced to the WGS84 ellipsoid. StandardDeviation is a non-negative standard uncertainty in SI metres (m); it has no coordinate origin. MinValue and MaxValue are provider domain-limit metadata in the mean\u0027s unit and reference, not confidence limits or instructions to truncate the Gaussian distribution.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:gaussian-uncertain-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6040,7 +6348,7 @@
             "x-osdc-semantic-bindings": {
               "/GaussianValue/Mean": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:water-surface-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6063,7 +6371,7 @@
               },
               "/GaussianValue/StandardDeviation": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:linear-standard-uncertainty",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6083,7 +6391,7 @@
               },
               "/GaussianValue/MinValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:water-surface-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6106,7 +6414,7 @@
               },
               "/GaussianValue/MaxValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:water-surface-depth",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6132,7 +6440,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:well-cluster",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -6179,7 +6487,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6199,7 +6507,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6213,7 +6521,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-description",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6228,7 +6536,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6250,7 +6558,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6274,7 +6582,7 @@
             "description": "Angle between the ellipsoid normal and the equatorial plane; north positive. GaussianValue.Mean is the expected value in SI radians (rad), referenced to the WGS84 ellipsoid. StandardDeviation is a non-negative standard uncertainty in SI radians (rad); it has no coordinate origin. MinValue and MaxValue are provider domain-limit metadata in the mean\u0027s unit and reference, not confidence limits or instructions to truncate the Gaussian distribution.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:gaussian-uncertain-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6292,7 +6600,7 @@
             "x-osdc-semantic-bindings": {
               "/GaussianValue/Mean": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:geodetic-latitude",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6313,7 +6621,7 @@
               },
               "/GaussianValue/StandardDeviation": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:angular-standard-uncertainty",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6333,7 +6641,7 @@
               },
               "/GaussianValue/MinValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:geodetic-latitude",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6354,7 +6662,7 @@
               },
               "/GaussianValue/MaxValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:geodetic-latitude",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6384,7 +6692,7 @@
             "description": "Angular position eastward from the reference meridian. GaussianValue.Mean is the expected value in SI radians (rad), referenced to the WGS84 ellipsoid. StandardDeviation is a non-negative standard uncertainty in SI radians (rad); it has no coordinate origin. MinValue and MaxValue are provider domain-limit metadata in the mean\u0027s unit and reference, not confidence limits or instructions to truncate the Gaussian distribution.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:gaussian-uncertain-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6402,7 +6710,7 @@
             "x-osdc-semantic-bindings": {
               "/GaussianValue/Mean": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:geodetic-longitude",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6423,7 +6731,7 @@
               },
               "/GaussianValue/StandardDeviation": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:angular-standard-uncertainty",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6443,7 +6751,7 @@
               },
               "/GaussianValue/MinValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:geodetic-longitude",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6464,7 +6772,7 @@
               },
               "/GaussianValue/MaxValue": {
                 "catalogue": "urn:osdc:semantic-catalogue",
-                "catalogueVersion": "0.16.0",
+                "catalogueVersion": "0.18.0",
                 "concept": "urn:osdc:semantic:geodetic-longitude",
                 "curationStatus": "Reviewed",
                 "assertionSource": "provider-binding-registry",
@@ -6495,7 +6803,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:well-slot",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -6503,6 +6811,35 @@
             "containing cluster"
           ],
           "constraints": []
+        }
+      },
+      "SlotDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SlotLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
         }
       },
       "SlotFeatureAssignment": {
@@ -6514,7 +6851,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6531,7 +6868,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6548,7 +6885,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6565,7 +6902,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6584,7 +6921,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6599,7 +6936,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-assignment",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -6626,7 +6963,7 @@
             "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-metadata",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6639,7 +6976,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6651,7 +6988,7 @@
             "description": "Boolean rule declaring that at most one category assignment may be active on a resource at the same instant.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-exclusivity",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6666,7 +7003,7 @@
             "description": "Boolean rule indicating whether assignments in a category may carry validity bounds.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-validity-period-enabled",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6687,7 +7024,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6706,7 +7043,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6721,7 +7058,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-category",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -6730,6 +7067,63 @@
             "resource type"
           ],
           "constraints": []
+        }
+      },
+      "SlotFeatureCategoryDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SlotFeatureCategoryLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "SlotFeatureCategoryLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsExclusive": {
+            "type": "boolean"
+          },
+          "HasValidityPeriod": {
+            "type": "boolean"
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
         }
       },
       "SlotFeatureOption": {
@@ -6741,7 +7135,7 @@
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6757,7 +7151,7 @@
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -6767,7 +7161,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-option",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -6777,9 +7171,56 @@
           "constraints": []
         }
       },
+      "SlotLight": {
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "Latitude": {
+            "$ref": "#/components/schemas/GaussianDrillingProperty"
+          },
+          "Longitude": {
+            "$ref": "#/components/schemas/GaussianDrillingProperty"
+          }
+        },
+        "x-osdc-semantic": {
+          "catalogue": "urn:osdc:semantic-catalogue",
+          "catalogueVersion": "0.18.0",
+          "concept": "urn:osdc:semantic:well-slot",
+          "curationStatus": "Reviewed",
+          "assertionSource": "provider-model-attribute",
+          "requiredContext": [
+            "containing cluster"
+          ],
+          "constraints": []
+        }
+      },
       "UsageStatisticsCluster": {
         "type": "object",
         "properties": {
+          "DiscoveryRequestsPerDay": {
+            "$ref": "#/components/schemas/History"
+          },
           "LastSaved": {
             "type": "string",
             "format": "date-time"
@@ -6902,14 +7343,29 @@
         "type": "object",
         "properties": {
           "MetaInfo": {
-            "$ref": "#/components/schemas/MetaInfo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MetaInfo"
+              }
+            ],
+            "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [],
+              "constraints": []
+            }
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6919,10 +7375,11 @@
           },
           "Description": {
             "type": "string",
+            "description": "Human-readable descriptive text about a resource.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-description",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6932,11 +7389,12 @@
           },
           "CreationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6953,11 +7411,12 @@
           },
           "LastModificationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6974,11 +7433,12 @@
           },
           "ProjectionDefinitionID": {
             "type": "string",
+            "description": "UUID of the definition owned by EarthCartographicProjection, not an EPSG code.",
             "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -6993,7 +7453,31 @@
             }
           },
           "ReferencePoint": {
-            "$ref": "#/components/schemas/Point3DGlobalCoordinates"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Point3DGlobalCoordinates"
+              }
+            ],
+            "description": "Position specified by geodetic latitude, longitude and ellipsoidal depth. Geographic angles use SI radians; linear coordinates and ellipsoidal depth use SI metres. X/Y are Riemannian north/east arc coordinates, not projected easting/northing. Reference: WGS84 ellipsoid convention.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:geodetic-position",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "role": "urn:osdc:semantic:reference-location",
+              "reference": "urn:osdc:semantic:wgs84",
+              "requiredContext": [
+                "reference ellipsoid",
+                "angular units",
+                "vertical sign",
+                "reference meridian",
+                "vertical representation and sign"
+              ],
+              "constraints": [],
+              "referenceDefinition": "WGS84 geodetic latitude/longitude with Greenwich origin and ellipsoidal depth positive downward; not a fully specified terrestrial frame realization or epoch.",
+              "referenceRequiredContext": []
+            }
           },
           "FieldFeatureAssignments": {
             "type": "array",
@@ -7026,7 +7510,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:drilling-field",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -7086,15 +7570,57 @@
           },
           "Name": {
             "type": "string",
-            "nullable": true
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
+            "nullable": true,
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-name",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [],
+              "constraints": []
+            }
           },
           "SourceID": {
             "type": "string",
-            "format": "uuid"
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
+            "format": "uuid",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-identifier",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [
+                "identified object type",
+                "owning service or containing resource"
+              ],
+              "constraints": [
+                "A display name or assigned external identity value is not this UUID.",
+                "Null means absent where permitted by the provider; an empty UUID does not identify a resource."
+              ]
+            }
           },
           "LocalID": {
             "type": "string",
-            "format": "uuid"
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
+            "format": "uuid",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-identifier",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [
+                "identified object type",
+                "owning service or containing resource"
+              ],
+              "constraints": [
+                "A display name or assigned external identity value is not this UUID.",
+                "Null means absent where permitted by the provider; an empty UUID does not identify a resource."
+              ]
+            }
           },
           "Resolution": {
             "type": "string",
@@ -7191,7 +7717,23 @@
               "type": "string",
               "format": "uuid"
             },
-            "nullable": true
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
+            "nullable": true,
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-identifier",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [
+                "identified object type",
+                "owning service or containing resource"
+              ],
+              "constraints": [
+                "A display name or assigned external identity value is not this UUID.",
+                "Null means absent where permitted by the provider; an empty UUID does not identify a resource."
+              ]
+            }
           }
         }
       },
@@ -7261,7 +7803,23 @@
               "type": "string",
               "format": "uuid"
             },
-            "nullable": true
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
+            "nullable": true,
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-identifier",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [
+                "identified object type",
+                "owning service or containing resource"
+              ],
+              "constraints": [
+                "A display name or assigned external identity value is not this UUID.",
+                "Null means absent where permitted by the provider; an empty UUID does not identify a resource."
+              ]
+            }
           }
         }
       },
@@ -7270,10 +7828,11 @@
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7289,10 +7848,11 @@
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7400,10 +7960,11 @@
           },
           "ProjectionDatumVerticalDepth": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7428,11 +7989,12 @@
           },
           "Wgs84VerticalDepth": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7460,11 +8022,12 @@
           },
           "CoordinateEpochUtc": {
             "type": "string",
+            "description": "Epoch to which the coordinates of a position refer. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:coordinate-epoch",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7486,11 +8049,12 @@
           },
           "GridConvergence": {
             "type": "number",
+            "description": "Signed angular relation between geodetic north and grid north at a specified position in a specified projection; explicit sign convention required. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad). Reference: Grid convergence true to grid clockwise.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:grid-convergence",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7534,10 +8098,11 @@
         "properties": {
           "FieldID": {
             "type": "string",
+            "description": "UUID of the referenced resource owned by the Field service.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7569,10 +8134,11 @@
             "items": {
               "$ref": "#/components/schemas/FieldCoordinateConversionPositionResult"
             },
+            "description": "Position specified by geodetic latitude, longitude and ellipsoidal depth.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-position",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7597,7 +8163,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:field-coordinate-conversion-result",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -7618,10 +8184,11 @@
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7637,9 +8204,10 @@
           },
           "IsInteriorBoundary": {
             "type": "boolean",
+            "description": "Boolean declaration that a derived boundary represents the interior side of a closed source delineation line.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:interior-boundary-flag",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7651,9 +8219,10 @@
           },
           "IsClosed": {
             "type": "boolean",
+            "description": "Boolean declaration that a line is geometrically closed according to the provider closure rule.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:closed-line-flag",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7671,7 +8240,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:calculated-delineation-boundary",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -7691,10 +8260,11 @@
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7710,11 +8280,12 @@
           },
           "DelineationLineTypeID": {
             "type": "string",
+            "description": "UUID of a line-type definition owned by the Field service.",
             "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7730,10 +8301,11 @@
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7743,10 +8315,11 @@
           },
           "Description": {
             "type": "string",
+            "description": "Human-readable descriptive text about a resource.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-description",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7756,11 +8329,12 @@
           },
           "Margin": {
             "type": "number",
+            "description": "Horizontal offset distance used to derive a boundary from a delineation line under a declared geometric algorithm. Physical quantity: LengthStandard; SI unit: metres (m).",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:delineation-margin",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7785,11 +8359,12 @@
           },
           "TopDepth": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7818,11 +8393,12 @@
           },
           "BottomDepth": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m). Reference: WGS84 ellipsoid convention.",
             "format": "double",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7866,7 +8442,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:field-delineation-line",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -7884,14 +8460,29 @@
         "type": "object",
         "properties": {
           "MetaInfo": {
-            "$ref": "#/components/schemas/MetaInfo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MetaInfo"
+              }
+            ],
+            "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [],
+              "constraints": []
+            }
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7901,11 +8492,12 @@
           },
           "CreationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7922,11 +8514,12 @@
           },
           "LastModificationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -7944,7 +8537,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:delineation-line-type",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -7955,6 +8548,57 @@
           "constraints": []
         }
       },
+      "FieldDelineationLineTypeDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldDelineationLineTypeLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "FieldDelineationLineTypeLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "FieldDepthTransformationPolicy": {
         "enum": [
           "PreservePhysicalPoint",
@@ -7962,15 +8606,45 @@
         ],
         "type": "string"
       },
+      "FieldDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "FieldFeatureAssignment": {
         "type": "object",
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -7982,11 +8656,12 @@
           },
           "FeatureCategoryID": {
             "type": "string",
+            "description": "UUID of the selected category in the owning service catalogue.",
             "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -7998,11 +8673,12 @@
           },
           "FeatureOptionID": {
             "type": "string",
+            "description": "UUID of an option belonging to the selected category.",
             "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8014,11 +8690,12 @@
           },
           "FromDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8032,11 +8709,12 @@
           },
           "ToDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8051,7 +8729,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-assignment",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8070,14 +8748,28 @@
         "type": "object",
         "properties": {
           "MetaInfo": {
-            "$ref": "#/components/schemas/MetaInfo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MetaInfo"
+              }
+            ],
+            "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-binding-registry",
+              "requiredContext": []
+            }
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8086,9 +8778,10 @@
           },
           "IsExclusive": {
             "type": "boolean",
+            "description": "Boolean rule declaring that at most one category assignment may be active on a resource at the same instant.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-exclusivity",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8100,9 +8793,10 @@
           },
           "HasValidityPeriod": {
             "type": "boolean",
+            "description": "Boolean rule indicating whether assignments in a category may carry validity bounds.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-validity-period-enabled",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8118,11 +8812,12 @@
           },
           "CreationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8136,11 +8831,12 @@
           },
           "LastModificationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8155,7 +8851,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-category",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8166,15 +8862,73 @@
           "constraints": []
         }
       },
+      "FieldFeatureCategoryDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldFeatureCategoryLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "FieldFeatureCategoryLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsExclusive": {
+            "type": "boolean"
+          },
+          "HasValidityPeriod": {
+            "type": "boolean"
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "FieldFeatureOption": {
         "type": "object",
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8186,10 +8940,11 @@
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8199,7 +8954,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:feature-option",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8214,10 +8969,11 @@
         "properties": {
           "Latitude": {
             "type": "number",
+            "description": "Angle between the ellipsoid normal and the equatorial plane; north positive. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-latitude",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8240,10 +8996,11 @@
           },
           "Longitude": {
             "type": "number",
+            "description": "Angular position eastward from the reference meridian. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-longitude",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8266,10 +9023,11 @@
           },
           "VerticalDepth": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8294,11 +9052,12 @@
           },
           "CoordinateEpochUtc": {
             "type": "string",
+            "description": "Epoch to which the coordinates of a position refer. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:coordinate-epoch",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8328,10 +9087,11 @@
         "properties": {
           "FieldID": {
             "type": "string",
+            "description": "UUID of the referenced resource owned by the Field service.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8360,9 +9120,10 @@
             "items": {
               "$ref": "#/components/schemas/FieldForwardConversionPosition"
             },
+            "description": "Position specified by geodetic latitude, longitude and ellipsoidal depth.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-position",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8380,7 +9141,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:field-coordinate-conversion-request",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8399,10 +9160,11 @@
         "properties": {
           "Latitude": {
             "type": "number",
+            "description": "Angle between the ellipsoid normal and the equatorial plane; north positive. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-latitude",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8425,10 +9187,11 @@
           },
           "Longitude": {
             "type": "number",
+            "description": "Angular position eastward from the reference meridian. Physical quantity: PlaneAngleGeodesic; SI unit: radians (rad).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-longitude",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8462,14 +9225,28 @@
         "type": "object",
         "properties": {
           "MetaInfo": {
-            "$ref": "#/components/schemas/MetaInfo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MetaInfo"
+              }
+            ],
+            "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-binding-registry",
+              "requiredContext": []
+            }
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8478,11 +9255,12 @@
           },
           "CreationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8496,11 +9274,12 @@
           },
           "LastModificationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8515,7 +9294,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:resource-identity-definition",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8533,10 +9312,11 @@
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8548,11 +9328,12 @@
           },
           "IdentityID": {
             "type": "string",
+            "description": "UUID of the selected identity definition in the owning service catalogue.",
             "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8564,10 +9345,11 @@
           },
           "Value": {
             "type": "string",
+            "description": "Value identifying a resource within a selected identification scheme; its interpretation and uniqueness depend on that scheme.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identity-value",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8580,7 +9362,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:resource-identity-assignment",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8593,15 +9375,67 @@
           ]
         }
       },
+      "FieldIdentityDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldIdentityLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "FieldIdentityLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "FieldInverseConversionPosition": {
         "type": "object",
         "properties": {
           "Easting": {
             "type": "number",
+            "description": "Projected coordinate positive in the declared grid-east direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:easting",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8628,10 +9462,11 @@
           },
           "Northing": {
             "type": "number",
+            "description": "Projected coordinate positive in the declared grid-north direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:northing",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8658,10 +9493,11 @@
           },
           "VerticalDepth": {
             "type": "number",
+            "description": "Negative ellipsoidal height measured along the ellipsoid normal: positive inward from the reference ellipsoid. Physical quantity: DepthDrilling; SI unit: metres (m).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:ellipsoidal-depth",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8686,11 +9522,12 @@
           },
           "CoordinateEpochUtc": {
             "type": "string",
+            "description": "Epoch to which the coordinates of a position refer. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:coordinate-epoch",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8720,10 +9557,11 @@
         "properties": {
           "FieldID": {
             "type": "string",
+            "description": "UUID of the referenced resource owned by the Field service.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8749,9 +9587,10 @@
             "items": {
               "$ref": "#/components/schemas/FieldInverseConversionPosition"
             },
+            "description": "Position specified by geodetic latitude, longitude and ellipsoidal depth.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:geodetic-position",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8769,7 +9608,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:field-coordinate-conversion-request",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8786,15 +9625,78 @@
       "FieldLight": {
         "type": "object",
         "properties": {
-          "MetaInfo": {
-            "$ref": "#/components/schemas/MetaInfo"
-          },
-          "Name": {
+          "ProjectionDefinitionID": {
             "type": "string",
+            "description": "UUID of the definition owned by EarthCartographicProjection, not an EPSG code.",
+            "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-identifier",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [
+                "identified object type",
+                "owning service or containing resource"
+              ],
+              "constraints": [
+                "A display name or assigned external identity value is not this UUID.",
+                "Null means absent where permitted by the provider; an empty UUID does not identify a resource."
+              ]
+            }
+          },
+          "ReferencePoint": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Point3DGlobalCoordinates"
+              }
+            ],
+            "description": "Position specified by geodetic latitude, longitude and ellipsoidal depth. Geographic angles use SI radians; linear coordinates and ellipsoidal depth use SI metres. X/Y are Riemannian north/east arc coordinates, not projected easting/northing. Reference: WGS84 ellipsoid convention.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:geodetic-position",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "role": "urn:osdc:semantic:reference-location",
+              "reference": "urn:osdc:semantic:wgs84",
+              "requiredContext": [
+                "reference ellipsoid",
+                "angular units",
+                "vertical sign",
+                "reference meridian",
+                "vertical representation and sign"
+              ],
+              "constraints": [],
+              "referenceDefinition": "WGS84 geodetic latitude/longitude with Greenwich origin and ellipsoidal depth positive downward; not a fully specified terrestrial frame realization or epoch.",
+              "referenceRequiredContext": []
+            }
+          },
+          "MetaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MetaInfo"
+              }
+            ],
+            "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-model-attribute",
+              "requiredContext": [],
+              "constraints": []
+            }
+          },
+          "Name": {
+            "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
+            "nullable": true,
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8804,10 +9706,11 @@
           },
           "Description": {
             "type": "string",
+            "description": "Human-readable descriptive text about a resource.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-description",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8817,11 +9720,12 @@
           },
           "CreationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8838,11 +9742,12 @@
           },
           "LastModificationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -8860,7 +9765,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:drilling-field",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8876,10 +9781,11 @@
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8891,11 +9797,12 @@
           },
           "MembershipCategoryID": {
             "type": "string",
+            "description": "UUID of the selected category in the owning service catalogue.",
             "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8907,11 +9814,12 @@
           },
           "MembershipOptionID": {
             "type": "string",
+            "description": "UUID of an option belonging to the selected category.",
             "format": "uuid",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8923,11 +9831,12 @@
           },
           "FromDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8941,11 +9850,12 @@
           },
           "ToDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8960,7 +9870,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:membership-assignment",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -8980,14 +9890,28 @@
         "type": "object",
         "properties": {
           "MetaInfo": {
-            "$ref": "#/components/schemas/MetaInfo"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MetaInfo"
+              }
+            ],
+            "description": "Identity and service-location metadata accompanying a managed resource; a locator is not the semantic identity.",
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "provider-binding-registry",
+              "requiredContext": []
+            }
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -8996,9 +9920,10 @@
           },
           "IsExclusive": {
             "type": "boolean",
+            "description": "Boolean rule declaring that at most one category assignment may be active on a resource at the same instant.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-exclusivity",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -9010,9 +9935,10 @@
           },
           "HasValidityPeriod": {
             "type": "boolean",
+            "description": "Boolean rule indicating whether assignments in a category may carry validity bounds.",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:category-validity-period-enabled",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -9028,11 +9954,12 @@
           },
           "CreationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -9046,11 +9973,12 @@
           },
           "LastModificationDate": {
             "type": "string",
+            "description": "A position on a time axis identified using a declared time scale and representation. Neither elapsed duration nor a calendar date alone. Reference: Coordinated Universal Time.",
             "format": "date-time",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:instant",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -9065,7 +9993,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:membership-category",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -9078,15 +10006,73 @@
           ]
         }
       },
+      "FieldMembershipCategoryDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldMembershipCategoryLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "FieldMembershipCategoryLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "$ref": "#/components/schemas/MetaInfo"
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsExclusive": {
+            "type": "boolean"
+          },
+          "HasValidityPeriod": {
+            "type": "boolean"
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "FieldMembershipOption": {
         "type": "object",
         "properties": {
           "ID": {
             "type": "string",
+            "description": "A UUID identifying a resource, nested object, catalogue definition, option or assignment in a declared ownership and type scope.",
             "format": "uuid",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-identifier",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -9098,10 +10084,11 @@
           },
           "Name": {
             "type": "string",
+            "description": "Human-readable name of a resource, definition or option; not necessarily unique or stable.",
             "nullable": true,
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:resource-name",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-binding-registry",
@@ -9111,7 +10098,7 @@
         },
         "x-osdc-semantic": {
           "catalogue": "urn:osdc:semantic-catalogue",
-          "catalogueVersion": "0.16.0",
+          "catalogueVersion": "0.18.0",
           "concept": "urn:osdc:semantic:membership-option",
           "curationStatus": "Reviewed",
           "assertionSource": "provider-model-attribute",
@@ -9173,10 +10160,11 @@
         "properties": {
           "Easting": {
             "type": "number",
+            "description": "Projected coordinate positive in the declared grid-east direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:easting",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -9203,10 +10191,11 @@
           },
           "Northing": {
             "type": "number",
+            "description": "Projected coordinate positive in the declared grid-north direction, with CRS and origin explicit. Physical quantity: PositionDrilling; SI unit: metres (m).",
             "format": "double",
             "x-osdc-semantic": {
               "catalogue": "urn:osdc:semantic-catalogue",
-              "catalogueVersion": "0.16.0",
+              "catalogueVersion": "0.18.0",
               "concept": "urn:osdc:semantic:northing",
               "curationStatus": "Reviewed",
               "assertionSource": "provider-model-attribute",
@@ -9270,6 +10259,9 @@
       "UsageStatisticsField": {
         "type": "object",
         "properties": {
+          "DiscoveryRequestsPerDay": {
+            "$ref": "#/components/schemas/History"
+          },
           "LastSaved": {
             "type": "string",
             "format": "date-time"
@@ -18328,6 +19320,35 @@
           }
         }
       },
+      "RigDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
       "RigEnvironment": {
         "enum": [
           "Unknown",
@@ -18465,6 +19486,95 @@
           }
         }
       },
+      "RigFeatureCategoryDiscoveryPage": {
+        "type": "object",
+        "properties": {
+          "Items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RigFeatureCategoryLight"
+            },
+            "nullable": true
+          },
+          "Offset": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "Limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "TotalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "NextOffset": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "RigFeatureCategoryLight": {
+        "type": "object",
+        "properties": {
+          "MetaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MetaInfo"
+              }
+            ],
+            "nullable": true,
+            "x-osdc-semantic": {
+              "catalogue": "urn:osdc:semantic-catalogue",
+              "catalogueVersion": "0.18.0",
+              "concept": "urn:osdc:semantic:resource-metadata",
+              "curationStatus": "Reviewed",
+              "assertionSource": "rig-provider-binding-registry",
+              "referenceProfile": "urn:osdc:reference-profile:canonical-drilling",
+              "referenceProfileVersion": "1.1.0",
+              "referenceScope": "canonical-storage-and-api",
+              "presentationReferencesAllowed": true,
+              "requiredContext": [],
+              "constraints": []
+            }
+          },
+          "Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Name": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsExclusive": {
+            "type": "boolean"
+          },
+          "HasValidityPeriod": {
+            "type": "boolean"
+          },
+          "IsBuiltIn": {
+            "type": "boolean"
+          },
+          "IsDeprecated": {
+            "type": "boolean"
+          },
+          "CreationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "LastModificationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
       "RigFeatureOption": {
         "type": "object",
         "properties": {
@@ -18587,6 +19697,14 @@
       "RigLight": {
         "type": "object",
         "properties": {
+          "FixedPlatformProperties": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FixedPlatformProperties"
+              }
+            ],
+            "nullable": true
+          },
           "MetaInfo": {
             "allOf": [
               {
@@ -22336,6 +23454,14 @@
       "UsageStatisticsRig": {
         "type": "object",
         "properties": {
+          "DiscoveryRequestsPerDay": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/History"
+              }
+            ],
+            "nullable": true
+          },
           "LastSaved": {
             "type": "string",
             "format": "date-time"

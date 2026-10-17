@@ -93,3 +93,18 @@ The current work has been funded by the [Research Council of Norway](https://www
 - Rig engineering semantics use `OSDC.DotnetLibraries.Drilling.SemanticCatalogue` 0.18.0. One provider binding registry supplies REST/OpenAPI `x-osdc-semantic` extensions, MCP schemas and WebPages quantity selection. MCP input roots declare generic collection, retrieval, creation, replacement, partial-update, deletion and validation operation roles. Vertical drill-floor depth is WGS84-positive-downward; standpipe elevations are positive upward from the drill floor. Equipment Weight fields are mass, pressure ratings are absolute, heave-compensator capacity is force, top-drive gains are dimensionless, and rotational speed is angular velocity in rad/s.
 - The WebApp and reusable WebPages now integrate Vertical Datum data for mean-sea-level depth references.
 - Rig UUID read arguments and read/light projections declare their managed-resource semantics. Root metadata and identity are exposed alongside the WGS84 Gaussian drill-floor depth so consumers can verify typed relationships and reference origins through generic operators.
+
+## Bounded light discovery
+
+Resource and catalog discovery returns light pages, with `offset` defaulting to 0 and `limit` defaulting to 50 (allowed range 1–200). Names and relevant resource-reference filters are evaluated on the server. Unbounded full-object `HeavyData` routes and tools, including filtered full-object lists, have been removed. Existing UUID and HTTP-metadata listings remain available; use named light pages for routine discovery.
+
+REST routes and MCP tool names (relative to the service's existing API path base):
+
+- `/Rig/LightData` / `rig_discover`
+- `/RigFeatureCategory/LightData` / `rig_feature_category_discover`
+
+Pages contain `Items`, `Offset`, `Limit`, `TotalCount`, and `NextOffset`; `NextOffset` is null on the final page. Offset pages are individually consistent reads, not a snapshot spanning requests: concurrent inserts/deletes can change later pages. Refresh discovery when the underlying collection changes. EarthGeodesy's existing search pages instead expose `Items[].Value`, `Offset`, `Limit`, and `TotalCount`.
+
+Single-record reads, result/chunk reads, and deliberate backup/export/restore operations are preserved. Backups can still contain complete resources and should be treated as explicit bulk operations.
+
+This is a breaking REST/MCP contract change: update generated clients, UIs, and external integrations together with the service release. Removed heavy-list names are not compatibility aliases. No persisted engineering shapes, database names, or storage volumes are changed. Historical usage counters are retained; bounded discovery has a separate additive `DiscoveryRequestsPerDay` history in resource services.
